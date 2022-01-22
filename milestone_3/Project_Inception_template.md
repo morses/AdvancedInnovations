@@ -20,14 +20,17 @@ Project Inception Worksheet
     Ethan Sutton -Developer
     Korbin Cardoza -Developer
     Scot Morse -Supervisor
-    
+    some_name_1 -Analyst
+    some_name_2 -Architect
+    some_name_3 -Tester or Designer 
 
 ## Initial Requirements Elaboration and Elicitation
     See Requirements_template for more
 
 ### Elicitation Questions
     1. 
-    2.   3. ...
+    2.   
+    3. ...
 
 ### Elicitation Interviews
     Transcript or summary of what was learned
@@ -41,7 +44,9 @@ Project Inception Worksheet
 ## Initial Modeling
 
 ### Use Case Diagrams
-    Diagrams
+    Diagrams:
+<!-- still needs a little work on where site admin should be pointing to. -->
+[Use Case](https://lucid.app/lucidchart/767d06b4-d277-4abd-bcdd-fa9da39c98db/edit?invitationId=inv_4713b97e-f17d-422e-9177-85d394e00b10)
 
 ### Sequence Diagrams
 
