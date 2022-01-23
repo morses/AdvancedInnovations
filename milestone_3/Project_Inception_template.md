@@ -48,12 +48,14 @@ From out interview we learned that extracting the data from different Discord se
 
 ### Sequence Diagrams
 
-### Other Modeling
+## Other Modeling
     Diagrams, UI wireframes, page flows, ...
 
-[Data Modeling](https://lucid.app/lucidchart/5795abc9-3576-4228-8b93-a1e454c521e1/edit?beaconFlowId=3AF44DF54071EA6F&invitationId=inv_e16bcd95-235e-48d1-a8a1-70e985f167c8&page=0_0#)
-
 [UI Modeling](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/UIModeling.md)
+
+### Data Modeling image:
+[Data Modeling](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/DataModeling.svg)
+
 ## Identify Non-Functional Requirements
     1.
     2.
