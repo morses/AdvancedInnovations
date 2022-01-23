@@ -2,8 +2,8 @@ Project Inception Worksheet
 =====================================
 
 ## Summary of Our Approach to Software Development
-    What processes are we following?  How will we run this project? ==> Agile, Scrum, ...  
-    What are we choosing to do, how will we do it and at what level of detail or extent?
+        Here at Advanced Innovations we are using a Scrum team process and following and Agile approach. We will be splitting up the development of our project into several small sprints that each focus on a different part of the application. In doing so, we will be able to efficently tackle difficult tasks.
+
 
 ## Initial Vision Discussion with Stakeholders
         Our shared vision is to create a Discord bot that can be added into servers by their owners. This bot will store user and server information to a database. Members of that server can then log into our website and see statistics such as the most popular time that games are played, what the most popular games are, what the most popular time to play a specific game is, the average play time for each game, who plays the most, and who is active the most. 
@@ -20,29 +20,27 @@ Project Inception Worksheet
     Ethan Sutton -Developer
     Korbin Cardoza -Developer
     Scot Morse -Supervisor
-    some_name_1 -Analyst
-    some_name_2 -Architect
-    some_name_3 -Tester or Designer 
+    Mack Doretta -Analyst
+    Erica Keegan -Architect
+    Easton Crist -Tester or Designer 
 
 ## Initial Requirements Elaboration and Elicitation
     See Requirements_template for more
 
 ### Elicitation Questions
     1. 
-    2.   
+    2.  
     3. ...
 
-### Elicitation Interviews
-    Transcript or summary of what was learned
+### Elicitation Interviews 
+From out interview we learned that extracting the data from different Discord servers will be one of the hardest parts. It's crucial that we are able to gather the correct information about the games being played and who is playing them. Even though this seems like a small portion of the project compared to the graphing of time played and other visual aspects of our site, without implementing this feature we will be unable to continue with any other parts of our site.
 
-### Other Elicitation Activities?
-    As needed
 
 ## List of Needs and Features
 [Needs and Features](https://github.com/AbrahamVela/AdvancedInnovations/blob/main/milestone_2/Initial%20Scope.md)
 
 ## Initial Modeling
-
+[Mind Map](https://miro.com/app/board/uXjVOVoolCc=/)
 ### Use Case Diagrams
     Diagrams:
 <!-- still needs a little work on where site admin should be pointing to. -->
