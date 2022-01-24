@@ -43,8 +43,9 @@ From out interview we learned that extracting the data from different Discord se
 [Mind Map](https://miro.com/app/board/uXjVOVoolCc=/)
 ### Use Case Diagrams
     Diagrams:
-<!-- still needs a little work on where site admin should be pointing to. -->
-[Use Case](https://lucid.app/lucidchart/767d06b4-d277-4abd-bcdd-fa9da39c98db/edit?invitationId=inv_4713b97e-f17d-422e-9177-85d394e00b10)
+[Use Case Link](https://lucid.app/lucidchart/767d06b4-d277-4abd-bcdd-fa9da39c98db/edit?invitationId=inv_4713b97e-f17d-422e-9177-85d394e00b10)
+
+[Use Case Svg](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/UseCase.svg)
 
 ### Sequence Diagrams
 
@@ -53,7 +54,9 @@ From out interview we learned that extracting the data from different Discord se
 
 [UI Modeling](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/UIModeling.md)
 
-[Data Modeling](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/DataModeling.svg)
+[Data Modeling Link](https://lucid.app/lucidchart/5795abc9-3576-4228-8b93-a1e454c521e1/edit?invitationId=inv_e16bcd95-235e-48d1-a8a1-70e985f167c8)
+
+[Data Modeling Svg](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/DataModeling.svg)
 
 ## Identify Non-Functional Requirements
     1.
