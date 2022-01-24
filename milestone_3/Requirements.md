@@ -17,6 +17,28 @@ Go through all the information gathered during the previous round of elicitation
 3. Have you discovered if something is missing?  
 4. Return to Elicitation activities if unanswered questions remain.
 
+1. 
+   Server - unique ID, name, owner. Each server has multiple users, and multiple games   being played.
+
+   User -unique ID, name, play time: amount of time spent playing games for given period, favorite game, active time: time that the user has their discord status set to online. Servers: servers that are in our system and the user is apart of.
+   
+   Game - unique ID, name, total time: total time that the game is played from all users, active time: clock time that the game is being played by users weekly, game image.
+   
+   User most active - unique ID, activity time
+   
+   Most active time - unique ID, start time, end time, user id
+   
+   Popular games - unique ID, game id.
+   
+   Popular time for games - unique ID, time, gameid
+   
+   Avg playtime per game - unique ID, avg times, gameid
+   
+   UserTimes - unique ID, start time, end time, userid
+   
+   GameTimes - unique ID, start time, end time, gameid
+   
+
 
 ## Design and Modeling
 Our first goal is to create a **data model** that will support the initial requirements.
