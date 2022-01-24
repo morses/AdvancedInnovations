@@ -25,7 +25,7 @@ Project Inception Worksheet
     Easton Crist -Tester or Designer 
 
 ## Initial Requirements Elaboration and Elicitation
-    See Requirements_template for more
+[Requirements](https://github.com/AbrahamVela/AdvancedInnovations/blob/main/milestone_3/Requirements.md)
 
 ### Elicitation Questions
     1. 
@@ -59,9 +59,9 @@ From out interview we learned that extracting the data from different Discord se
 [Data Modeling Svg](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/DataModeling.svg)
 
 ## Identify Non-Functional Requirements
-    1.
-    2.
-    3.
+    1. Security
+    2. Compatibility
+    3. Usability
 
 ## Identify Functional Requirements (In User Story Format)
 
