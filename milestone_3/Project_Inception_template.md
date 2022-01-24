@@ -53,7 +53,6 @@ From out interview we learned that extracting the data from different Discord se
 
 [UI Modeling](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/UIModeling.md)
 
-### Data Modeling image:
 [Data Modeling](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/DataModeling.svg)
 
 ## Identify Non-Functional Requirements
