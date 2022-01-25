@@ -2,11 +2,11 @@ Project Inception Worksheet
 =====================================
 
 ## Summary of Our Approach to Software Development
-        Here at Advanced Innovations we are using a Scrum team process and following and Agile approach. We will be splitting up the development of our project into several small sprints that each focus on a different part of the application. In doing so, we will be able to efficently tackle difficult tasks.
+Here at Advanced Innovations we are using a Scrum team process and following and Agile approach. We will be splitting up the development of our project into several small sprints that each focus on a different part of the application. In doing so, we will be able to efficently tackle difficult tasks.
 
 
 ## Initial Vision Discussion with Stakeholders
-        Our shared vision is to create a Discord bot that can be added into servers by their owners. This bot will store user and server information to a database. Members of that server can then log into our website and see statistics such as the most popular time that games are played, what the most popular games are, what the most popular time to play a specific game is, the average play time for each game, who plays the most, and who is active the most. 
+Our shared vision is to create a Discord bot that can be added into servers by their owners. This bot will store user and server information to a database. Members of that server can then log into our website and see statistics such as the most popular time that games are played, what the most popular games are, what the most popular time to play a specific game is, the average play time for each game, who plays the most, and who is active the most. 
 
 ### Description of Clients/Users
 [Personas](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/Personas.md)
