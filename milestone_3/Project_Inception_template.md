@@ -2,11 +2,11 @@ Project Inception Worksheet
 =====================================
 
 ## Summary of Our Approach to Software Development
-        Here at Advanced Innovations we are using a Scrum team process and following and Agile approach. We will be splitting up the development of our project into several small sprints that each focus on a different part of the application. In doing so, we will be able to efficently tackle difficult tasks.
+Here at Advanced Innovations we are using a Scrum team process and following and Agile approach. We will be splitting up the development of our project into several small sprints that each focus on a different part of the application. In doing so, we will be able to efficently tackle difficult tasks.
 
 
 ## Initial Vision Discussion with Stakeholders
-        Our shared vision is to create a Discord bot that can be added into servers by their owners. This bot will store user and server information to a database. Members of that server can then log into our website and see statistics such as the most popular time that games are played, what the most popular games are, what the most popular time to play a specific game is, the average play time for each game, who plays the most, and who is active the most. 
+Our shared vision is to create a Discord bot that can be added into servers by their owners. This bot will store user and server information to a database. Members of that server can then log into our website and see statistics such as the most popular time that games are played, what the most popular games are, what the most popular time to play a specific game is, the average play time for each game, who plays the most, and who is active the most. 
 
 ### Description of Clients/Users
 [Personas](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/Personas.md)
@@ -22,7 +22,7 @@ Project Inception Worksheet
     Scot Morse -Supervisor
     Mack Doretta -Analyst
     Erica Keegan -Architect
-    Easton Crist -Tester or Designer 
+    Easton Crist -Tester
 
 ## Initial Requirements Elaboration and Elicitation
 [Requirements](https://github.com/AbrahamVela/AdvancedInnovations/blob/main/milestone_3/Requirements.md)
@@ -52,7 +52,7 @@ From out interview we learned that extracting the data from different Discord se
 ## Other Modeling
     Diagrams, UI wireframes, page flows, ...
 
-[UI Modeling](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/UIModeling.md)
+[UI Modeling](https://github.com/AbrahamVela/AdvancedInnovations/blob/main/milestone_3/UI_Models/UIModeling.md)
 
 [Data Modeling Link](https://lucid.app/lucidchart/5795abc9-3576-4228-8b93-a1e454c521e1/edit?invitationId=inv_e16bcd95-235e-48d1-a8a1-70e985f167c8)
 
@@ -69,12 +69,88 @@ E: Epic
 U: User Story  
 T: Task  
 
-7. [E] 
-    1. [U]
-        a. [T]
-        b. [T]
-    2. [U]
-        a. [T] 
+A. [E] Create a bot that gathers user and game statisitics from added servers.
+
+1. [U] As a user I would like to see the server I'm a part of user statisitics.
+
+    a. [T] Instal proper packaging to access discord.
+
+    b. [T] Retrieve a simple piece of data.
+
+    c. [T] Retrieve a simple piece of user data.
+
+    d. [T] Retrieve more user data.
+2. [U] As a user I would like to see the server I'm a part of games statisitics.
+
+    a. [T] Instal proper packaging to access discord.
+
+    b. [T] Retrieve a simple piece of data.
+
+    c. [T] Retrieve a simple piece of game data.
+
+    d. [T] Retrieve more games data.
+
+B. [E] Set up database using database model.
+
+1. [U] Make sure the database(sql) is connected to the code(mvc) through entity framework.
+
+    a. [T] Make proper scripts.
+
+    b. [T] Have connection string set up.
+
+    c. [T]Do a test run and display something simple.
+
+C. [E] Make an algorithm that graphs user statistics.
+
+1. [U] As a user I want to see a graph of user(s) statistics.
+
+    a. [T] Import something like QuickGraph.
+
+    b. [T] Write an algorithm that graphs one user statistic.
+
+    c. [T] Apply the above algorithm to more users and stats.
+
+D. [E] Make a page that shows all registered servers that are using the bot.
+
+1. [U] As a user I want to see a page.
+
+    a. [T] Create a page.
+
+    b. [T] Have the page display something.
+
+2. [U] As a user I want to see a page with registered servers using the bot.
+
+    a. [T] Have the page show registered servers using the bot.
+
+    b. [T] Make the data of registered server using the bot into a list.
+
+E. [E] Make a page that shows active times for users.
+
+1. [U] As a user I want to see a page.
+
+    a. [T] Create a page.
+
+    b. [T] Have the page display something.
+
+2. [U] As a user I want to see a page with active times for users.
+
+    a. [T] Have the page show active times for users
+
+    b. [T] Make the data of active times for users into a graph.
+
+F. [E] Make a page that shows active times for games being played.
+
+1. [U] As a user I want to see a page.
+
+    a. [T] Create a page
+
+    b. [T] Have the page display something
+
+2. [U] As a user I want to see a page with active times for games being played.
+
+    a. [T] Have the page show active times for games being played.
+
+    b. [T] Make the data of active times for games being played into a graph.
 
 ## Initial Architecture Envisioning
 [Initial Architecture](https://github.com/AbrahamVela/AdvancedInnovations/blob/main/milestone_2/system_network%20architecture%20(Updated).svg)
