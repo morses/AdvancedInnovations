@@ -11,7 +11,7 @@ Bootstrap, FontAwesome, DataTables
 Discord.js, Jquery
 
 # Git Branch Naming
-We will be using the Jira console commmand given within each issue for Git branches
+Branches will be named using the console command given within each issue inside of Jira
 
 # Loading method
-We will be using Lazy Loading
+Lazy loading will be used
