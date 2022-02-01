@@ -54,7 +54,7 @@ From out interview we learned that extracting the data from different Discord se
 
 [UI Modeling](https://github.com/AbrahamVela/AdvancedInnovations/blob/main/milestone_3/UI_Models/UIModeling.md)
 
-[Data Modeling Link](https://lucid.app/lucidchart/5795abc9-3576-4228-8b93-a1e454c521e1/edit?invitationId=inv_e16bcd95-235e-48d1-a8a1-70e985f167c8)
+[Data Modeling Link](https://lucid.app/lucidchart/1c741263-ac10-4d1f-961f-78cfc9b589e8/edit?invitationId=inv_ea20b1c5-9e1b-4d51-9b29-4496ffae4947)
 
 [Data Modeling Svg](https://github.com/AbrahamVela/AdvancedInnovations/blob/dev/milestone_3/DataModeling.svg)
 
