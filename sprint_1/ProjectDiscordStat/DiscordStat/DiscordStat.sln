@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordStats", "DiscordStats.csproj", "{71D65170-1C8A-4A50-8109-2232474DC10C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordStats_Tests", "..\DiscordStats_Tests\DiscordStats_Tests.csproj", "{1B342BE5-8853-4FA8-8CFD-E7AC1DC67C4E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{71D65170-1C8A-4A50-8109-2232474DC10C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71D65170-1C8A-4A50-8109-2232474DC10C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71D65170-1C8A-4A50-8109-2232474DC10C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71D65170-1C8A-4A50-8109-2232474DC10C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B342BE5-8853-4FA8-8CFD-E7AC1DC67C4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B342BE5-8853-4FA8-8CFD-E7AC1DC67C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B342BE5-8853-4FA8-8CFD-E7AC1DC67C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B342BE5-8853-4FA8-8CFD-E7AC1DC67C4E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5B8D54FB-0992-41F0-B43A-64C61D7AF0EC}
+	EndGlobalSection
+EndGlobal

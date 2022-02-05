@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiscordStats.Migrations
 {
     [DbContext(typeof(DiscordStatsIdentityDbContext))]
-    [Migration("20220202030136_CreateIdentitySchema")]
+    [Migration("20220205023728_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
