@@ -1,0 +1,13 @@
+﻿@model IEnumerable<DiscordStats.Models.Server>
+
+<h1>Welcome home @ViewBag.name, this is your account page.</h1>
+<p>Did you know your Discord id is: @ViewBag.id?</p>
+<ul>
+@foreach (var s in Model)
+{
+    <li>@s.owner</li>
+    <li>@s.name</li>
+    <li>@s.id</li>
+
+}
+</ul>
