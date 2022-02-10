@@ -1,8 +1,8 @@
---CREATE DATABASE [DiscordData];
---GO
+-- CREATE DATABASE [DiscordData];
+-- GO
 
---USE [DiscordData];
---GO
+-- USE [DiscordData];
+-- GO
 
 -- *************** Create tables/entities ********************
 CREATE TABLE [Server] 
