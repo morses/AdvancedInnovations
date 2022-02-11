@@ -10,9 +10,10 @@ namespace DiscordStats.Models
             ServerUserJoins = new HashSet<ServerUserJoin>();
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; } = null!;
         public string Owner { get; set; } = null!;
+        public string Icon { get; set; }
 
         public virtual ICollection<ServerUserJoin> ServerUserJoins { get; set; }
     }
