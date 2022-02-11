@@ -1,26 +1,21 @@
 ﻿using DiscordStats.Models;
+using DiscordStats.DAL.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using RestSharp;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Azure.Core;
-using System.Net;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace DiscordStats.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IDiscordService _discord;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IDiscordService discord)
         {
             _logger = logger;
+            _discord = discord;
         }
 
         public IActionResult Index()
@@ -49,36 +44,23 @@ namespace DiscordStats.Controllers
         [Authorize(AuthenticationSchemes = "Discord")]
         public  IActionResult Account()
         {
-
-
+            // Don't use the ViewBag!  Use a viewmodel instead.
+            // The data in ClaimTypes can be mocked.  Will have to wait though for how to do that.
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
 
-            var request = (HttpWebRequest)WebRequest.Create("https://discord.com/api/users/@me/guilds");
-            request.Method = "GET";
-            var t = User;
-            request.ContentType = "application/json";
-            request.Headers.Add("Authorization", "Bearer " + User.Claims.First(c => c.Type == ClaimTypes.Role).Value);
-            request.Headers.Add("Content-Type", "application/json");
+            IEnumerable<Server>? servers = _discord.GetCurrentUserGuilds(bearerToken);
 
-            var content = string.Empty;
-           
-            
+            // Now we can inject a mock IDiscordService that fakes this method.  That will allow us to test
+            // anything __after__ getting this list of servers, i.e. any logic that we perform with this data from
+            // here on.  There's nothing here now but there presumably will be.  If this method used a viewmodel
+            // then we could test this action method a little more, but it doesn't.
 
+            // Unfortunately it doesn't allow us to test the actual code within the GetCurrentUserGuilds method.
+            // For that we must take the next step in refactoring.
 
-            using (var response = (HttpWebResponse)request.GetResponse())
-            {
-                using (var stream = response.GetResponseStream())
-                {
-                    using (var sr = new StreamReader(stream))
-                    {
-                        content = sr.ReadToEnd();
-                    }
-                }
-            }
-            var server = JsonConvert.DeserializeObject<List<Server>>(content);
-
-            return View(server);
+            return View(servers);
         }
 
     }

@@ -13,13 +13,20 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
+using DiscordStats.DAL.Abstract;
+using DiscordStats.DAL.Concrete;
 
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("DiscordStatsContextConnection");builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options =>
+var connectionString = builder.Configuration.GetConnectionString("DiscordStatsContextConnection");
+builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options =>
     options.UseSqlServer(connectionString));builder.Services.AddDbContext<DiscordStatsContext>(options =>
     options.UseSqlServer(connectionString));builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<DiscordStatsContext>();
+    
+// Add our repositories and services
+builder.Services.AddScoped<IDiscordService, DiscordService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(options =>
