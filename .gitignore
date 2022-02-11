@@ -348,3 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Suggested from Scot to add so it will ignore user config files when someone uses VSCode with your project
+.vscode
