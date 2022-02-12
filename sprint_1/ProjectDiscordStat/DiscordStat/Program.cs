@@ -38,23 +38,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     })
     .AddCookie()
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = false,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer"),
-                ValidAudience = builder.Configuration.GetValue<string>("Jwt:Audience"),
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Jwt:EncryptionKey")))
-            };
-        })
-        .AddOAuth("Discord",
+    .AddOAuth("Discord",
             options =>
             {
 
