@@ -27,6 +27,12 @@ namespace DiscordStats.Controllers
         {
             return View();
         }
+
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
         [Authorize(AuthenticationSchemes = "Discord")]
         public IActionResult Privacy()
         {
