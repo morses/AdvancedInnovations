@@ -35,6 +35,31 @@ namespace DiscordStats.Controllers
             }
             var server = JsonConvert.DeserializeObject<List<Server>>(content);
 
+            
+            var requestTwo = (HttpWebRequest)WebRequest.Create("https://discord.com/api/users/@me");
+            requestTwo.Method = "GET";
+            requestTwo.ContentType = "application/json";
+            requestTwo.Headers.Add("Authorization", "Bearer " + User.Claims.First(c => c.Type == ClaimTypes.Role).Value);
+            requestTwo.Headers.Add("Content-Type", "application/json");
+
+            var contentTwo = string.Empty;
+
+            using (var responsea = (HttpWebResponse)requestTwo.GetResponse())
+            {
+                using (var streamTwo = responsea.GetResponseStream())
+                {
+                    using (var sr = new StreamReader(streamTwo))
+                    {
+                        contentTwo = sr.ReadToEnd();
+                    }
+                }
+            }
+            var serverTwo = JsonConvert.DeserializeObject<User>(contentTwo);
+
+
+            ViewBag.hash = serverTwo.Avatar;
+
+
             return View(server);
         }
 
