@@ -1,0 +1,29 @@
+﻿@model IEnumerable<DiscordStats.Models.Server>
+
+<div class="row">
+    <div class="col">
+        @{var link = "https://cdn.discordapp.com/avatars/" + ViewBag.id + "//" + ViewBag.hash + ".png";}
+        <img class="discordImage"  src="@link"/>
+    </div>
+    <div class="col">
+        <h1>Welcome home @ViewBag.name, this is your account page.</h1>
+    </div>
+</div>
+
+<p>Did you know your Discord id is: @ViewBag.id?</p>
+
+ <table class="table" >
+     <tr>
+        <th><b>Server Owner</b></th>
+        <th><b>Server Name</b></th>
+        <th><b>Server Id</b></th>
+    </tr>
+    @foreach(var s in Model)
+    {
+        <tr>
+            <td>@if (s.Owner=="true") { <p>Yes</p>}else{<p>No</p>}</td>
+            <td>@s.Name</td>
+            <td>@s.Id</td>
+        </tr>
+    }
+</table>

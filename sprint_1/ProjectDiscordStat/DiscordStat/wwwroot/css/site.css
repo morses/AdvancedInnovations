@@ -16,3 +16,27 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.discordImage {
+    border-radius: 100%;
+    -moz-border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -o-border-image: 100%;
+}
+
+table {
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+
+    font-family: arial, sans-serif;
+    color: white;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table td, .table th {
+    border: 1px solid #666464;
+    text-align: left;
+    padding: 8px;
+}
