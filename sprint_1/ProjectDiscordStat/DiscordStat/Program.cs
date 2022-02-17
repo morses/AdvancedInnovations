@@ -33,6 +33,9 @@ var connectionString = builder.Configuration.GetConnectionString("DiscordStatsCo
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<DiscordStatsIdentityDbContext>();
 
+// Register an IHttpClientFactory to enable injection of HttpClients
+builder.Services.AddHttpClient();
+
 // Add our repositories and services
 builder.Services.AddScoped<IDiscordService, DiscordService>();
 

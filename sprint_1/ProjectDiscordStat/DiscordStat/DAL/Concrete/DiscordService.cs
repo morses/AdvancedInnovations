@@ -1,6 +1,7 @@
 ﻿using DiscordStats.DAL.Abstract;
 using DiscordStats.Models;
 using System.Net;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
 namespace DiscordStats.DAL.Concrete
@@ -11,61 +12,58 @@ namespace DiscordStats.DAL.Concrete
 
     public class DiscordService : IDiscordService
     {
+        // Use constructor injection to get the http client factory, which we'll use to get an http client
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public DiscordService(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
+
         // This method wraps up the minimum functionality needed to make a request
         // to an external dependency.  It cannot be unit tested, but we do need to fake it in
         // order to test code that uses it, i.e. GetCurrentUserGuilds below
-        public static string GetJsonStringFromEndpoint(string bearerToken, string uri)
+        public async Task<string> GetJsonStringFromEndpoint(string bearerToken, string uri)
         {
-            var request = (HttpWebRequest)WebRequest.Create(uri);
-            request.Method = "GET";
-            request.ContentType = "application/json";
-            request.Headers.Add("Authorization", "Bearer " + bearerToken);
-            request.Headers.Add("Content-Type", "application/json");
-
-            var content = string.Empty;
-
-            using (var response = (HttpWebResponse)request.GetResponse())
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri)
             {
-                using (var stream = response.GetResponseStream())
-                {
-                    using (var sr = new StreamReader(stream))
+                Headers =
                     {
-                        content = sr.ReadToEnd();
+                        { HeaderNames.Accept, "application/json" },
+                        { HeaderNames.Authorization, "Bearer " + bearerToken},
+                        { HeaderNames.UserAgent, "DiscordStat" }
                     }
-                }
+            };
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            // Note this is the blocking version.  Would be better to use the Async version
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
+            // This is only a minimal version; make sure to cover all your bases here
+            if (response.IsSuccessStatusCode)
+            {
+                // same here, this is blocking; use ReadAsStreamAsync instead
+                string responseText = await response.Content.ReadAsStringAsync();
+                return responseText;
             }
-            return content;
+            else
+            {
+                // What to do if failure? Should throw specific exceptions that explain what happened
+                throw new HttpRequestException();
+            }
         }
-
-        // This is the method we can use from the controller, since the controller (usually) doesn't need to know
-        // anything about how this information is acquired
-        public List<Server>? GetCurrentUserGuilds(string bearerToken)
-        {
-            SendRequest sr = GetJsonStringFromEndpoint;
-            return GetCurrentUserGuilds(bearerToken, sr);
-        }
-
-        // But this is the method that actually does the work AND can have fake data injected via the delegate method
-        public List<Server>? GetCurrentUserGuilds(string bearerToken, SendRequest messageSender)
+        public async Task<List<Server>?> GetCurrentUserGuilds(string bearerToken)
         {
             // Remember to handle errors here
-            string response = messageSender(bearerToken, "https://discord.com/api/users/@me/guilds");
+            string response = await GetJsonStringFromEndpoint(bearerToken, "https://discord.com/api/users/@me/guilds");
             // And here
             List<Server>? servers = JsonConvert.DeserializeObject<List<Server>>(response);
             return servers;
         }
 
-        public User? GetCurrentUserInfo(string bearerToken)
-        {
-            SendRequest sr = GetJsonStringFromEndpoint;
-            return GetCurrentUserInfo(bearerToken, sr);
-        }
-
-        // But this is the method that actually does the work AND can have fake data injected via the delegate method
-        public User? GetCurrentUserInfo(string bearerToken, SendRequest messageSender)
+        public async Task<User?> GetCurrentUserInfo(string bearerToken)
         {
             // Remember to handle errors here
-            string response = messageSender(bearerToken, "https://discord.com/api/users/@me");
+            string response = await GetJsonStringFromEndpoint(bearerToken, "https://discord.com/api/users/@me");
             // And here
             User? userInfo = JsonConvert.DeserializeObject<User>(response);
             return userInfo;

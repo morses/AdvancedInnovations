@@ -20,7 +20,7 @@ namespace DiscordStats.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
-        public IActionResult Account()
+        public async Task<IActionResult> Account()
         {
             // Don't use the ViewBag!  Use a viewmodel instead.
             // The data in ClaimTypes can be mocked.  Will have to wait though for how to do that.
@@ -28,9 +28,9 @@ namespace DiscordStats.Controllers
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
 
-            IEnumerable<Server>? servers = _discord.GetCurrentUserGuilds(bearerToken);
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
 
-            var userInfo = _discord.GetCurrentUserInfo(bearerToken);
+            var userInfo = await _discord.GetCurrentUserInfo(bearerToken);
 
 
             ViewBag.hash = userInfo.Avatar;
@@ -47,13 +47,13 @@ namespace DiscordStats.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
-        public IActionResult Servers()
+        public async Task<IActionResult> Servers()
         {
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
 
-            IEnumerable<Server>? servers = _discord.GetCurrentUserGuilds(bearerToken);
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
 
             return View(servers.Where(m => m.Owner == "true").ToList());
         }
