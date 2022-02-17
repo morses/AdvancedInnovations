@@ -13,8 +13,8 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
-using DiscordStats.Models;
-
+using DiscordStats.DAL.Abstract;
+using DiscordStats.DAL.Concrete;
 var builder = WebApplication.CreateBuilder(args);
 
 //for local use
@@ -32,6 +32,9 @@ var connectionString = builder.Configuration.GetConnectionString("DiscordStatsCo
 //     options.UseSqlServer(connectionString));
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<DiscordStatsIdentityDbContext>();
+
+// Add our repositories and services
+builder.Services.AddScoped<IDiscordService, DiscordService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
