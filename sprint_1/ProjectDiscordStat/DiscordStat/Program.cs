@@ -18,12 +18,15 @@ using DiscordStats.DAL.Concrete;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
 var connectionString = builder.Configuration.GetConnectionString("DiscordStatsContextConnection");
 builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options =>
     options.UseSqlServer(connectionString));builder.Services.AddDbContext<DiscordStatsContext>(options =>
     options.UseSqlServer(connectionString));builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<DiscordStatsContext>();
     
+// Register an IHttpClientFactory to enable injection of HttpClients
+builder.Services.AddHttpClient();
 // Add our repositories and services
 builder.Services.AddScoped<IDiscordService, DiscordService>();
 

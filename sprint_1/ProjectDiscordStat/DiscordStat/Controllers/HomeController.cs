@@ -42,7 +42,7 @@ namespace DiscordStats.Controllers
         
 
         [Authorize(AuthenticationSchemes = "Discord")]
-        public  IActionResult Account()
+        public async Task<IActionResult> Account()
         {
             // Don't use the ViewBag!  Use a viewmodel instead.
             // The data in ClaimTypes can be mocked.  Will have to wait though for how to do that.
@@ -50,7 +50,7 @@ namespace DiscordStats.Controllers
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
 
-            IEnumerable<Server>? servers = _discord.GetCurrentUserGuilds(bearerToken);
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
 
             // Now we can inject a mock IDiscordService that fakes this method.  That will allow us to test
             // anything __after__ getting this list of servers, i.e. any logic that we perform with this data from

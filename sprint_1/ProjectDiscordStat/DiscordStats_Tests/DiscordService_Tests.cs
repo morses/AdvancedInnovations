@@ -1,8 +1,12 @@
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
+using System.Net;
+using System.Threading.Tasks;
 using DiscordStats.DAL.Concrete;
 using DiscordStats.Models;
+using Moq;
+using Moq.Contrib.HttpClient;       // from: dotnet add package Moq.Contrib.HttpClient
 
 namespace DiscordStats_Tests
 {
@@ -14,13 +18,47 @@ namespace DiscordStats_Tests
         }
 
         [Test]
-        public void GetGuilds_ValidDataForTwoServersFromDiscord_ShouldParseOK()
+        public async Task GetGuilds_404Response_ShouldThrowException()
         {
-            // Arrange
-            DiscordService discord = new DiscordService();
-            // I didn't know what this was supposed to look like so I copied what I thought
-            // was the correct example from the Discord API docs.  Doesn't look right though as
-            // owner here is a bool but yours is a string.
+            // Arrange  (wrap this up in a method to reuse it)
+            var handler = new Mock<HttpMessageHandler>();
+
+            handler.SetupAnyRequest( )
+                   .ReturnsResponse( HttpStatusCode.NotFound );
+
+            DiscordService discord = new DiscordService(handler.CreateClientFactory());
+
+            // Act
+            Task<List<Server>?> Act() => discord.GetCurrentUserGuilds("fakeBearerToken");
+
+            // Assert
+            Assert.That(Act,Throws.TypeOf<HttpRequestException>());
+        }
+
+        [Test]
+        public async Task GetGuilds_NotAuthorizedResponse_ShouldThrowException()
+        {
+            // Arrange  (wrap this up in a method to reuse it)
+            var handler = new Mock<HttpMessageHandler>();
+
+            handler.SetupAnyRequest( )
+                   .ReturnsResponse( HttpStatusCode.Unauthorized );
+
+            DiscordService discord = new DiscordService(handler.CreateClientFactory());
+
+            // Act
+            Task<List<Server>?> Act() => discord.GetCurrentUserGuilds("fakeBearerToken");
+
+            // Assert
+            Assert.That(Act,Throws.TypeOf<HttpRequestException>());
+        }
+
+        [Test]
+        public async Task GetGuilds_ValidDataForTwoServersFromDiscord_ShouldParseOK()
+        {
+            // Arrange  (wrap this up in a method to reuse it)
+            var handler = new Mock<HttpMessageHandler>();
+
             string jsonFromDiscordAPI = @"[{
   ""id"": 1035111022,
   ""name"": ""1337 Krew"",
@@ -37,8 +75,17 @@ namespace DiscordStats_Tests
   ""permissions"": ""36953089"",
   ""features"": [""GAMES"", ""IMAGES""]
 }]";
+            var response = new HttpResponseMessage()
+            {
+                Content = new StringContent(jsonFromDiscordAPI)
+            };
+            handler.SetupAnyRequest( )
+                   .ReturnsAsync( response );
+
+            DiscordService discord = new DiscordService(handler.CreateClientFactory());
+
             // Act
-            List<Server>? servers = discord.GetCurrentUserGuilds("fakeBearerToken", (bt, uri) => jsonFromDiscordAPI);
+            List<Server>? servers = await discord.GetCurrentUserGuilds("fakeBearerToken");
 
             // Assert
             Assert.Multiple(() =>
@@ -49,6 +96,7 @@ namespace DiscordStats_Tests
                     Assert.That(servers[0].Owner == "true");
                 }
             );
+    
         }
 
         [Test]
