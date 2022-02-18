@@ -10,13 +10,13 @@ namespace DiscordStats.Controllers
     public class AccountController : Controller
     {
 
-        private readonly ILogger<AccountController> _logger;
+        private readonly ILogger<HomeController> _logger;
         private readonly IDiscordService _discord;
 
-        public AccountController(ILogger<AccountController> logger, IDiscordService discord)
+        public AccountController(ILogger<HomeController> logger, IDiscordService discord)
         {
             _logger = logger;
-            _discord = discord;          
+            _discord = discord;
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]

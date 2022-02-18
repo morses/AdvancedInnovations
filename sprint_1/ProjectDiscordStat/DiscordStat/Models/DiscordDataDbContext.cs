@@ -30,27 +30,8 @@ namespace DiscordStats.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Server>(entity =>
-            {
-                entity.ToTable("Server");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Name).HasMaxLength(50);
-
-                entity.Property(e => e.Owner).HasMaxLength(50);
-            });
-
             modelBuilder.Entity<ServerUserJoin>(entity =>
             {
-                entity.ToTable("ServerUserJoin");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.ServerId).HasColumnName("ServerID");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
                 entity.HasOne(d => d.Server)
                     .WithMany(p => p.ServerUserJoins)
                     .HasForeignKey(d => d.ServerId)
@@ -60,17 +41,6 @@ namespace DiscordStats.Models
                     .WithMany(p => p.ServerUserJoins)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("UserID");
-            });
-
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.ToTable("User");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Name).HasMaxLength(50);
-
-                entity.Property(e => e.Servers).HasMaxLength(256);
             });
 
             OnModelCreatingPartial(modelBuilder);

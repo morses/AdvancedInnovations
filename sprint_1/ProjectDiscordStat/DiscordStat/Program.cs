@@ -12,15 +12,23 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
-using DiscordStats.DAL.Abstract;
-using DiscordStats.DAL.Concrete;
+//using DiscordStats.DAL.Abstract;
+//using DiscordStats.DAL.Concrete;
+using DiscordStats.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //for local use
-var connectionString = builder.Configuration.GetConnectionString("DiscordStatsContextConnection"); builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options =>
-     options.UseSqlServer(connectionString)); builder.Services.AddDbContext<DiscordStatsContext>(options =>
-      options.UseSqlServer(connectionString)); builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+var ConnectionString =
+    //for local discordIdentitydb use
+    builder.Configuration.GetConnectionString("DiscordStatsContextConnection");  
+    builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options => options.UseSqlServer(ConnectionString)); 
+    builder.Services.AddDbContext<DiscordStatsContext>(options => options.UseSqlServer(ConnectionString)); 
+    builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
        .AddEntityFrameworkStores<DiscordStatsContext>();
+    //for local discordDatadb use
+    //builder.Configuration.GetConnectionString("DiscordDataConnection");
+    //builder.Services.AddDbContext<DiscordDataDbContext>(options => options.UseSqlServer(ConnectionString));
 
 // for azure use
 //var identityString = builder.Configuration.GetConnectionString("DiscordStatsIdentityDbContextConnection");
@@ -36,8 +44,8 @@ var connectionString = builder.Configuration.GetConnectionString("DiscordStatsCo
 builder.Services.AddHttpClient();
 
 // Add our repositories and services
-builder.Services.AddScoped<IDiscordService, DiscordService>();
-builder.Services.AddScoped<IServerRepository, ServerRepository>();
+//builder.Services.AddScoped<IDiscordService, DiscordService>();
+//builder.Services.AddScoped<IServerRepository, ServerRepository>();
 
 
 // Add services to the container.
