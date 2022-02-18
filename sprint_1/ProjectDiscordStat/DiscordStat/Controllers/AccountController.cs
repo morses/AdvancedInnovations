@@ -16,7 +16,7 @@ namespace DiscordStats.Controllers
         public AccountController(ILogger<AccountController> logger, IDiscordService discord)
         {
             _logger = logger;
-            _discord = discord;
+            _discord = discord;          
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]

@@ -1,0 +1,16 @@
+﻿@model DiscordStats.ViewModel.AllServers;
+
+<tabel class="table">
+
+	<tr>
+		<th>Server Name</th>
+	</tr>
+
+	@foreach(Server server in Model!.allServers!)
+	{
+		<tr>
+			<td>@server.Name</td>
+		</tr>
+	}
+
+</tabel>

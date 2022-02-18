@@ -37,6 +37,8 @@ builder.Services.AddHttpClient();
 
 // Add our repositories and services
 builder.Services.AddScoped<IDiscordService, DiscordService>();
+builder.Services.AddScoped<IServerRepository, ServerRepository>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

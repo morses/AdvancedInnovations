@@ -11,16 +11,20 @@ using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using DiscordStats.DAL.Abstract;
+using DiscordStats.ViewModel;
 
 namespace DiscordStats.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IServerRepository _serverRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IServerRepository serverRepository)
         {
             _logger = logger;
+            _serverRepository = serverRepository;
         }
 
         public IActionResult Index()
@@ -31,6 +35,14 @@ namespace DiscordStats.Controllers
         public IActionResult Contact()
         {
             return View();
+        }
+
+        [Authorize(AuthenticationSchemes = "Discord")]
+        public IActionResult AllServers()
+        {
+            AllServers allServers = new AllServers();
+            allServers.allServers = _serverRepository.GetAll().ToList();
+            return View(allServers);
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
