@@ -2,7 +2,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using DiscordStats.Data;
 using DiscordStats.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -13,8 +12,8 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
-using DiscordStats.Models;
-
+using DiscordStats.DAL.Abstract;
+using DiscordStats.DAL.Concrete;
 var builder = WebApplication.CreateBuilder(args);
 
 //for local use
@@ -32,6 +31,12 @@ var connectionString = builder.Configuration.GetConnectionString("DiscordStatsCo
 //     options.UseSqlServer(connectionString));
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<DiscordStatsIdentityDbContext>();
+
+// Register an IHttpClientFactory to enable injection of HttpClients
+builder.Services.AddHttpClient();
+
+// Add our repositories and services
+builder.Services.AddScoped<IDiscordService, DiscordService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
