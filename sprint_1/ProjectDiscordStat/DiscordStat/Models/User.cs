@@ -16,13 +16,13 @@ namespace DiscordStats.Models
 
         [Key]
         [Column("ID")]
-        public int Id { get; set; }
+        public string Id { get; set; }
         [StringLength(50)]
         public string Name { get; set; } = null!;
         [StringLength(256)]
         public string Servers { get; set; } = null!;
-
-        public string Avatar { get; set; }
+        [StringLength(256)]
+        public string? UserAvatar { get; set; }
 
         [InverseProperty(nameof(ServerUserJoin.User))]
         public virtual ICollection<ServerUserJoin> ServerUserJoins { get; set; }

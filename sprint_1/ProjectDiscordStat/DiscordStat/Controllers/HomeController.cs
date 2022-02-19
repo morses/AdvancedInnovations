@@ -40,9 +40,9 @@ namespace DiscordStats.Controllers
         [Authorize(AuthenticationSchemes = "Discord")]
         public IActionResult AllServers()
         {
-            AllServers allServers = new AllServers();
-            allServers.allServers = _serverRepository.GetAll().ToList();
-            return View(allServers);
+            AllServerNames allServerNames = new AllServerNames();
+            allServerNames.allServerNamesContainer = _serverRepository.GetServerNames().ToList(); 
+            return View(allServerNames);
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]

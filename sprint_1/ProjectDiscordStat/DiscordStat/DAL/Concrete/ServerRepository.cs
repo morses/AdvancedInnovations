@@ -8,18 +8,20 @@ namespace DiscordStats.DAL.Concrete
 {
     public class ServerRepository : Repository<Server>, IServerRepository
     {
-        public ServerRepository(DbContext ctx) : base(ctx)
+        public ServerRepository(DiscordDataDbContext ctx) : base(ctx)
         {
         }
-
-
-        public IEnumerable<Server> GetAll()
+        public IEnumerable<string> GetServerNames()
         {
-            return GetAll().ToList();
+            List<string> serverName = new List<string>();
+            var servers = _dbSet.Select(a => a.Name).ToList();
+            foreach (var s in servers)
+            {
+                serverName.Add(s);
+            }
+
+            return serverName;
+
         }
-        //IEnumerable<Server> IServerRepository.GetAll()
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

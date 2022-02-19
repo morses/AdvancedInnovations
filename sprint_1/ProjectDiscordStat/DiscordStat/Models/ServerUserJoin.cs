@@ -13,9 +13,9 @@ namespace DiscordStats.Models
         [Column("ID")]
         public int Id { get; set; }
         [Column("ServerID")]
-        public int? ServerId { get; set; }
+        public string? ServerId { get; set; }
         [Column("UserID")]
-        public int? UserId { get; set; }
+        public string? UserId { get; set; }
 
         [ForeignKey(nameof(ServerId))]
         [InverseProperty("ServerUserJoins")]

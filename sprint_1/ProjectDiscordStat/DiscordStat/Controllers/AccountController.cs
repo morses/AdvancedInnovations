@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Globalization;
 
 namespace DiscordStats.Controllers
 {
@@ -26,14 +28,14 @@ namespace DiscordStats.Controllers
             // The data in ClaimTypes can be mocked.  Will have to wait though for how to do that.
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
-            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+            string bearerTokenString = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
 
-            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerTokenString);
 
-            var userInfo = await _discord.GetCurrentUserInfo(bearerToken);
+            var userInfo = await _discord.GetCurrentUserInfo(bearerTokenString);
 
 
-            ViewBag.hash = userInfo.Avatar;
+            ViewBag.hash = userInfo.UserAvatar;
 
             // Now we can inject a mock IDiscordService that fakes this method.  That will allow us to test
             // anything __after__ getting this list of servers, i.e. any logic that we perform with this data from
