@@ -35,7 +35,7 @@ namespace DiscordStats.Controllers
             var userInfo = await _discord.GetCurrentUserInfo(bearerTokenString);
 
 
-            ViewBag.hash = userInfo.UserAvatar;
+            ViewBag.hash = userInfo.Avatar;
 
             // Now we can inject a mock IDiscordService that fakes this method.  That will allow us to test
             // anything __after__ getting this list of servers, i.e. any logic that we perform with this data from

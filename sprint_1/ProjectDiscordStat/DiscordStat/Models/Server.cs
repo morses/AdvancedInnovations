@@ -22,7 +22,7 @@ namespace DiscordStats.Models
         [StringLength(50)]
         public string Owner { get; set; } = null!;
         [StringLength(256)]
-        public string? ServerIcon { get; set; }
+        public string? Icon { get; set; }
 
         [InverseProperty(nameof(ServerUserJoin.Server))]
         public virtual ICollection<ServerUserJoin> ServerUserJoins { get; set; }
