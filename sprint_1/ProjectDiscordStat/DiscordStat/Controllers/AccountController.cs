@@ -1,4 +1,5 @@
-﻿using DiscordStats.Models;
+﻿using System.Configuration;
+using DiscordStats.Models;
 using DiscordStats.DAL.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -12,11 +13,13 @@ namespace DiscordStats.Controllers
 
         private readonly ILogger<AccountController> _logger;
         private readonly IDiscordService _discord;
-
-        public AccountController(ILogger<AccountController> logger, IDiscordService discord)
+        private readonly IConfiguration _configuration;
+      
+        public AccountController(ILogger<AccountController> logger, IDiscordService discord, IConfiguration config)
         {
             _logger = logger;
             _discord = discord;
+            _configuration = config;
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
@@ -55,8 +58,15 @@ namespace DiscordStats.Controllers
 
             IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
 
+            foreach (var s in servers.Where(m => m.Owner == "true"))
+            {
+                s.HasBot = await _discord.CheckForBot(_configuration["API:BotToken"], s.Id);
+            }
+
             return View(servers.Where(m => m.Owner == "true").ToList());
         }
+
+        
     }
 
 }

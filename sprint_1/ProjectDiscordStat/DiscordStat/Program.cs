@@ -17,7 +17,8 @@ using DiscordStats.DAL.Concrete;
 var builder = WebApplication.CreateBuilder(args);
 
 //for local use
-var connectionString = builder.Configuration.GetConnectionString("DiscordStatsContextConnection"); builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options =>
+var connectionString = builder.Configuration.GetConnectionString("DiscordStatsContextConnection"); 
+builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options =>
      options.UseSqlServer(connectionString)); builder.Services.AddDbContext<DiscordStatsContext>(options =>
       options.UseSqlServer(connectionString)); builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
        .AddEntityFrameworkStores<DiscordStatsContext>();
@@ -53,6 +54,7 @@ builder.Services.AddAuthentication(options =>
                 options.AuthorizationEndpoint = "https://discord.com/api/oauth2/authorize";
                 options.Scope.Add("identify");
                 options.Scope.Add("guilds");
+                options.Scope.Add("guilds.join");
                 //Can add more here
                 options.CallbackPath = new PathString("/auth/oauthCallback");
                 options.ClientId = builder.Configuration["API:ClientId"];

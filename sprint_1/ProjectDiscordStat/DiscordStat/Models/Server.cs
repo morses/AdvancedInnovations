@@ -14,7 +14,7 @@ namespace DiscordStats.Models
         public string Name { get; set; } = null!;
         public string Owner { get; set; } = null!;
         public string Icon { get; set; }
-
+        public string HasBot { get; set; }
         public virtual ICollection<ServerUserJoin> ServerUserJoins { get; set; }
     }
 }
