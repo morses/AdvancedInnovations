@@ -45,9 +45,6 @@ namespace DiscordStats.Controllers
         [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> AllServers()
         {
-            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-            string botToken = _config["API:BotToken"];
-
             AllServers allServersNameAndMemCount = new AllServers();
             allServersNameAndMemCount.allServerNameAndMemCountContainer = _serverRepository.GetAll().ToList();
 
@@ -56,9 +53,18 @@ namespace DiscordStats.Controllers
          
         [Authorize(AuthenticationSchemes = "Discord")]
         [HttpPost]
-        public IActionResult AddMemberToPickedServer()
+        public async Task<IActionResult> AddMemberToPickedServer(string? id)
         {
-            return View();
+            string botToken = _config["API:BotToken"];
+            var userId = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var serverId = id;
+
+            string? response = await _discord.AddMemberToGuild(botToken, serverId, userId);
+
+            AddMemberToPickedServer addedMemberProcessInfo = new();
+            addedMemberProcessInfo.infoOfProcessOfBeingAdded = response;
+
+            return View(addedMemberProcessInfo);
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]

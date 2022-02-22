@@ -131,7 +131,7 @@ namespace DiscordStats.DAL.Concrete
                         Server? serverHasBot = await GetCurrentGuild(botToken, server.Id);
 
                         var servMemberCount = serverHasBot.Approximate_Member_Count;
-                        _serverRepository.AddOrUpdate(new Server() { Id = server.Id, Name = server.Name, Owner = server.Owner, Icon = server.Icon, HasBot = server.HasBot, Approximate_Member_Count = servMemberCount });
+                        _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = server.Owner, Icon = server.Icon, HasBot = server.HasBot, Approximate_Member_Count = servMemberCount });
 
                     }
                     else
@@ -143,7 +143,7 @@ namespace DiscordStats.DAL.Concrete
                                 Server? serverHasBot = await GetCurrentGuild(botToken, server.Id);
 
                                 var servMemberCount = serverHasBot.Approximate_Member_Count;
-                                _serverRepository.AddOrUpdate(new Server() { Id = server.Id, Name = server.Name, Owner = server.Owner, Icon = server.Icon, HasBot = server.HasBot, Approximate_Member_Count = servMemberCount });
+                                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = server.Owner, Icon = server.Icon, HasBot = server.HasBot, Approximate_Member_Count = servMemberCount });
                             }
                         }
                     }    
@@ -179,6 +179,13 @@ namespace DiscordStats.DAL.Concrete
             // And here
 
             return response;
-        }    
+        }   
+        
+        public async Task<string?> AddMemberToGuild(string botToken, string serverId, string userId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId + "/members/" + userId;
+            string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
+            return response;
+        }
     }
 }
