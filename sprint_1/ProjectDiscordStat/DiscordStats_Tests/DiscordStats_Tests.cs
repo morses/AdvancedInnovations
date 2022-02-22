@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using DiscordStats.DAL.Concrete;
 using DiscordStats.Models;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Moq.Contrib.HttpClient;
 
@@ -45,6 +46,7 @@ namespace DiscordStats_Tests
                     .ReturnsResponse(HttpStatusCode.Unauthorized);
 
             DiscordService discord = new DiscordService(handler.CreateClientFactory());
+
 
             // Act
             Task<List<Server>?> Act() => discord.GetCurrentUserGuilds("fakeBearerToken");
@@ -100,12 +102,17 @@ namespace DiscordStats_Tests
 
         }
 
-        //[Test]
-        //public void GetGuilds_EmptyStringFromDiscord_ShouldThrowException()
-        //{
-        //    Assert.Fail();
-        //}
+        [Test] public void GetGuildsInfo_WhereBotIsNotInServer__ShouldReturnFalse()
+        {
+            var handler = new Mock<HttpMessageHandler>();
 
-        // And continue with tests
+            handler.SetupAnyRequest()
+                .ReturnsResponse(HttpStatusCode.NotFound);
+
+            DiscordService discord = new DiscordService(handler.CreateClientFactory());
+           
+            Assert.AreEqual(discord.CheckForBot("FakeBotToken", "FakeServerId").Result, "false");
+        }
+        
     }
 }

@@ -7,9 +7,10 @@
 -- *************** Create tables/entities ********************
 CREATE TABLE [Server] 
 (
-  [ID]    int          PRIMARY KEY IDENTITY(1, 1),
+  [ID]    nvarchar(128)          PRIMARY KEY IDENTITY(1, 1),
   [Name]  nvarchar(50) NOT NULL,
-  [Owner] nvarchar(50) NOT NULL
+  [Owner] nvarchar(50) NOT NULL,
+  [Icon] nvarchar(50) NOT NULL
 );
 
 CREATE TABLE [ServerUserJoin] 
@@ -21,9 +22,10 @@ CREATE TABLE [ServerUserJoin]
 
 CREATE TABLE [User] 
 (
-  [ID]      int           PRIMARY KEY IDENTITY(1, 1),
+  [ID]      nvarchar(128)           PRIMARY KEY IDENTITY(1, 1),
   [Name]    nvarchar(50)  NOT NULL,
-  [Servers] nvarchar(256) NOT NULL
+  [Servers] nvarchar(256) NOT NULL.
+  [Avatar] nvarchar(256) NOT NULL
 );
 
 -- *************** Add foreign key relations ********************
