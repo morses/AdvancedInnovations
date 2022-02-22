@@ -106,8 +106,18 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "Bot Guilds",
+        pattern: "api/guilds",
+        defaults: new { controller = "Stats", action = "Guilds" });
+
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+});
+
 
 app.Run();

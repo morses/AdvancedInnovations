@@ -1,0 +1,3 @@
+class Guild {
+    constructor(ServerId, )
+}
