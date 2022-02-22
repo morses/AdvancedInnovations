@@ -6,22 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiscordStats.Models
 {
-    [Table("User")]
-    public partial class User
+    [Table("DiscordUser")]
+    public partial class DiscordUser
     {
-        public User()
+        public DiscordUser()
         {
             ServerUserJoins = new HashSet<ServerUserJoin>();
         }
 
         [Key]
         [Column("ID")]
-        public string Id { get; set; }
+        public int Id { get; set; }
         [StringLength(50)]
         public string Name { get; set; } = null!;
         [StringLength(256)]
         public string Servers { get; set; } = null!;
-        [StringLength(256)]
+        [StringLength(50)]
         public string? Avatar { get; set; }
 
         [InverseProperty(nameof(ServerUserJoin.DiscordUser))]

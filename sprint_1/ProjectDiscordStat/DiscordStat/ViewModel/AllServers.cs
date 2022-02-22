@@ -3,8 +3,8 @@ using DiscordStats.Models;
 
 namespace DiscordStats.ViewModel
 {
-    public class AllServerNames
+    public class AllServers
     {
-        public IList<string>? allServerNamesContainer;
+        public IList<Server>? allServerNameAndMemCountContainer;
     }
 }

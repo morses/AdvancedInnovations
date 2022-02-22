@@ -11,16 +11,17 @@ namespace DiscordStats.DAL.Concrete
         public ServerRepository(DiscordDataDbContext ctx) : base(ctx)
         {
         }
-        public IEnumerable<string> GetServerNames()
+
+        public IEnumerable<Server> GetServers()
         {
-            List<string> serverName = new List<string>();
-            var servers = _dbSet.Select(a => a.Name).ToList();
-            foreach (var s in servers)
+            List<Server> servers = new List<Server>();
+            //var servers = _dbSet; //.Select(a => a.Name).ToList();
+            foreach (var s in _dbSet)
             {
-                serverName.Add(s);
+                servers.Add(s);
             }
 
-            return serverName;
+            return servers;
 
         }
     }

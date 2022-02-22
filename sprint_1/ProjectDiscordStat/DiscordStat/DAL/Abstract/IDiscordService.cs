@@ -15,9 +15,10 @@ namespace DiscordStats.DAL.Abstract
         /// </summary>
         /// <param name="bearerToken"></param>
         /// <returns></returns>
-        Task<List<Server>?> GetCurrentUserGuilds(string bearerToken);
+        Task<List<Server>?> GetCurrentUserGuilds(string bearerToken, string botToken);
 
         Task<User?> GetCurrentUserInfo(string bearerToken);
-
+        Task<Server?> GetCurrentGuild(string botToken, string serverId);
+        Task<string?> CheckForBot(string botToken, string serverId);
     }
 }

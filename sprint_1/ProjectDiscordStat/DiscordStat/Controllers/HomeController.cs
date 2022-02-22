@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using DiscordStats.DAL.Abstract;
 using DiscordStats.ViewModel;
+//using System.Web.Helpers;
 
 namespace DiscordStats.Controllers
 {
@@ -20,17 +21,21 @@ namespace DiscordStats.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IServerRepository _serverRepository;
+        private readonly IDiscordService _discord;
+        private readonly IConfiguration _config;
 
-        public HomeController(ILogger<HomeController> logger, IServerRepository serverRepository)
+        public HomeController(ILogger<HomeController> logger, IServerRepository serverRepository, IDiscordService discord, IConfiguration config)
         {
             _logger = logger;
             _serverRepository = serverRepository;
+            _discord = discord;
+            _config = config;    
         }
 
         public IActionResult Index()
         {
             return View();
-        }
+        }     
 
         public IActionResult Contact()
         {
@@ -38,11 +43,22 @@ namespace DiscordStats.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
-        public IActionResult AllServers()
+        public async Task<IActionResult> AllServers()
         {
-            AllServerNames allServerNames = new AllServerNames();
-            allServerNames.allServerNamesContainer = _serverRepository.GetServerNames().ToList(); 
-            return View(allServerNames);
+            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+            string botToken = _config["API:BotToken"];
+
+            AllServers allServersNameAndMemCount = new AllServers();
+            allServersNameAndMemCount.allServerNameAndMemCountContainer = _serverRepository.GetAll().ToList();
+
+            return View(allServersNameAndMemCount);
+        }
+         
+        [Authorize(AuthenticationSchemes = "Discord")]
+        [HttpPost]
+        public IActionResult AddMemberToPickedServer()
+        {
+            return View();
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]

@@ -14,11 +14,13 @@ namespace DiscordStats.Controllers
 
         private readonly ILogger<HomeController> _logger;
         private readonly IDiscordService _discord;
+        private readonly IConfiguration _config;
 
-        public AccountController(ILogger<HomeController> logger, IDiscordService discord)
+        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config)
         {
             _logger = logger;
             _discord = discord;
+            _config = config;
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
@@ -28,11 +30,12 @@ namespace DiscordStats.Controllers
             // The data in ClaimTypes can be mocked.  Will have to wait though for how to do that.
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
-            string bearerTokenString = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+            string botToken = _config["API:BotToken"];
 
-            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerTokenString);
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken, botToken);
 
-            var userInfo = await _discord.GetCurrentUserInfo(bearerTokenString);
+            var userInfo = await _discord.GetCurrentUserInfo(bearerToken);
 
 
             ViewBag.hash = userInfo.Avatar;
@@ -54,8 +57,10 @@ namespace DiscordStats.Controllers
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+            string botToken = _config["API:BotToken"];
 
-            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken, botToken);
+
 
             return View(servers.Where(m => m.Owner == "true").ToList());
         }

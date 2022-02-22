@@ -6,6 +6,7 @@ namespace DiscordStats.DAL.Abstract
 {
     public interface IServerRepository : IRepository<Server>    
     {
-        IEnumerable<string> GetServerNames();
+        IEnumerable<Server> GetServers();
+
     }
 }

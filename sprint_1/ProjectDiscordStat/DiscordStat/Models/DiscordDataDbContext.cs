@@ -16,9 +16,9 @@ namespace DiscordStats.Models
         {
         }
 
+        public virtual DbSet<DiscordUser> DiscordUsers { get; set; } = null!;
         public virtual DbSet<Server> Servers { get; set; } = null!;
         public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -30,17 +30,23 @@ namespace DiscordStats.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Server>(entity =>
+            {
+                entity.HasKey(e => e.ServerPk)
+                    .HasName("PK__Server__C56B0386F49F36E5");
+            });
+
             modelBuilder.Entity<ServerUserJoin>(entity =>
             {
-                entity.HasOne(d => d.Server)
+                entity.HasOne(d => d.DiscordUser)
                     .WithMany(p => p.ServerUserJoins)
-                    .HasForeignKey(d => d.ServerId)
-                    .HasConstraintName("ServerID");
+                    .HasForeignKey(d => d.DiscordUserId)
+                    .HasConstraintName("DiscordUserID");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.ServerPkNavigation)
                     .WithMany(p => p.ServerUserJoins)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("UserID");
+                    .HasForeignKey(d => d.ServerPk)
+                    .HasConstraintName("ServerPk");
             });
 
             OnModelCreatingPartial(modelBuilder);

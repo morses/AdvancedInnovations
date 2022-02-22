@@ -1,15 +1,19 @@
-﻿@model DiscordStats.ViewModel.AllServerNames;
+﻿@model DiscordStats.ViewModel.AllServers;
 
 <div class="col">
-	<div class="row">
+	@*<div class="row">
 		<p><b>Server Names</b></p> 
-	</div>
-	<div class="row">
-		<ul>
-			@foreach(var s in Model!.allServerNamesContainer!)
-			{
-				<li>@s</li>
-			}
-		</ul>
-	</div>
+	</div>*@
+    <form asp-controller="Home" asp-action="AddMemberToPickedServer" method="post">
+        <div class="row">
+                @foreach (var s in Model!.allServerNameAndMemCountContainer!)
+                {
+                    <button class="button" name="AddGuildMem" value="">Server Name: @s.Name <br> Member Count: @s.Approximate_Member_Count</button>
+                   @* <a href="#" asp-controller="Home" asp-action="AddMember">@s</a> *@
+                   @* @Html.ActionLink(@s,AddMember,Home,@s,)*@
+                }
+        </div>
+     </form>
 </div>
+
+   

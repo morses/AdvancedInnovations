@@ -14,17 +14,22 @@ namespace DiscordStats.Models
             ServerUserJoins = new HashSet<ServerUserJoin>();
         }
 
-        [Key]
         [Column("ID")]
-        public string Id { get; set; }
+        [StringLength(128)]
+        public string Id { get; set; } = null!;
+        [Key]
+        public int ServerPk { get; set; }
         [StringLength(50)]
         public string Name { get; set; } = null!;
         [StringLength(50)]
         public string Owner { get; set; } = null!;
         [StringLength(256)]
         public string? Icon { get; set; }
+        [StringLength(50)]
+        public string HasBot { get; set; } = null!;
+        public int? Approximate_Member_Count { get; set; }
 
-        [InverseProperty(nameof(ServerUserJoin.Server))]
+        [InverseProperty(nameof(ServerUserJoin.ServerPkNavigation))]
         public virtual ICollection<ServerUserJoin> ServerUserJoins { get; set; }
     }
 }

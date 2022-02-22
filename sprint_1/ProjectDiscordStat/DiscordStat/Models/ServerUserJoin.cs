@@ -12,16 +12,15 @@ namespace DiscordStats.Models
         [Key]
         [Column("ID")]
         public int Id { get; set; }
-        [Column("ServerID")]
-        public string? ServerId { get; set; }
-        [Column("UserID")]
-        public string? UserId { get; set; }
+        public int? ServerPk { get; set; }
+        [Column("DiscordUserID")]
+        public int? DiscordUserId { get; set; }
 
-        [ForeignKey(nameof(ServerId))]
+        [ForeignKey(nameof(DiscordUserId))]
         [InverseProperty("ServerUserJoins")]
-        public virtual Server? Server { get; set; }
-        [ForeignKey(nameof(UserId))]
-        [InverseProperty("ServerUserJoins")]
-        public virtual User? User { get; set; }
+        public virtual DiscordUser? DiscordUser { get; set; }
+        [ForeignKey(nameof(ServerPk))]
+        [InverseProperty(nameof(Server.ServerUserJoins))]
+        public virtual Server? ServerPkNavigation { get; set; }
     }
 }
