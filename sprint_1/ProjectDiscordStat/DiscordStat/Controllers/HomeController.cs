@@ -60,9 +60,10 @@ namespace DiscordStats.Controllers
             string? response = await _discord.AddMemberToGuild(botToken, serverId, userId);
 
             AddMemberToPickedServerVM addedMemberProcessInfoVM = new();
-            addedMemberProcessInfoVM.infoOfProcessOfBeingAdded = response;
+            //addedMemberProcessInfoVM.infoOfProcessOfBeingAdded = response;
+            ViewBag.Response = addedMemberProcessInfoVM.infoOfProcessOfBeingAdded(response);
 
-            return View(addedMemberProcessInfoVM);
+            return View();
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]

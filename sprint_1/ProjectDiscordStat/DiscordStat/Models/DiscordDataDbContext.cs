@@ -30,18 +30,24 @@ namespace DiscordStats.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DiscordUser>(entity =>
+            {
+                entity.HasKey(e => e.DiscordUserPk)
+                    .HasName("PK__DiscordU__1F12BE95042D43AD");
+            });
+
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-                    .HasName("PK__Server__C56B0386F49F36E5");
+                    .HasName("PK__Server__C56B03863C997A01");
             });
 
             modelBuilder.Entity<ServerUserJoin>(entity =>
             {
-                entity.HasOne(d => d.DiscordUser)
+                entity.HasOne(d => d.DiscordUserPkNavigation)
                     .WithMany(p => p.ServerUserJoins)
-                    .HasForeignKey(d => d.DiscordUserId)
-                    .HasConstraintName("DiscordUserID");
+                    .HasForeignKey(d => d.DiscordUserPk)
+                    .HasConstraintName("DiscordUserPk");
 
                 entity.HasOne(d => d.ServerPkNavigation)
                     .WithMany(p => p.ServerUserJoins)

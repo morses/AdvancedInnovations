@@ -24,7 +24,7 @@ namespace DiscordStats.Models
         [StringLength(256)]
         public string? Avatar { get; set; }
 
-        [InverseProperty(nameof(ServerUserJoin.DiscordUser))]
+        [InverseProperty(nameof(ServerUserJoin.DiscordUserPkNavigation))]
         public virtual ICollection<ServerUserJoin> ServerUserJoins { get; set; }
     }
 }
