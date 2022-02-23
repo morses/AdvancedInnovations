@@ -16,9 +16,9 @@ namespace DiscordStats.Models
         {
         }
 
-        public virtual DbSet<Server> Servers { get; set; } = null!;
-        public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<DiscordUser> DiscordUsers { get; set; }
+        public virtual DbSet<Server> Servers { get; set; }
+        public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,45 +32,21 @@ namespace DiscordStats.Models
         {
             modelBuilder.Entity<Server>(entity =>
             {
-                entity.ToTable("Server");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Name).HasMaxLength(50);
-
-                entity.Property(e => e.Owner).HasMaxLength(50);
+                entity.HasKey(e => e.ServerPk)
+                    .HasName("PK__Server__C56B0386B12E1C97");
             });
 
             modelBuilder.Entity<ServerUserJoin>(entity =>
             {
-                entity.ToTable("ServerUserJoin");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.ServerId).HasColumnName("ServerID");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Server)
+                entity.HasOne(d => d.DiscordUser)
                     .WithMany(p => p.ServerUserJoins)
-                    .HasForeignKey(d => d.ServerId)
-                    .HasConstraintName("ServerID");
+                    .HasForeignKey(d => d.DiscordUserId)
+                    .HasConstraintName("DiscordUserID");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.ServerPkNavigation)
                     .WithMany(p => p.ServerUserJoins)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("UserID");
-            });
-
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.ToTable("User");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Name).HasMaxLength(50);
-
-                entity.Property(e => e.Servers).HasMaxLength(256);
+                    .HasForeignKey(d => d.ServerPk)
+                    .HasConstraintName("ServerPk");
             });
 
             OnModelCreatingPartial(modelBuilder);

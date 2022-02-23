@@ -1,6 +1,8 @@
 ﻿using DiscordStats.DAL.Abstract;
 using DiscordStats.Models;
 using System.Net;
+using Discord;
+using Discord.WebSocket;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
@@ -29,12 +31,13 @@ namespace DiscordStats.DAL.Concrete
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri)
             {
                 Headers =
-                    {
-                        { HeaderNames.Accept, "application/json" },
-                        { HeaderNames.Authorization, "Bearer " + bearerToken},
-                        { HeaderNames.UserAgent, "DiscordStat" }
-                    }
+                {
+                    { HeaderNames.Accept, "application/json" },
+                    { HeaderNames.Authorization, "Bearer " + bearerToken },
+                    { HeaderNames.UserAgent, "DiscordStat" }
+                }
             };
+
             HttpClient httpClient = _httpClientFactory.CreateClient();
             // Note this is the blocking version.  Would be better to use the Async version
             HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
@@ -51,12 +54,41 @@ namespace DiscordStats.DAL.Concrete
                 throw new HttpRequestException();
             }
         }
+        public async Task<string> GetJsonStringFromEndpointForBot(string botToken, string uri)
+        {
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri)
+            {
+                Headers =
+                {
+                    { HeaderNames.Accept, "application/json" },
+                    { HeaderNames.Authorization, "Bot " + botToken },
+                    { HeaderNames.UserAgent, "DiscordStat" }
+
+                }
+            };
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            // Note this is the blocking version.  Would be better to use the Async version
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
+            // This is only a minimal version; make sure to cover all your bases here
+            if (response.IsSuccessStatusCode)
+            { 
+                return "true";
+            }
+            else
+            {
+                // What to do if failure? Should throw specific exceptions that explain what happened
+                return "false";
+                throw new HttpRequestException();
+            }
+        }
+
         public async Task<List<Server>?> GetCurrentUserGuilds(string bearerToken)
         {
             // Remember to handle errors here
             string response = await GetJsonStringFromEndpoint(bearerToken, "https://discord.com/api/users/@me/guilds");
             // And here
             List<Server>? servers = JsonConvert.DeserializeObject<List<Server>>(response);
+
             return servers;
         }
 
@@ -67,6 +99,16 @@ namespace DiscordStats.DAL.Concrete
             // And here
             User? userInfo = JsonConvert.DeserializeObject<User>(response);
             return userInfo;
+        }
+
+        public async Task<string?> CheckForBot(string botToken, string serverId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId;
+            // Remember to handle errors here
+            string response = await GetJsonStringFromEndpointForBot(botToken, uri);
+            // And here
+            
+            return response;
         }
     }
 }
