@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Globalization;
-using DiscordStats.Models;
+
+
 
 namespace DiscordStats.Controllers
 {

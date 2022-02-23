@@ -66,6 +66,7 @@ builder.Services.AddAuthentication(options =>
                 options.Scope.Add("identify");
                 options.Scope.Add("guilds");
                 options.Scope.Add("guilds.members.read");
+                options.Scope.Add("guilds.join");
                 //Can add more here
                 options.CallbackPath = new PathString("/auth/oauthCallback");
                 options.ClientId = builder.Configuration["API:ClientId"];

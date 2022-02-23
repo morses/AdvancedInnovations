@@ -165,10 +165,8 @@ namespace DiscordStats.DAL.Concrete
             var dbServers = _serverRepository.GetAll();
             if (dbServers.Count() == 0)
             {
-
                 var servMemberCount = server.Approximate_Member_Count;
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, Approximate_Member_Count = servMemberCount });
-
             }
             else
             {
