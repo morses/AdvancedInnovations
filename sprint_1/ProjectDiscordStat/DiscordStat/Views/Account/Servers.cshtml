@@ -27,8 +27,8 @@
             @{
                 var url = "https://discord.com/oauth2/authorize?client_id=938808510932746350&scope=bot&permissions=8&guild_id=" + s.Id;
             }
-                           <button id="@s.Id" onclick="location.href = '@url'" class="btn btn-primary">Add Bot</button>
-            </div>
+            <a id="anchorID" href="@url" target="_blank" class="btn btn-primary">Add Bot</a>
+              </div>
             }
             @if(s.HasBot == "true")
             {
