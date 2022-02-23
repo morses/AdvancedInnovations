@@ -1,6 +1,8 @@
 ﻿using DiscordStats.DAL.Abstract;
 using DiscordStats.Models;
 using System.Net;
+using Discord;
+using Discord.WebSocket;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
@@ -69,9 +71,7 @@ namespace DiscordStats.DAL.Concrete
             HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
             // This is only a minimal version; make sure to cover all your bases here
             if (response.IsSuccessStatusCode)
-            {
-                // same here, this is blocking; use ReadAsStreamAsync instead
-                string responseText = await response.Content.ReadAsStringAsync();
+            { 
                 return "true";
             }
             else
