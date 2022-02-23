@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Globalization;
+using DiscordStats.Models;
 
 namespace DiscordStats.Controllers
 {
@@ -34,6 +35,18 @@ namespace DiscordStats.Controllers
             string botToken = _config["API:BotToken"];
 
             IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken, botToken);
+            
+            foreach (Server server in servers)
+            {
+
+                string hasBot = await _discord.CheckForBot(botToken, server.Id);
+                if(hasBot == "true")
+                {
+                    var serverWithMemCount = await _discord.GetCurrentGuild(botToken, server.Id);
+
+                    _discord.ServerEntryDbCheck(serverWithMemCount, hasBot, server.Owner);
+                }
+            }
 
             var userInfo = await _discord.GetCurrentUserInfo(bearerToken);
 

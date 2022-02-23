@@ -2,9 +2,12 @@
 using DiscordStats.Models;
 
 namespace DiscordStats.ViewModel
+
 {
-    public class AllServers
+    public class AddMemberToPickedServerVM
     {
-        public IList<Server>? allServerNameAndMemCountContainer;
+        public string? infoOfProcessOfBeingAdded;
     }
 }
+
+

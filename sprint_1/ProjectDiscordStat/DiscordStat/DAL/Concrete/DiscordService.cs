@@ -120,35 +120,6 @@ namespace DiscordStats.DAL.Concrete
             string response = await GetJsonStringFromEndpoint(bearerToken, $"https://discord.com/api/users/@me/guilds");
             // And here
             List<Server>? servers = JsonConvert.DeserializeObject<List<Server>>(response);
-            foreach (Server server in servers)
-            {
-                server.HasBot = await CheckForBot(botToken, server.Id);
-                if (server.HasBot == "true")
-                {
-                    var dbServers = _serverRepository.GetAll();
-                    if (dbServers.Count() == 0)
-                    {
-                        Server? serverHasBot = await GetCurrentGuild(botToken, server.Id);
-
-                        var servMemberCount = serverHasBot.Approximate_Member_Count;
-                        _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = server.Owner, Icon = server.Icon, HasBot = server.HasBot, Approximate_Member_Count = servMemberCount });
-
-                    }
-                    else
-                    {
-                        foreach (var dbServer in dbServers)
-                        {
-                            if (server.Id != dbServer.Id)
-                            {
-                                Server? serverHasBot = await GetCurrentGuild(botToken, server.Id);
-
-                                var servMemberCount = serverHasBot.Approximate_Member_Count;
-                                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = server.Owner, Icon = server.Icon, HasBot = server.HasBot, Approximate_Member_Count = servMemberCount });
-                            }
-                        }
-                    }    
-                }
-            }
             return servers;
         }
 
@@ -171,6 +142,7 @@ namespace DiscordStats.DAL.Concrete
             return server;
         }
 
+
         public async Task<string?> CheckForBot(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId;
@@ -187,5 +159,30 @@ namespace DiscordStats.DAL.Concrete
             string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
             return response;
         }
+
+        public void ServerEntryDbCheck(Server server, string hasBot, string serverOwner)
+        {
+            var dbServers = _serverRepository.GetAll();
+            if (dbServers.Count() == 0)
+            {
+
+                var servMemberCount = server.Approximate_Member_Count;
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, Approximate_Member_Count = servMemberCount });
+
+            }
+            else
+            {
+                foreach (var dbServer in dbServers)
+                {
+                    if (server.Id != dbServer.Id)
+                    {
+                        var servMemberCount = server.Approximate_Member_Count;
+                        _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, Approximate_Member_Count = servMemberCount });
+                    }
+                }
+            }
+
+        }
+
     }
 }

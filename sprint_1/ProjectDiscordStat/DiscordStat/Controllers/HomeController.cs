@@ -13,7 +13,6 @@ using Newtonsoft.Json.Linq;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using DiscordStats.DAL.Abstract;
 using DiscordStats.ViewModel;
-//using System.Web.Helpers;
 
 namespace DiscordStats.Controllers
 {
@@ -45,10 +44,9 @@ namespace DiscordStats.Controllers
         [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> AllServers()
         {
-            AllServers allServersNameAndMemCount = new AllServers();
-            allServersNameAndMemCount.allServerNameAndMemCountContainer = _serverRepository.GetAll().ToList();
+            AllServersVM allServersNameAndMemCountVM = new (_serverRepository);
 
-            return View(allServersNameAndMemCount);
+            return View(allServersNameAndMemCountVM);
         }
          
         [Authorize(AuthenticationSchemes = "Discord")]
@@ -61,10 +59,10 @@ namespace DiscordStats.Controllers
 
             string? response = await _discord.AddMemberToGuild(botToken, serverId, userId);
 
-            AddMemberToPickedServer addedMemberProcessInfo = new();
-            addedMemberProcessInfo.infoOfProcessOfBeingAdded = response;
+            AddMemberToPickedServerVM addedMemberProcessInfoVM = new();
+            addedMemberProcessInfoVM.infoOfProcessOfBeingAdded = response;
 
-            return View(addedMemberProcessInfo);
+            return View(addedMemberProcessInfoVM);
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
