@@ -102,18 +102,16 @@ namespace DiscordStats.DAL.Concrete
             if (response.IsSuccessStatusCode)
             {
                 // same here, this is blocking; use ReadAsStreamAsync instead
-                string responseText = await response.Content.ReadAsStringAsync();
                 return "true";
             }
             else
             {
                 // What to do if failure? Should throw specific exceptions that explain what happened
                 return "false";
-                throw new HttpRequestException();
             }
         }
 
-        public async Task<List<Server>?> GetCurrentUserGuilds(string bearerToken, string botToken)
+        public async Task<List<Server>?> GetCurrentUserGuilds(string bearerToken)
         {
 
             // Remember to handle errors here

@@ -58,7 +58,7 @@ namespace DiscordStats.DAL.Concrete
                 throw new ArgumentNullException("Entity must not be null to add or update");
             }
             _context.Update(entity);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
             return entity;
         }
 

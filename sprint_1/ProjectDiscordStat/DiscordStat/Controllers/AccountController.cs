@@ -14,13 +14,13 @@ namespace DiscordStats.Controllers
 
         private readonly ILogger<HomeController> _logger;
         private readonly IDiscordService _discord;
-        private readonly IConfiguration _config;
+        private readonly IConfiguration _configuration;
 
         public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config)
         {
             _logger = logger;
             _discord = discord;
-            _config = config;
+            _configuration = config;
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
@@ -31,9 +31,9 @@ namespace DiscordStats.Controllers
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-            string botToken = _config["API:BotToken"];
+            string botToken = _configuration["API:BotToken"];
 
-            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken, botToken);
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
             
             foreach (Server server in servers)
             {
@@ -69,10 +69,13 @@ namespace DiscordStats.Controllers
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-            string botToken = _config["API:BotToken"];
 
-            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken, botToken);
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
 
+            foreach (var s in servers.Where(m => m.Owner == "true"))
+            {
+                s.HasBot = await _discord.CheckForBot(_configuration["API:BotToken"], s.Id);
+            }
 
             return View(servers.Where(m => m.Owner == "true").ToList());
         }
