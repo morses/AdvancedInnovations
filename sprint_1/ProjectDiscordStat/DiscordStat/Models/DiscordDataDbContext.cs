@@ -16,9 +16,9 @@ namespace DiscordStats.Models
         {
         }
 
-        public virtual DbSet<DiscordUser> DiscordUsers { get; set; }
-        public virtual DbSet<Server> Servers { get; set; }
-        public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; }
+        public virtual DbSet<DiscordUser> DiscordUsers { get; set; } = null!;
+        public virtual DbSet<Server> Servers { get; set; } = null!;
+        public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -30,18 +30,28 @@ namespace DiscordStats.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DiscordUser>(entity =>
+            {
+
+                entity.HasKey(e => e.DiscordUserPk)
+                    .HasName("PK__DiscordU__1F12BE95042D43AD");
+            });
+
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-                    .HasName("PK__Server__C56B0386B12E1C97");
+                    .HasName("PK__Server__C56B03863C997A01");
+
             });
 
             modelBuilder.Entity<ServerUserJoin>(entity =>
             {
-                entity.HasOne(d => d.DiscordUser)
+
+                entity.HasOne(d => d.DiscordUserPkNavigation)
                     .WithMany(p => p.ServerUserJoins)
-                    .HasForeignKey(d => d.DiscordUserId)
-                    .HasConstraintName("DiscordUserID");
+                    .HasForeignKey(d => d.DiscordUserPk)
+                    .HasConstraintName("DiscordUserPk");
+
 
                 entity.HasOne(d => d.ServerPkNavigation)
                     .WithMany(p => p.ServerUserJoins)

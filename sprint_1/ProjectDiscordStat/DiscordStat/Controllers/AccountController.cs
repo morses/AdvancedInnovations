@@ -1,25 +1,26 @@
-﻿using System.Configuration;
-using DiscordStats.Models;
+﻿using DiscordStats.Models;
 using DiscordStats.DAL.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
+
+
 namespace DiscordStats.Controllers
 {
     public class AccountController : Controller
     {
 
-        private readonly ILogger<AccountController> _logger;
+        private readonly ILogger<HomeController> _logger;
         private readonly IDiscordService _discord;
-        private readonly IConfiguration _configuration;
-      
-        public AccountController(ILogger<AccountController> logger, IDiscordService discord, IConfiguration config)
+        private readonly IConfiguration _config;
+
+        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config)
         {
             _logger = logger;
             _discord = discord;
-            _configuration = config;
+            _config = config;
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
@@ -30,8 +31,21 @@ namespace DiscordStats.Controllers
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+            string botToken = _config["API:BotToken"];
 
-            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken, botToken);
+            
+            foreach (Server server in servers)
+            {
+
+                string hasBot = await _discord.CheckForBot(botToken, server.Id);
+                if(hasBot == "true")
+                {
+                    var serverWithMemCount = await _discord.GetCurrentGuild(botToken, server.Id);
+
+                    _discord.ServerEntryDbCheck(serverWithMemCount, hasBot, server.Owner);
+                }
+            }
 
             var userInfo = await _discord.GetCurrentUserInfo(bearerToken);
 
@@ -55,18 +69,13 @@ namespace DiscordStats.Controllers
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+            string botToken = _config["API:BotToken"];
 
-            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken, botToken);
 
-            foreach (var s in servers.Where(m => m.Owner == "true"))
-            {
-                s.HasBot = await _discord.CheckForBot(_configuration["API:BotToken"], s.Id);
-            }
 
             return View(servers.Where(m => m.Owner == "true").ToList());
         }
-
-        
     }
 
 }
