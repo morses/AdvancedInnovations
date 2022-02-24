@@ -108,10 +108,10 @@ app.MapRazorPages();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllerRoute(
-        name: "Bot Guilds",
-        pattern: "api/guilds",
-        defaults: new { controller = "Stats", action = "Guilds" });
+    //endpoints.MapControllerRoute(
+    //    name: "Bot Guilds",
+    //    pattern: "api/guilds",
+    //    defaults: new { controller = "Api", action = "Guilds" });
 
     endpoints.MapControllerRoute(
         name: "default",
