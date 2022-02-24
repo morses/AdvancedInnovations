@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
 
 <body>
@@ -23,83 +23,62 @@
     </div>
     <div class="row">
         <div class="col" >
-            <center><div id="columnContainer"></div></center>
+            <center><canvas id="barChart" style="width:100%;max-width:700px"></canvas></center>
         </div>
         <div class="col">
-            <center><div id="pieContainer"></div></center>
+            <center><canvas id="pieChart" style="width:100%;max-width:700px"></canvas></center>
         </div>
     </div>
 </div>
 
-<script type="text/javascript">
- 
-	window.onload = function () {
-		var chart = new CanvasJS.Chart("columnContainer", {
-			theme: "light2",
-			animationEnabled: true,
-			title: {
-				text: "Users per Servers"
-			},
-			axisY:{
-				title: "Users"
-			},
-			axisX:{
-				title: "Servers"
-			},
-			subtitles: [
-				{ text: "Try Resizing the Browser" 
 
-				}
-			],
-			data: [
-			{
-				type: "column", //change type to bar, line, area, pie, etc
-				dataPoints: [
-				{ x: 1, y: 71 },
-				{ x: 2, y: 55 },
-				{ x: 3, y: 50 },
-				{ x: 4, y: 65 },
-				{ x: 5, y: 95 },
-				{ x: 6, y: 68 },
-				{ x: 7, y: 28 },
-				{ x: 8, y: 34 },
-				{ x: 9, y: 14 }
-				]
-			}
-			]
-		});
+<script>
+var xValues = ["1", "2", "3", "4", "5"];
+var yValues = [62, 49, 23, 70, 32];
+var barColors = ["red", "green","blue","orange","brown"];
 
-		chart.render();
-		var chart1 = new CanvasJS.Chart("pieContainer", {
-			theme: "light2",
-			animationEnabled: true,
-			title: {
-				text: "Users per Game"
-			},
-			subtitles: [
-				{ text: "Try Resizing the Browser" 
+new Chart("barChart", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Users per Servers",
+    }
+    
+  }
+})
 
-				}
-			],
-			data: [
-			{
-				type: "pie", //change type to bar, line, area, pie, etc
-				dataPoints: [
-				{ x: 1, y: 71 },
-				{ x: 2, y: 55 },
-				{ x: 3, y: 50 },
-				{ x: 4, y: 65 },
-				{ x: 5, y: 95 },
-				{ x: 6, y: 68 },
-				{ x: 7, y: 28 },
-				{ x: 8, y: 34 },
-				{ x: 9, y: 14 }
-				]
-			}
-			]
-		});
-		chart1.render();
-	};
+var xValues = ["1", "2", "3", "4", "5"];
+var yValues = [24, 49, 57, 24, 32];
+var barColors = ["red", "green","blue","orange","brown"];
+
+new Chart("pieChart", {
+  type: "pie",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Users Playing top 5 games",
+    }
+    
+  }
+});
+	
 </script>
 </body>
 </html>
