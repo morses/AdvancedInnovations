@@ -14,6 +14,14 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 using DiscordStats.DAL.Abstract;
 using DiscordStats.ViewModel;
 
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+
 namespace DiscordStats.Controllers
 {
     public class HomeController : Controller
@@ -30,9 +38,10 @@ namespace DiscordStats.Controllers
             _discord = discord;
             _config = config;    
         }
-
+        // Get: Home
         public IActionResult Index()
         {
+
             return View();
         }     
 
