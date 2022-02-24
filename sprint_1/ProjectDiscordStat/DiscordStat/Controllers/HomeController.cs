@@ -69,7 +69,7 @@ namespace DiscordStats.Controllers
         [Authorize(AuthenticationSchemes = "Discord")]
         public IActionResult Privacy()
         {
-
+            ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             return View();
         }
 

@@ -1,6 +1,30 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<body>
+    <p><font color="black" size="+5"><b>Stat Tracker Privacy Policy</b></font></p>
+
+    <p>Last updated: February 24, 2022</p>
+
+    <p><font color="black" size="+5">Two Levels of Information we collect and how:</font></p>
+    <ul>
+        <li><font color="black" size="+2">Discord user info by logging in with discord.</font></li>
+        <p>Once you log in with discord we have minimal access to your info. We use that to create your user "Account"" page and store whats on your user 
+           page into our database. The third party database we use privacy page can be found here: <a href="https://privacy.microsoft.com/en-us/PrivacyStatement">Azure in Microsoft</a>
+        </p>
+        <li><font color="black" size="+2">Discord server info by adding our bot to an owned server.</font></li>
+        <p>When adding our bot to a server you must be the owner(the one who created it), and you must already have logged in through discord.
+           Only servers that have our bot will be stored in our database. Servers in our database are shown on a page for all user to view and 
+           request to be a member.
+        </p>
+    </ul>
+    <p><font color="black" size="+5">Privacy pages from discord:</font></p>
+    <ul>
+        <li><font color="black" size="+2">For your account privacy page go to <a href="https://discord.com/channels/" + @ViewBag.id >Your account</a>
+            then click "User Settings"" then "Privacy &amp; Safety"</font></li>        
+        <li><font color="black" size="+2"><a href="https://discord.com/privacy">Discords Privacy page</a></font></li>
+    </ul>
+</body>
+
+
