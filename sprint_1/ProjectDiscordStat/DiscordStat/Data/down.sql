@@ -1,7 +1,7 @@
-ALTER TABLE [ServerUserJoin] DROP CONSTRAINT [ServerID];
-ALTER TABLE [ServerUserJoin] DROP CONSTRAINT [UserID];
+ALTER TABLE [ServerUserJoin] DROP CONSTRAINT [ServerPk];
+ALTER TABLE [ServerUserJoin] DROP CONSTRAINT [DiscordUserID];
 
 DROP TABLE [Server];
 DROP TABLE [ServerUserJoin];
-DROP TABLE [User];
+DROP TABLE [DiscordUser];
 
