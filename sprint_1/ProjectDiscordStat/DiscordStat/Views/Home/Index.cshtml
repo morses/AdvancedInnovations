@@ -1,6 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</head>
+
+<body>
 <div class="col">
     <div class="row">
         <div class="text-center">
@@ -15,10 +23,62 @@
     </div>
     <div class="row">
         <div class="col" >
-            <center>chart/graph here</center>
+            <center><canvas id="barChart" style="width:100%;max-width:700px"></canvas></center>
         </div>
         <div class="col">
-            <center>chart/graph here</center>
+            <center><canvas id="pieChart" style="width:100%;max-width:700px"></canvas></center>
         </div>
     </div>
 </div>
+
+
+<script>
+var xValues = ["1", "2", "3", "4", "5"];
+var yValues = [62, 49, 23, 70, 32];
+var barColors = ["red", "green","blue","orange","brown"];
+
+new Chart("barChart", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Users per Servers",
+    }
+    
+  }
+})
+
+var xValues = ["1", "2", "3", "4", "5"];
+var yValues = [24, 49, 57, 24, 32];
+var barColors = ["red", "green","blue","orange","brown"];
+
+new Chart("pieChart", {
+  type: "pie",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Users Playing top 5 games",
+    }
+    
+  }
+});
+	
+</script>
+</body>
+</html>
