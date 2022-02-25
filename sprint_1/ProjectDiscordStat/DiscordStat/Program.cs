@@ -34,11 +34,11 @@ builder.Services.AddDbContext<DiscordDataDbContext>(options => options.UseSqlSer
 // for azure use
 //var connectionString = builder.Configuration.GetConnectionString("DiscordDataConnection");
 //builder.Services.AddDbContext<DiscordDataDbContext>(options =>
-//     options.UseSqlServer(connectionString).UseLasyLoadingProxies());
+//     options.UseSqlServer(connectionString));
 
 //var identityString = builder.Configuration.GetConnectionString("DiscordStatsIdentityDbContextConnection");
 //builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options =>
-//    options.UseSqlServer(identityString).UseLasyLoadingProxies());
+//    options.UseSqlServer(identityString));
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<DiscordStatsIdentityDbContext>();
 

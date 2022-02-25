@@ -121,12 +121,12 @@ namespace DiscordStats.DAL.Concrete
             return servers;
         }
 
-        public async Task<User?> GetCurrentUserInfo(string bearerToken)
+        public async Task<DiscordUser?> GetCurrentUserInfo(string bearerToken)
         {
             // Remember to handle errors here
             string response = await GetJsonStringFromEndpoint(bearerToken, "https://discord.com/api/users/@me");
             // And here
-            User? userInfo = JsonConvert.DeserializeObject<User>(response);
+            DiscordUser? userInfo = JsonConvert.DeserializeObject<DiscordUser>(response);
             return userInfo;
         }
 
