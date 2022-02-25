@@ -49,6 +49,9 @@ builder.Services.AddHttpClient();
 // Add our repositories and services
 builder.Services.AddScoped<IDiscordService, DiscordService>();
 builder.Services.AddScoped<IServerRepository, ServerRepository>();
+builder.Services.AddScoped<IServerUserJoinRepository, ServerUserJoinRepository>();
+builder.Services.AddScoped<IDiscordUserRepository, DiscordUserRepository>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -122,15 +125,9 @@ app.MapRazorPages();
 
 app.UseEndpoints(endpoints =>
 {
-    //endpoints.MapControllerRoute(
-    //    name: "Bot Guilds",
-    //    pattern: "api/guilds",
-    //    defaults: new { controller = "Api", action = "Guilds" });
-
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
-
 });
 
 

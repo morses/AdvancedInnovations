@@ -69,5 +69,15 @@ namespace DiscordStats.Controllers
 
             //return Json(Data);
         }
+
+        [HttpPost]
+        public IActionResult PostUsers(DiscordUser[] users)
+        {
+            foreach (var user in users)
+            {
+                Debug.Write(user.Id + user.Name + "\n");
+            }
+            return Json("It worked");
+        }
     }
 }

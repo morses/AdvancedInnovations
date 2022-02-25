@@ -27,8 +27,7 @@ namespace DiscordStats.Models
         public string? Icon { get; set; }
         [StringLength(50)]
         public string HasBot { get; set; } = null!;
-        //[Column("Approximate_Member_Count")]
-        public int? Approximate_Member_Count { get; set; }
+        public int? ApproximateMemberCount { get; set; }
 
         [InverseProperty(nameof(ServerUserJoin.ServerPkNavigation))]
         public virtual ICollection<ServerUserJoin> ServerUserJoins { get; set; }

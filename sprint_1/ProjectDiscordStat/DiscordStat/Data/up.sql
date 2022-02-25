@@ -13,7 +13,7 @@ CREATE TABLE [Server]
   [Owner]		nvarchar(50) NOT NULL,
   [Icon]		nvarchar(256) Null,
   [HasBot]		nvarchar(50) Not Null,
-  [Approximate_Member_Count] int Null
+  [ApproximateMemberCount] int Null
 );
 
 CREATE TABLE [ServerUserJoin] 
@@ -33,5 +33,5 @@ CREATE TABLE [DiscordUser]
 );
 
 -- *************** Add foreign key relations ********************
-ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerPk] FOREIGN KEY ([ServerPk]) REFERENCES [Server] ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [DiscordUserPk]   FOREIGN KEY ([DiscordUserPk])   REFERENCES [DiscordUser]   ([DiscordUserPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;

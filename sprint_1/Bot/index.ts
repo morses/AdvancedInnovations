@@ -20,7 +20,7 @@ const https = require('https')
 const axios = require('axios')
 
 
-const ServerID = 416485574631751690
+// const ServerID = 928010025958510632
 
 
 const client = new DiscordJS.Client({
@@ -112,16 +112,6 @@ client.on('messageCreate', async(message) => {
     }
 
     else if (command === "getweather") {
-        // https.get('https://localhost:7228/api/guilds', (response: any) => {
-        //     let data = '';
-        //     response.on('data', (chunk: any) => {
-        //         data += chunk;
-        //     })
-
-        //     response.on('end', () => {
-        //         message.reply(data);
-        //     })
-        // })
 
         axios.get('https://localhost:7228/api/guilds')
             .then((result: any) => {
@@ -135,6 +125,31 @@ client.on('messageCreate', async(message) => {
 
     else if (command === "senduser") {
         axios.post('https://localhost:7228/api/guilds')
+            .then((result: any) => {
+                console.log(result)
+                message.reply(result.data.toString());
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
+    }
+
+    else if (command === "testing") {
+        let list = await client.guilds.cache.get(String(serverID))?.members.fetch()
+        let users: any = []
+        list?.each((user) => {
+            if (user.user.bot === false) {
+                let newUser = {
+                    "Id": user.user.id.toString(),
+                    "Name": user.user.username,
+                    "Servers": "",
+                    "Avatar": "null"
+                }
+                users.push(newUser)
+            }
+        })
+        console.log(users)
+        axios.post('https://localhost:7228/api/postusers', users)
             .then((result: any) => {
                 console.log(result)
                 message.reply(result.data.toString());
@@ -162,6 +177,43 @@ client.on('messageCreate', async(message) => {
         message.reply(`${replies(command)} \n(This message had a latency of ${timeTaken}ms.)`);
     }
 })
+
+
+
+async function sendUsers (serverId: string){
+    let list = await client.guilds.cache.get(String(serverId))?.members.fetch()
+        let users: any = []
+        list?.each((user) => {
+            if (user.user.bot === false) {
+                if (user.user.avatar === null) {
+                    user.user.avatar = "null";
+                }
+                let newUser = {
+                    "Id": user.user.id.toString(),
+                    "Name": user.user.username,
+                    "Servers": serverId,
+                    "Avatar": user.user.avatar
+                }
+                users.push(newUser);
+            }
+        })
+        console.log(users)
+        axios.post('https://localhost:7228/api/postusers', users)
+            .then((result: any) => {
+                console.log(result);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
+}
+
+function updataData() {
+    client.guilds.cache.each((guild) => {
+        sendUsers(guild.id)
+    })
+}
+
+setInterval(updataData, 10000)
 
 
 client.login(process.env.TOKEN)

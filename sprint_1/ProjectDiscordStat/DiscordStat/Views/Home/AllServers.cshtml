@@ -10,10 +10,10 @@
         <div class="row">
                 @foreach (var s in Model.AllServerNameAndMemCountContainer())
                 {
-                    <button class="button" name="id" value="@s.Id">Server Name: @s.Name <br> Member Count: @s.Approximate_Member_Count</button>
+                    <button class="button" name="id" value="@s.Id">Server Name: @s.Name <br> Member Count: @s.ApproximateMemberCount</button>
                 }
         </div>
      </form>
 </div>
 
-   
+dotnet ef dbcontext scaffold Name=DiscordDataConnection Microsoft.EntityFrameworkCore.SqlServer --context DiscordDataDbContext --context-dir Models --output-dir Models --verbose --force  --data-annotations   
