@@ -19,5 +19,12 @@ namespace DiscordStats.DAL.Abstract
 
         Task<User?> GetCurrentUserInfo(string bearerToken);
 
+        Task<Server?> GetCurrentGuild(string botToken, string serverId);
+
+        Task<string?> CheckForBot(string botToken, string serverId);
+
+        Task<string?> AddMemberToGuild(string botToken, string serverId, string userId);
+
+        void ServerEntryDbCheck(Server server, string hasBot, string serverOwner);
     }
 }
