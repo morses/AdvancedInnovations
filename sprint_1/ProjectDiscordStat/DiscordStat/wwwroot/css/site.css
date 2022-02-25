@@ -1,20 +1,56 @@
+body {
+    margin-bottom: 60px;
+    color: #32a852;
+    background: black;
+}
+
+h1 {
+    color: #32a852;
+    font-size: "+4";
+    font: bold;
+}
+
+h2 {
+   font-size: "+2";
+}
+
+p {
+    color: white;
+}
+
+.mode {
+    float: right;
+}
+
+.change {
+    cursor: pointer;
+    border: 1px solid #555;
+    border-radius: 40%;
+    width: 20px;
+    text-align: center;
+    padding: 5px;
+    margin-left: 8px;
+}
+
+.dark {
+    background-color: #222;
+    color: #e6e6e6;
+}
+
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
+    position: relative;
+    min-height: 100%;
 }
 
 .discordImage {
@@ -28,9 +64,7 @@ table {
     border: 1px solid black;
     margin-left: auto;
     margin-right: auto;
-
     font-family: arial, sans-serif;
-    color: white;
     border-collapse: collapse;
     width: 100%;
 }
