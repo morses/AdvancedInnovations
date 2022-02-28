@@ -2,7 +2,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using DiscordStats.Data;
 using DiscordStats.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -13,25 +12,46 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
+using DiscordStats.DAL.Abstract;
+using DiscordStats.DAL.Concrete;
 using DiscordStats.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //for local use
-var connectionString = builder.Configuration.GetConnectionString("DiscordStatsContextConnection"); builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options =>
-     options.UseSqlServer(connectionString)); builder.Services.AddDbContext<DiscordStatsContext>(options =>
-      options.UseSqlServer(connectionString)); builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-       .AddEntityFrameworkStores<DiscordStatsContext>();
+var ConnectionString =
+//for local discordIdentitydb use
+    builder.Configuration.GetConnectionString("DiscordStatsContextConnection");
+builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options => options.UseSqlServer(ConnectionString).UseLazyLoadingProxies());
+builder.Services.AddDbContext<DiscordStatsContext>(options => options.UseSqlServer(ConnectionString).UseLazyLoadingProxies());
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+   .AddEntityFrameworkStores<DiscordStatsContext>();
+//for local discordDatadb use
+var ConnectionString2 =
+    builder.Configuration.GetConnectionString("DiscordDataConnection");
+builder.Services.AddDbContext<DiscordDataDbContext>(options => options.UseSqlServer(ConnectionString2));
 
 // for azure use
-//var identityString = builder.Configuration.GetConnectionString("DiscordStatsIdentityDbContextConnection");
 //var connectionString = builder.Configuration.GetConnectionString("DiscordDataConnection");
-//builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options =>
-//    options.UseSqlServer(identityString));
 //builder.Services.AddDbContext<DiscordDataDbContext>(options =>
 //     options.UseSqlServer(connectionString));
+
+//var identityString = builder.Configuration.GetConnectionString("DiscordStatsIdentityDbContextConnection");
+//builder.Services.AddDbContext<DiscordStatsIdentityDbContext>(options =>
+//    options.UseSqlServer(identityString));
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<DiscordStatsIdentityDbContext>();
+
+
+// Register an IHttpClientFactory to enable injection of HttpClients
+builder.Services.AddHttpClient();
+
+// Add our repositories and services
+builder.Services.AddScoped<IDiscordService, DiscordService>();
+builder.Services.AddScoped<IServerRepository, ServerRepository>();
+builder.Services.AddScoped<IServerUserJoinRepository, ServerUserJoinRepository>();
+builder.Services.AddScoped<IDiscordUserRepository, DiscordUserRepository>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -48,6 +68,8 @@ builder.Services.AddAuthentication(options =>
                 options.AuthorizationEndpoint = "https://discord.com/api/oauth2/authorize";
                 options.Scope.Add("identify");
                 options.Scope.Add("guilds");
+                options.Scope.Add("guilds.members.read");
+                options.Scope.Add("guilds.join");
                 //Can add more here
                 options.CallbackPath = new PathString("/auth/oauthCallback");
                 options.ClientId = builder.Configuration["API:ClientId"];
@@ -101,8 +123,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
+
 
 app.Run();
