@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace DiscordStats.Data;
+namespace DiscordStats.Areas.Identity.Data;
 
 public class DiscordStatsContext : IdentityDbContext<IdentityUser>
 {
