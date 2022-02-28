@@ -121,12 +121,12 @@ namespace DiscordStats.DAL.Concrete
             return servers;
         }
 
-        public async Task<User?> GetCurrentUserInfo(string bearerToken)
+        public async Task<DiscordUser?> GetCurrentUserInfo(string bearerToken)
         {
             // Remember to handle errors here
             string response = await GetJsonStringFromEndpoint(bearerToken, "https://discord.com/api/users/@me");
             // And here
-            User? userInfo = JsonConvert.DeserializeObject<User>(response);
+            DiscordUser? userInfo = JsonConvert.DeserializeObject<DiscordUser>(response);
             return userInfo;
         }
 
@@ -166,18 +166,19 @@ namespace DiscordStats.DAL.Concrete
                 var servMemberCount = server.ApproximateMemberCount;
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount });
             }
-            else
+            var duplicate = false;
+            foreach (var dbServer in dbServers)
             {
-                foreach (var dbServer in dbServers)
+                if (dbServer.Id == server.Id)
                 {
-                    if (server.Id != dbServer.Id)
-                    {
-                        var servMemberCount = server.ApproximateMemberCount;
-                        _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount });
-                    }
+                    duplicate = true;
                 }
             }
-
+            if (!duplicate)
+            {
+                var servMemberCount = server.ApproximateMemberCount;
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount });
+            }
         }
 
     }

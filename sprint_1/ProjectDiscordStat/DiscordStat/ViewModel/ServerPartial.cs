@@ -14,7 +14,7 @@ namespace DiscordStats.Models
         [StringLength(50)]
         public string Name { get; set; } = null!;
 
-        public int? ApproximateMemberCount { get; set; }
+        public int? Approximate_Member_Count { get; set; }
 
     }
 }

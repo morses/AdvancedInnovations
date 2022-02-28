@@ -1,4 +1,4 @@
--- INSERT INTO [Server](ID, Name, Owner, Icon, HasBot, ApproximateMemberCount) 
+-- INSERT INTO [Server](ID, Name, Owner, Icon, HasBot, Approximate_Member_Count) 
 --     VALUES
 --     ('lkamsdlknsg','Server 1','Owner 1', 'Icon 1', 'True', 10),
 --     ('styrjkea','Server 2','Owner 2', 'Icon 2', 'True', 113),
@@ -24,7 +24,7 @@
 -- --    VALUES
 -- --    ('1243535','Advanced Innovations', 'no', 'asdlkfjdaskfj1454dsaf','true');
     
--- -- INSERT INTO [Server](Name, Owner, Icon, HasBot, ApproximateMemberCount)
+-- -- INSERT INTO [Server](Name, Owner, Icon, HasBot, Approximate_Member_Count)
 -- --     VALUES
 -- --     ('1243535','Advanced Innovations', 'no', 'asdlkfjdaskfj1454dsaf','true');
 -- --     ('2345426',Turtle Project', 'no', 'kasdjfl234ljksdg', 'true'),

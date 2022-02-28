@@ -20,7 +20,7 @@ namespace DiscordStats.ViewModel
             List<ServerPartial> serverNameAndCountList = new();
             foreach(var server in servers)
             {
-                serverNameAndCountList.Add(new ServerPartial { Id = server.Id, Name = server.Name, ApproximateMemberCount = server.ApproximateMemberCount });
+                serverNameAndCountList.Add(new ServerPartial { Id = server.Id, Name = server.Name, Approximate_Member_Count = server.ApproximateMemberCount });
             }
 
             return serverNameAndCountList;

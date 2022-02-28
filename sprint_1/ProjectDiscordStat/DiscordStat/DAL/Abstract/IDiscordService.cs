@@ -17,7 +17,7 @@ namespace DiscordStats.DAL.Abstract
         /// <returns></returns>
         Task<List<Server>?> GetCurrentUserGuilds(string bearerToken);
 
-        Task<User?> GetCurrentUserInfo(string bearerToken);
+        Task<DiscordUser?> GetCurrentUserInfo(string bearerToken);
 
         Task<Server?> GetCurrentGuild(string botToken, string serverId);
 

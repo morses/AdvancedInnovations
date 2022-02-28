@@ -2,7 +2,23 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Newtonsoft.Json;
-
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using RestSharp;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Azure.Core;
+using System.Net;
+using Newtonsoft.Json.Linq;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+using DiscordStats.DAL.Abstract;
+using DiscordStats.ViewModel;
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -13,16 +29,22 @@ namespace DiscordStats.Controllers
 
     public class ApiController : Controller
     {
+
+
+
         private static readonly string[] Summaries = new[]
         {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+        };
 
+
+        private readonly IDiscordUserRepository _discordUserRepository;
         private readonly ILogger<ApiController> _logger;
 
-        public ApiController(ILogger<ApiController> logger)
+        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo)
         {
             _logger = logger;
+            _discordUserRepository = discordUserRepo;
         }
 
         [HttpGet]
@@ -76,6 +98,20 @@ namespace DiscordStats.Controllers
             foreach (var user in users)
             {
                 Debug.Write(user.Id + user.Name + "\n");
+                var duplicate = false;
+                var allServers = _discordUserRepository.GetAll();
+
+                foreach (var discordUser in allServers)
+                {
+                    if (user.Id == discordUser.Id)
+                    {
+                        duplicate = true;
+                    }
+                }
+                if (!duplicate)
+                {
+                    _discordUserRepository.AddOrUpdate(user);
+                }
             }
             return Json("It worked");
         }
