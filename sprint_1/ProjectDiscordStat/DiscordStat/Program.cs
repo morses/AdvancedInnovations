@@ -49,6 +49,9 @@ builder.Services.AddHttpClient();
 // Add our repositories and services
 builder.Services.AddScoped<IDiscordService, DiscordService>();
 builder.Services.AddScoped<IServerRepository, ServerRepository>();
+builder.Services.AddScoped<IServerUserJoinRepository, ServerUserJoinRepository>();
+builder.Services.AddScoped<IDiscordUserRepository, DiscordUserRepository>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -120,8 +123,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
+
 
 app.Run();

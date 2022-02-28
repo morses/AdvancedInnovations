@@ -9,11 +9,6 @@ namespace DiscordStats.Models
     [Table("Server")]
     public partial class Server
     {
-        public Server()
-        {
-            ServerUserJoins = new HashSet<ServerUserJoin>();
-        }
-
         [Column("ID")]
         [StringLength(128)]
         public string Id { get; set; } = null!;
@@ -27,10 +22,22 @@ namespace DiscordStats.Models
         public string? Icon { get; set; }
         [StringLength(50)]
         public string HasBot { get; set; } = null!;
-        //[Column("Approximate_Member_Count")]
-        public int? Approximate_Member_Count { get; set; }
-
-        [InverseProperty(nameof(ServerUserJoin.ServerPkNavigation))]
-        public virtual ICollection<ServerUserJoin> ServerUserJoins { get; set; }
+        [Column("Approximate_Member_Count")]
+        public int? ApproximateMemberCount { get; set; }
+        [Column("owner_id")]
+        [StringLength(50)]
+        public string OwnerId { get; set; } = null!;
+        [Column("verification_level")]
+        [StringLength(50)]
+        public string VerificationLevel { get; set; } = null!;
+        [Column("description")]
+        [StringLength(256)]
+        public string Description { get; set; } = null!;
+        [Column("premium_tier")]
+        [StringLength(50)]
+        public string PremiumTier { get; set; } = null!;
+        [Column("approximate_presence_count")]
+        [StringLength(50)]
+        public string ApproximatePresenceCount { get; set; } = null!;
     }
 }

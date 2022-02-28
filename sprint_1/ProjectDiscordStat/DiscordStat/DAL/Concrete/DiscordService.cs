@@ -163,21 +163,22 @@ namespace DiscordStats.DAL.Concrete
             var dbServers = _serverRepository.GetAll();
             if (dbServers.Count() == 0)
             {
-                var servMemberCount = server.Approximate_Member_Count;
-                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, Approximate_Member_Count = servMemberCount });
+                var servMemberCount = server.ApproximateMemberCount;
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount });
             }
-            else
+            var duplicate = false;
+            foreach (var dbServer in dbServers)
             {
-                foreach (var dbServer in dbServers)
+                if (dbServer.Id == server.Id)
                 {
-                    if (server.Id != dbServer.Id)
-                    {
-                        var servMemberCount = server.Approximate_Member_Count;
-                        _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, Approximate_Member_Count = servMemberCount });
-                    }
+                    duplicate = true;
                 }
             }
-
+            if (!duplicate)
+            {
+                var servMemberCount = server.ApproximateMemberCount;
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount });
+            }
         }
 
     }

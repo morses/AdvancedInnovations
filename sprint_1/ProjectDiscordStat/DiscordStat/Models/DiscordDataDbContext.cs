@@ -33,26 +33,13 @@ namespace DiscordStats.Models
             modelBuilder.Entity<DiscordUser>(entity =>
             {
                 entity.HasKey(e => e.DiscordUserPk)
-                    .HasName("PK__DiscordU__1F12BE9582A804FC");
+                    .HasName("PK__DiscordU__1F12BE953B438C47");
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-                    .HasName("PK__Server__C56B03869E937E92");
-            });
-
-            modelBuilder.Entity<ServerUserJoin>(entity =>
-            {
-                entity.HasOne(d => d.DiscordUserPkNavigation)
-                    .WithMany(p => p.ServerUserJoins)
-                    .HasForeignKey(d => d.DiscordUserPk)
-                    .HasConstraintName("DiscordUserPk");
-
-                entity.HasOne(d => d.ServerPkNavigation)
-                    .WithMany(p => p.ServerUserJoins)
-                    .HasForeignKey(d => d.ServerPk)
-                    .HasConstraintName("ServerPk");
+                    .HasName("PK__Server__C56B03867709F1D5");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -24,5 +24,27 @@ namespace DiscordStats.DAL.Concrete
             return servers;
 
         }
+
+        public bool CreateServer(Server server)
+        {
+            if (server == null)
+                return false;
+            if (CheckForDuplicates(server.Id) == false)
+                return false;
+            return true;
+        }
+
+        public bool CheckForDuplicates(string serverId)
+        {
+            IEnumerable<Server> servers = GetServers();
+            foreach(Server server in servers)
+            {
+                if (serverId == server.Id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

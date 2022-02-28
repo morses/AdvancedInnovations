@@ -7,13 +7,18 @@
 -- *************** Create tables/entities ********************
 CREATE TABLE [Server] 
 (
-  [ID]			nvarchar(128) Not Null,  
-  [ServerPk]	int          PRIMARY KEY IDENTITY(1, 1),
-  [Name]		nvarchar(50) NOT NULL,
-  [Owner]		nvarchar(50) NOT NULL,
-  [Icon]		nvarchar(256) Null,
-  [HasBot]		nvarchar(50) Not Null,
-  [Approximate_Member_Count] int Null
+  [ID]            nvarchar(128) Not Null,  
+  [ServerPk]    int          PRIMARY KEY IDENTITY(1, 1),
+  [Name]        nvarchar(50) NOT NULL,
+  [Owner]        nvarchar(50) NOT NULL,
+  [Icon]        nvarchar(256) Null,
+  [HasBot]        nvarchar(50) Not Null,
+  [Approximate_Member_Count] int Null,
+  [owner_id] nvarchar(50) Not Null,
+  [verification_level] nvarchar(50) Not Null,
+  [description] nvarchar(256) Not Null,
+  [premium_tier] nvarchar(50) Not Null,
+  [approximate_presence_count]nvarchar(50) Not Null
 );
 
 CREATE TABLE [ServerUserJoin] 
@@ -29,9 +34,11 @@ CREATE TABLE [DiscordUser]
   [DiscordUserPk] int           PRIMARY KEY IDENTITY(1, 1),
   [Name]    nvarchar(50)  NOT NULL,
   [Servers] nvarchar(256) NOT NULL,
-  [Avatar] nvarchar(256)	 NULL
+  [Avatar] nvarchar(256)     NULL
 );
 
 -- *************** Add foreign key relations ********************
-ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerPk] FOREIGN KEY ([ServerPk]) REFERENCES [Server] ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [DiscordUserPk]   FOREIGN KEY ([DiscordUserPk])   REFERENCES [DiscordUser]   ([DiscordUserPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE [ServerUserJoin] DROP CONSTRAINT [ServerPk];
+ALTER TABLE [ServerUserJoin] DROP CONSTRAINT [DiscordUserPk];
