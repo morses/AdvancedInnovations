@@ -27,7 +27,7 @@
 @if (Model != null)
 {
     <form id="form1" runaat="server">
-<table id="filterTable" class="display" style="color:black">
+<table id="filterTable" class="display" style="color:white">
     <thead>
     <tr>
         <th><b>Server Owner</b></th>
@@ -54,7 +54,7 @@
             </td>
             <td>@item.Name</td>
             <td>@item.Id</td>
-            <td style = "background-color:white">
+            <td>
                 <a href="@Url.Action("Details", "Account", new {name = item.Name})" class="btn btn-primary"/>
                 <i class="fas fa-info"></i>
             </td>
@@ -67,7 +67,7 @@
 }
 @if (Model == null)
 {
-    <div class="col-12" style="text-align:center">
+    <div class="col-12" style="text-align: center; color:white">
     <div class="row">
         <h2>It looks like you're not a member of any servers.</h2>
         <h5>To join a server ask an an admin or other members for an invite link. Don't know anyone in a server? No Problem!</h5>
