@@ -1,0 +1,31 @@
+﻿@model DiscordStats.ViewModels.ServerOwnerViewModel
+<div class="row">
+    <div class="col-2">
+        @{
+            var link = "https://cdn.discordapp.com/icons/" + @Model.Id + "//" + @Model.Icon + ".png";
+            <img src="@link"/>
+        }
+    </div>
+    <div class="col-6" style="text-align:left">
+        <h1>@Model.Name</h1>
+        <p>Id: @Model.Id</p>
+    </div>
+</div>
+<div class="row">
+    @{
+        if (@Model.HasBot == "false")
+        {
+            <h1 style="text-align:center">This is all the information we could gather about this server. Please add the bot to see more.</h1>
+        }
+        else
+        {
+            <p>Owner: @Model.Owner</p>
+            <P>Total members: @Model.Approximate_Member_Count</P>
+            <P>Online members: @Model.Approximate_Presence_Count</P>
+            <P>Verification Level: @Model.Verification_Level</P>
+            <P>Boost Level: @Model.Premium_Tier</P>
+            <p>Description: @Model.Description</p>
+        }
+
+    }
+</div>
