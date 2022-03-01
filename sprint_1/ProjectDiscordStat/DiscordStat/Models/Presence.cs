@@ -17,12 +17,12 @@ namespace DiscordStats.Models
         [Key]
         public int PresencePk { get; set; }
         [Column("ID")]
-        [StringLength(128)]
+        [StringLength(256)]
         public string Id { get; set; } = null!;
         [Column("applicationID")]
-        [StringLength(128)]
+        [StringLength(256)]
         public string ApplicationId { get; set; } = null!;
-        [StringLength(50)]
+        [StringLength(256)]
         public string Name { get; set; } = null!;
         [StringLength(256)]
         public string Details { get; set; } = null!;
@@ -32,7 +32,7 @@ namespace DiscordStats.Models
         public string? LargeImageId { get; set; }
         [StringLength(256)]
         public string? SmallImageId { get; set; }
-        [StringLength(128)]
+        [StringLength(256)]
         public string ServerId { get; set; } = null!;
 
         [InverseProperty(nameof(ServerPresenceJoin.PresencePkNavigation))]
