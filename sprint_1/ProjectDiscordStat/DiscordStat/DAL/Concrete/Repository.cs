@@ -33,11 +33,13 @@ namespace DiscordStats.DAL.Concrete
             return FindById(id) != null;
         }
 
-        public IQueryable<TEntity> GetAll()
+
+        public List<TEntity> GetAll()
         {
             // note, no includes here and we're returning it as an IQueryable, NOT a DbSet, on purpose
             // so the caller cannot do other things (which should go here or in a subclass)
-            return _dbSet;
+            return _dbSet.ToList();
+
         }
 
         public IQueryable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includes)

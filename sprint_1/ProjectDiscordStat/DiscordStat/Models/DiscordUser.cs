@@ -19,8 +19,8 @@ namespace DiscordStats.Models
         public string Id { get; set; } = null!;
         [Key]
         public int DiscordUserPk { get; set; }
-        [StringLength(128)]
-        public string Username { get; set; } = null!;
+        [StringLength(50)]
+        public string username { get; set; } = null!;
         [StringLength(256)]
         public string Servers { get; set; } = null!;
         [StringLength(256)]

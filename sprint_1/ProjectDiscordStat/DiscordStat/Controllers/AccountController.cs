@@ -3,6 +3,7 @@ using DiscordStats.DAL.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
+using DiscordStats.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -79,6 +80,34 @@ namespace DiscordStats.Controllers
 
             return View(servers.Where(m => m.Owner == "true").ToList());
         }
+        [Authorize(AuthenticationSchemes = "Discord")]
+        public async Task<IActionResult> Details(string? name)
+        {
+            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
+            var SelectedServer = servers.Where(m => m.Name == name).FirstOrDefault();
+            SelectedServer.HasBot = await _discord.CheckForBot(_configuration["API:BotToken"], SelectedServer.Id);
+            var vm = new ServerOwnerViewModel();
+
+            if (SelectedServer.HasBot == "true")
+            {
+                vm = await _discord.GetFullGuild(_configuration["API:BotToken"], SelectedServer.Id);
+                var ServerOwner = await _discord.GetUserInfoById(_configuration["API:BotToken"], vm.Owner_Id);
+                vm.HasBot = SelectedServer.HasBot;
+                vm.Owner = ServerOwner.username;
+            }
+            else
+            {
+                vm.Icon = SelectedServer.Icon;
+                vm.Name = SelectedServer.Name;
+                vm.Id = SelectedServer.Id;
+                vm.HasBot = "false";
+            }
+
+            return View(vm);
+
+        }
     }
 
 }
+

@@ -1,9 +1,31 @@
 ﻿@model IEnumerable<DiscordStats.Models.Server>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+</head>
+
+<div class="mode">
+    <div onclick="false" class="change"></div>
+    @*<span onclick="true" class="change"></span>*@
+</div>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/5b2bd23d5f.js" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script>
+
+    $(document).ready( function () {
+        $('#filterTable').DataTable({ 
+            "order": [[ 2, "desc" ]] 
+        }); 
+    } );
+</script>
 
 <div class="row">
     <div class="col">
-        @{var link = "https://cdn.discordapp.com/avatars/" + ViewBag.id + "//" + ViewBag.hash + ".png";}
-        <img class="discordImage"  src="@link"/>
+        <a href="https://discord.com/channels/" + @ViewBag.id >@{var link = "https://cdn.discordapp.com/avatars/" + ViewBag.id + "//" + ViewBag.hash + ".png";}
+        <img class="discordImage"  src="@link"/></a>
     </div>
     <div class="col">
         <h1>Welcome home @ViewBag.name, this is your account page.</h1>
@@ -11,27 +33,56 @@
 </div>
 
 <p>Did you know your Discord id is: @ViewBag.id?</p>
-@if(Model != null)
+
+@if (Model != null)
 {
-    <table class="table" >
-     <tr>
+    <form id="form1" runaat="server">
+<table id="filterTable" class="display" style="color:white">
+    <thead>
+    <tr>
         <th><b>Server Owner</b></th>
         <th><b>Server Name</b></th>
         <th><b>Server Id</b></th>
+        <th></th>
+
+
     </tr>
-    @foreach(var s in Model)
+    </thead>
+    <tbody>
+
+    @foreach (var item in Model)
     {
         <tr>
-            <td>@if (s.Owner=="true") { <p>Yes</p>}else{<p>No</p>}</td>
-            <td>@s.Name</td>
-            <td>@s.Id</td>
+
+            <td>
+                @if (item.Owner == "true")
+                {
+                    <p>Yes</p>
+                }
+                else
+                {
+                    <p>No</p>
+                }
+            </td>
+            <td>@item.Name</td>
+            <td>@item.Id</td>
+            <td>
+                <a href="@Url.Action("Details", "Account", new {name = item.Name})" class="btn btn-primary"/>
+                <i class="fas fa-info"></i>
+            </td>
+
         </tr>
     }
+
+    </tbody>
 </table>
+
+    </form>
 }
 @if (Model == null)
 {
-    <div class="col-12" style="text-align:center">
+    <div class="col-12" style="text-align: center; color:white">
+
     <div class="row">
         <h2>It looks like you're not a member of any servers.</h2>
         <h5>To join a server ask an an admin or other members for an invite link. Don't know anyone in a server? No Problem!</h5>
@@ -42,3 +93,4 @@
         </div>
     </div>
 }
+

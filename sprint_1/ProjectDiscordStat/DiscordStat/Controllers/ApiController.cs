@@ -217,7 +217,6 @@ namespace DiscordStats.Controllers
         {
             foreach (var user in users)
             {
-                Debug.Write(user.Id + user.Username + "\n");
                 var duplicate = false;
 
                 Task.Delay(300).Wait();
