@@ -17,7 +17,9 @@ namespace DiscordStats.Models
         }
 
         public virtual DbSet<DiscordUser> DiscordUsers { get; set; } = null!;
+        public virtual DbSet<Presence> Presences { get; set; } = null!;
         public virtual DbSet<Server> Servers { get; set; } = null!;
+        public virtual DbSet<ServerPresenceJoin> ServerPresenceJoins { get; set; } = null!;
         public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,13 +35,45 @@ namespace DiscordStats.Models
             modelBuilder.Entity<DiscordUser>(entity =>
             {
                 entity.HasKey(e => e.DiscordUserPk)
-                    .HasName("PK__DiscordU__1F12BE953B438C47");
+                    .HasName("PK__DiscordU__1F12BE95AE3D0F09");
+            });
+
+            modelBuilder.Entity<Presence>(entity =>
+            {
+                entity.HasKey(e => e.PresencePk)
+                    .HasName("PK__Presence__4981B3D94DB2D7C4");
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-                    .HasName("PK__Server__C56B03867709F1D5");
+                    .HasName("PK__Server__C56B038642B96E0D");
+            });
+
+            modelBuilder.Entity<ServerPresenceJoin>(entity =>
+            {
+                entity.HasOne(d => d.PresencePkNavigation)
+                    .WithMany(p => p.ServerPresenceJoins)
+                    .HasForeignKey(d => d.PresencePk)
+                    .HasConstraintName("ServerPresenceJoinPresencePk");
+
+                entity.HasOne(d => d.ServerPkNavigation)
+                    .WithMany(p => p.ServerPresenceJoins)
+                    .HasForeignKey(d => d.ServerPk)
+                    .HasConstraintName("ServerPresenceJoinServerPk");
+            });
+
+            modelBuilder.Entity<ServerUserJoin>(entity =>
+            {
+                entity.HasOne(d => d.DiscordUserPkNavigation)
+                    .WithMany(p => p.ServerUserJoins)
+                    .HasForeignKey(d => d.DiscordUserPk)
+                    .HasConstraintName("ServerUserJoinDiscordUserPk");
+
+                entity.HasOne(d => d.ServerPkNavigation)
+                    .WithMany(p => p.ServerUserJoins)
+                    .HasForeignKey(d => d.ServerPk)
+                    .HasConstraintName("ServerUserJoinServerPk");
             });
 
             OnModelCreatingPartial(modelBuilder);

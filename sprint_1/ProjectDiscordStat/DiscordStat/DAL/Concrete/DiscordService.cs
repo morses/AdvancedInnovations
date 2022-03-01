@@ -229,19 +229,15 @@ namespace DiscordStats.DAL.Concrete
             var duplicate = false;
             if (dbServers.Count() == 0)
             {
-<<<<<<< Updated upstream
                 var servMemberCount = server.ApproximateMemberCount;
-
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null" });
-
+                duplicate = true;
             }
-            var duplicate = false;
-=======
                 var servMemberCount = server.Approximate_Member_Count;
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, Approximate_Member_Count = servMemberCount });
                 duplicate = true;
             }
->>>>>>> Stashed changes
+
             foreach (var dbServer in dbServers)
             {
                 if (dbServer.Id == server.Id)
@@ -251,15 +247,9 @@ namespace DiscordStats.DAL.Concrete
             }
             if (!duplicate)
             {
-<<<<<<< Updated upstream
                 var servMemberCount = server.ApproximateMemberCount;
-
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null" });
 
-=======
-                var servMemberCount = server.Approximate_Member_Count;
-                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, Approximate_Member_Count = servMemberCount });
->>>>>>> Stashed changes
             }
         }
 
