@@ -1,5 +1,6 @@
-﻿using DiscordStats.Models;
+using DiscordStats.Models;
 using DiscordStats.ViewModels;
+
 
 namespace DiscordStats.DAL.Abstract
 {
@@ -21,13 +22,17 @@ namespace DiscordStats.DAL.Abstract
         Task<DiscordUser?> GetCurrentUserInfo(string bearerToken);
 
         Task<Server?> GetCurrentGuild(string botToken, string serverId);
+
         Task<DiscordUser?> GetUserInfoById(string bearerToken, string UserId);
+
 
         Task<string?> CheckForBot(string botToken, string serverId);
 
         Task<string?> AddMemberToGuild(string botToken, string serverId, string userId);
 
         void ServerEntryDbCheck(Server server, string hasBot, string serverOwner);
+
         Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId);
+
     }
 }

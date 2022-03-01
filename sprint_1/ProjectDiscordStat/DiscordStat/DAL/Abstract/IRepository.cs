@@ -29,7 +29,9 @@ namespace DiscordStats.DAL.Abstract
         /// method will NOT populate navigation properties associated with foreign keys.
         /// </summary>
         /// <returns>All the entities</returns>
+
         List<TEntity> GetAll();
+
 
         /// <summary>
         /// Version of GetAll that will perform includes to load navigation properties, 

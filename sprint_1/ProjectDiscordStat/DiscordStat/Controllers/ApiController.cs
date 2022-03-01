@@ -98,6 +98,7 @@ namespace DiscordStats.Controllers
             foreach (var user in users)
             {
                 Debug.Write(user.Id + user.username + "\n");
+
                 var duplicate = false;
                 var allServers = _discordUserRepository.GetAll();
 

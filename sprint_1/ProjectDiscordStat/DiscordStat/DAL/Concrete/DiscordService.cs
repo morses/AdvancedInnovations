@@ -1,7 +1,9 @@
 ﻿using DiscordStats.DAL.Abstract;
 using DiscordStats.Models;
 using System.Net;
+
 using DiscordStats.ViewModels;
+
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
@@ -131,6 +133,7 @@ namespace DiscordStats.DAL.Concrete
             return userInfo;
         }
 
+
         public async Task<DiscordUser?> GetUserInfoById(string botToken, string UserId)
         {
             string uri = "https://discord.com/api/users/" + UserId;
@@ -140,6 +143,7 @@ namespace DiscordStats.DAL.Concrete
             DiscordUser? userInfo = JsonConvert.DeserializeObject<DiscordUser>(response);
             return userInfo;
         }
+
         public async Task<Server?> GetCurrentGuild(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId + "/preview";
@@ -150,6 +154,7 @@ namespace DiscordStats.DAL.Concrete
             return server;
         }
 
+
         public async Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId + "?with_counts=true";
@@ -159,6 +164,7 @@ namespace DiscordStats.DAL.Concrete
             ServerOwnerViewModel? server = JsonConvert.DeserializeObject<ServerOwnerViewModel>(response);
             return server;
         }
+
         public async Task<string?> CheckForBot(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId;
@@ -182,7 +188,9 @@ namespace DiscordStats.DAL.Concrete
             if (dbServers.Count() == 0)
             {
                 var servMemberCount = server.ApproximateMemberCount;
+
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null" });
+
             }
             var duplicate = false;
             foreach (var dbServer in dbServers)
@@ -195,7 +203,9 @@ namespace DiscordStats.DAL.Concrete
             if (!duplicate)
             {
                 var servMemberCount = server.ApproximateMemberCount;
+
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null" });
+
             }
         }
 

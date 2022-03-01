@@ -105,6 +105,7 @@ namespace DiscordStats.Controllers
             }
 
             return View(vm);
+
         }
     }
 
