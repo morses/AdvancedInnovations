@@ -86,6 +86,46 @@ namespace DiscordStats.DAL.Concrete
             }
         }
 
+        public async Task<string> PutToDiscordEndPoint(string botToken, string uri, string bearerToken)
+        {
+            var bodyAsJSON = $"{{\"access_token\": \"{botToken}\"}}";
+
+            //var requestContent = JsonContent.Create(body);
+            HttpContent body = new StringContent(bodyAsJSON);
+
+            body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+            // make the access token in the body, where it could be the bot token
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
+            {
+                // might have 
+                Headers =
+                    {
+                        { HeaderNames.Accept, "application/json" },
+                        { HeaderNames.Authorization, "Bot " + botToken},
+                        { HeaderNames.UserAgent, "DiscordStat" },
+                        { HeaderNames.ContentType, "application/json" }
+                    }
+
+            };
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            // Note this is the blocking version.  Would be better to use the Async version
+            HttpResponseMessage response = await httpClient.PutAsync(uri, body);
+            //HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
+            // This is only a minimal version; make sure to cover all your bases here
+            if (response.IsSuccessStatusCode)
+            {
+                // same here, this is blocking; use ReadAsStreamAsync instead
+                string responseText = await response.Content.ReadAsStringAsync();
+                return responseText;
+            }
+            else
+            {
+                // What to do if failure? Should throw specific exceptions that explain what happened
+                throw new HttpRequestException();
+            }
+        }
+
         public async Task<string> GetJsonStringFromEndpointForBot(string botToken, string uri)
         {
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri)
@@ -174,25 +214,34 @@ namespace DiscordStats.DAL.Concrete
 
             return response;
         }   
-        
-        public async Task<string?> AddMemberToGuild(string botToken, string serverId, string userId)
+
+        public async Task<string?> AddMemberToGuild(string botToken, string serverId, string userId, string bearerToken)
         {
             string uri = "https://discord.com/api/guilds/" + serverId + "/members/" + userId;
-            string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
+            string response = await PutToDiscordEndPoint(botToken, uri, bearerToken);
             return response;
         }
 
+        //need to test
         public void ServerEntryDbCheck(Server server, string hasBot, string serverOwner)
         {
             var dbServers = _serverRepository.GetAll();
+            var duplicate = false;
             if (dbServers.Count() == 0)
             {
+<<<<<<< Updated upstream
                 var servMemberCount = server.ApproximateMemberCount;
 
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null" });
 
             }
             var duplicate = false;
+=======
+                var servMemberCount = server.Approximate_Member_Count;
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, Approximate_Member_Count = servMemberCount });
+                duplicate = true;
+            }
+>>>>>>> Stashed changes
             foreach (var dbServer in dbServers)
             {
                 if (dbServer.Id == server.Id)
@@ -202,10 +251,15 @@ namespace DiscordStats.DAL.Concrete
             }
             if (!duplicate)
             {
+<<<<<<< Updated upstream
                 var servMemberCount = server.ApproximateMemberCount;
 
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null" });
 
+=======
+                var servMemberCount = server.Approximate_Member_Count;
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, Approximate_Member_Count = servMemberCount });
+>>>>>>> Stashed changes
             }
         }
 
