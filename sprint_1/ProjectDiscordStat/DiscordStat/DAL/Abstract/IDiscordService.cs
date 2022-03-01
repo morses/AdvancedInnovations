@@ -28,7 +28,7 @@ namespace DiscordStats.DAL.Abstract
 
         Task<string?> CheckForBot(string botToken, string serverId);
 
-        Task<string?> AddMemberToGuild(string botToken, string serverId, string userId);
+        Task<string?> AddMemberToGuild(string botToken, string serverId, string userId, string bearerToken);
 
         void ServerEntryDbCheck(Server server, string hasBot, string serverOwner);
 

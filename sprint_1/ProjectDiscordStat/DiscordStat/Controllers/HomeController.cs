@@ -63,10 +63,11 @@ namespace DiscordStats.Controllers
         public async Task<IActionResult> AddMemberToPickedServer(string? id)
         {
             string botToken = _config["API:BotToken"];
+            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
             var userId = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var serverId = id;
 
-            string? response = await _discord.AddMemberToGuild(botToken, serverId, userId);
+            string? response = await _discord.AddMemberToGuild(botToken, serverId, userId, bearerToken);
 
             AddMemberToPickedServerVM addedMemberProcessInfoVM = new();
             //addedMemberProcessInfoVM.infoOfProcessOfBeingAdded = response;
