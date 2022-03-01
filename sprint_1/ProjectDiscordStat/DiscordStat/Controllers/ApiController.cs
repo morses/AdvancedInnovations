@@ -39,13 +39,24 @@ namespace DiscordStats.Controllers
 
 
         private readonly IDiscordUserRepository _discordUserRepository;
+        private readonly IPresenceRepository _presenceRepository;
         private readonly ILogger<ApiController> _logger;
 
-        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo)
+        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository)
         {
             _logger = logger;
             _discordUserRepository = discordUserRepo;
+            _presenceRepository = presenceRepository;
+            //var _allDiscordUsers = new List<DiscordUser>();
+            //foreach (var user in _discordUserRepository.GetAll())
+            //{
+            //    user.ToJson()
+            //}
+            var _allPresences = JsonConvert.DeserializeObject<List<Presence>>(JsonConvert.SerializeObject(_presenceRepository.GetAll()));
+
         }
+
+
 
         [HttpGet]
         public IActionResult Guilds()
@@ -95,23 +106,92 @@ namespace DiscordStats.Controllers
         [HttpPost]
         public IActionResult PostUsers(DiscordUser[] users)
         {
+            var allDiscordUsers = _discordUserRepository.GetAll().ToList();
+
+            if (allDiscordUsers.Count() == 0)
+            {
+                _discordUserRepository.AddOrUpdate(new()
+                {
+                    Id = users[0].Id,
+                    Username = users[0].Username,
+                    Servers = users[0].Servers,
+                    Avatar = users[0].Avatar,
+                });
+
+                allDiscordUsers.Add(users[0]);
+
+            }
+
             foreach (var user in users)
             {
-                Debug.Write(user.Id + user.Name + "\n");
-                var duplicate = false;
-                var allServers = _discordUserRepository.GetAll();
+                //var allDiscordUsers = JsonConvert.DeserializeObject<List<DiscordUser>>(JsonConvert.SerializeObject(_discordUserRepository.GetAll()));
 
-                foreach (var discordUser in allServers)
+                Debug.Write(user.Id + user.Username + "\n");
+                var duplicate = false;
+
+
+                foreach (var discordUser in allDiscordUsers)
+                    {
+                        if (user.Id == discordUser.Id)
+                        {
+                            duplicate = true;
+                        }
+                    }
+                
+                    if (!duplicate)
+                    {
+                        _discordUserRepository.AddOrUpdate(new()
+                        {
+                            Id = user.Id,
+                            Username = user.Username,
+                            Servers = user.Servers,
+                            Avatar = user.Avatar,
+                        });
+                    }
+            }
+
+            
+            return Json("It worked");
+        }
+
+
+        [HttpPost]
+        public IActionResult PostPresence(Presence[] presences)
+        {
+            var allPresences = _presenceRepository.GetAll().ToList();
+
+            foreach (var presence in presences)
+            {
+                if (presence.SmallImageId == null)
                 {
-                    if (user.Id == discordUser.Id)
+                    presence.SmallImageId = "null";
+                }
+                if (presence.LargeImageId == null)
+                {
+                    presence.LargeImageId = "null";
+                }
+                //Debug.Write("\n\n\n" + presence.Id + "\n");
+                //Debug.Write(presence.Name + "\n");
+                //Debug.Write(presence.CreatedAt + "\n");
+                //Debug.Write(presence.ApplicationId + "\n");
+                //Debug.Write(presence.SmallImageId + "\n");
+                //Debug.Write(presence.LargeImageId + "\n");
+                //Debug.Write(presence.Details + "\n");
+                //Debug.Write(presence.ServerId + "\n\n\n");
+                var duplicate = false;
+
+                foreach (var activity in allPresences)
+                {
+                    if (presence.Id == activity.Id)
                     {
                         duplicate = true;
                     }
                 }
                 if (!duplicate)
                 {
-                    _discordUserRepository.AddOrUpdate(user);
+                    _presenceRepository.AddOrUpdate(presence);
                 }
+
             }
             return Json("It worked");
         }

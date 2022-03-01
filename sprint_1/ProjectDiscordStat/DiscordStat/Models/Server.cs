@@ -9,6 +9,12 @@ namespace DiscordStats.Models
     [Table("Server")]
     public partial class Server
     {
+        public Server()
+        {
+            ServerPresenceJoins = new HashSet<ServerPresenceJoin>();
+            ServerUserJoins = new HashSet<ServerUserJoin>();
+        }
+
         [Column("ID")]
         [StringLength(128)]
         public string Id { get; set; } = null!;
@@ -39,5 +45,10 @@ namespace DiscordStats.Models
         [Column("approximate_presence_count")]
         [StringLength(50)]
         public string ApproximatePresenceCount { get; set; } = null!;
+
+        [InverseProperty(nameof(ServerPresenceJoin.ServerPkNavigation))]
+        public virtual ICollection<ServerPresenceJoin> ServerPresenceJoins { get; set; }
+        [InverseProperty(nameof(ServerUserJoin.ServerPkNavigation))]
+        public virtual ICollection<ServerUserJoin> ServerUserJoins { get; set; }
     }
 }

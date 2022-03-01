@@ -24,7 +24,7 @@ CREATE TABLE [Server]
 CREATE TABLE [ServerUserJoin] 
 (
   [ID]       int          PRIMARY KEY IDENTITY(1, 1),
-  [ServerPk] int,
+  [ServerPk] int, 
   [DiscordUserPk]   int
 );
 
@@ -32,13 +32,33 @@ CREATE TABLE [DiscordUser]
 (
   [ID]      nvarchar(128) Not Null, 
   [DiscordUserPk] int           PRIMARY KEY IDENTITY(1, 1),
-  [Name]    nvarchar(50)  NOT NULL,
+  [Username]    nvarchar(128)  NOT NULL,
   [Servers] nvarchar(256) NOT NULL,
   [Avatar] nvarchar(256)     NULL
 );
 
+CREATE TABLE [Presence]
+(
+  [PresencePk] int PRIMARY KEY IDENTITY(1, 1),
+  [ID] nvarchar(128) NOT NULL,
+  [applicationID] nvarchar(128) Not Null,
+  [Name]    nvarchar(50)  NOT NULL,
+  [Details] nvarchar(256) NOT NULL,
+  [CreatedAt] nvarchar(256) NOT NULL,
+  [LargeImageId] nvarchar(256) NULL,
+  [SmallImageId] nvarchar(256) NULL,
+  [ServerId] nvarchar(128) NOT NULL
+);
+
+CREATE TABLE [ServerPresenceJoin] 
+(
+  [ID]       int          PRIMARY KEY IDENTITY(1, 1),
+  [ServerPk] int,
+  [PresencePk]   int
+);
+
 -- *************** Add foreign key relations ********************
-ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [DiscordUserPk]   FOREIGN KEY ([DiscordUserPk])   REFERENCES [DiscordUser]   ([DiscordUserPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE [ServerUserJoin] DROP CONSTRAINT [ServerPk];
-ALTER TABLE [ServerUserJoin] DROP CONSTRAINT [DiscordUserPk];
+ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerUserJoinServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerUserJoinDiscordUserPk]   FOREIGN KEY ([DiscordUserPk])   REFERENCES [DiscordUser]   ([DiscordUserPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE [ServerPresenceJoin] ADD CONSTRAINT [ServerPresenceJoinServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE [ServerPresenceJoin] ADD CONSTRAINT [ServerPresenceJoinPresencePk]   FOREIGN KEY ([PresencePk])   REFERENCES [Presence]   ([PresencePk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
