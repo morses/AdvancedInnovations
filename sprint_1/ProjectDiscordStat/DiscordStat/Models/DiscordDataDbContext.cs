@@ -16,9 +16,11 @@ namespace DiscordStats.Models
         {
         }
 
+        public virtual DbSet<DiscordUser> DiscordUsers { get; set; } = null!;
+        public virtual DbSet<Presence> Presences { get; set; } = null!;
         public virtual DbSet<Server> Servers { get; set; } = null!;
+        public virtual DbSet<ServerPresenceJoin> ServerPresenceJoins { get; set; } = null!;
         public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -30,47 +32,48 @@ namespace DiscordStats.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DiscordUser>(entity =>
+            {
+                entity.HasKey(e => e.DiscordUserPk)
+                    .HasName("PK__DiscordU__1F12BE95AE3D0F09");
+            });
+
+            modelBuilder.Entity<Presence>(entity =>
+            {
+                entity.HasKey(e => e.PresencePk)
+                    .HasName("PK__Presence__4981B3D94DB2D7C4");
+            });
+
             modelBuilder.Entity<Server>(entity =>
             {
-                entity.ToTable("Server");
+                entity.HasKey(e => e.ServerPk)
+                    .HasName("PK__Server__C56B038642B96E0D");
+            });
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+            modelBuilder.Entity<ServerPresenceJoin>(entity =>
+            {
+                entity.HasOne(d => d.PresencePkNavigation)
+                    .WithMany(p => p.ServerPresenceJoins)
+                    .HasForeignKey(d => d.PresencePk)
+                    .HasConstraintName("ServerPresenceJoinPresencePk");
 
-                entity.Property(e => e.Name).HasMaxLength(50);
-
-                entity.Property(e => e.Owner).HasMaxLength(50);
+                entity.HasOne(d => d.ServerPkNavigation)
+                    .WithMany(p => p.ServerPresenceJoins)
+                    .HasForeignKey(d => d.ServerPk)
+                    .HasConstraintName("ServerPresenceJoinServerPk");
             });
 
             modelBuilder.Entity<ServerUserJoin>(entity =>
             {
-                entity.ToTable("ServerUserJoin");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.ServerId).HasColumnName("ServerID");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Server)
+                entity.HasOne(d => d.DiscordUserPkNavigation)
                     .WithMany(p => p.ServerUserJoins)
-                    .HasForeignKey(d => d.ServerId)
-                    .HasConstraintName("ServerID");
+                    .HasForeignKey(d => d.DiscordUserPk)
+                    .HasConstraintName("ServerUserJoinDiscordUserPk");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.ServerPkNavigation)
                     .WithMany(p => p.ServerUserJoins)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("UserID");
-            });
-
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.ToTable("User");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Name).HasMaxLength(50);
-
-                entity.Property(e => e.Servers).HasMaxLength(256);
+                    .HasForeignKey(d => d.ServerPk)
+                    .HasConstraintName("ServerUserJoinServerPk");
             });
 
             OnModelCreatingPartial(modelBuilder);

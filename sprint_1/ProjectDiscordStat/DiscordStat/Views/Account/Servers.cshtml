@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<DiscordStats.Models.Server>
-
-<h4 style="text-align:center">Here is a list of servers that you own. Please select which one you would like to add a bot to.</h4>
+<script src="https://kit.fontawesome.com/5b2bd23d5f.js" crossorigin="anonymous"></script>
+<h1 style="text-align:center">Here is a list of servers that you own. Please select which one you would like to add a bot to.</h1>
 @foreach (var s in Model)
 {
     <div class="row" style="padding-top: 3%">
@@ -21,10 +21,22 @@
 
 
             </div>
+            @if(s.HasBot == "false")
+            {
             <div class="row" style="width: 50%; margin-top: 2%">
-                <button class="btn btn-primary">Add Bot</button>
-            </div>
-            
+            @{
+                var url = "https://discord.com/oauth2/authorize?client_id=938808510932746350&scope=bot&permissions=8&guild_id=" + s.Id;
+            }
+            <a id="anchorID" href="@url" target="_blank" class="btn btn-primary">Add Bot</a>
+              </div>
+            }
+            @if(s.HasBot == "true")
+            {
+                <div class="row" style="width: 50%; margin-top: 2%;white-space: nowrap; display: inline-block; color: green; font-size:18px">
+                   
+                    <span>Bot added </span> <span class="fa fa-check" style="margin-left: -15%"></span>
+                </div>
+            }
         </div>
 
     </div>
@@ -35,7 +47,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
-    $(".dropdown-menu li a").click(function() {
-        alert("hello");
-    });
+
+    function AddBot(val) {
+        alert(val);
+    }
 </script>
