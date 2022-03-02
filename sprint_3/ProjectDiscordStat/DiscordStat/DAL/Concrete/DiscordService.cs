@@ -232,10 +232,7 @@ namespace DiscordStats.DAL.Concrete
                 var servMemberCount = server.ApproximateMemberCount;
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null" });
                 duplicate = true;
-            }
-                var servMemberCount = server.Approximate_Member_Count;
-                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, Approximate_Member_Count = servMemberCount });
-                duplicate = true;
+
             }
 
             foreach (var dbServer in dbServers)
