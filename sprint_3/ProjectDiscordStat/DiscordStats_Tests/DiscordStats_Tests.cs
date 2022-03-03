@@ -257,7 +257,7 @@ namespace DiscordStats_Tests
             Assert.Multiple(() =>
             {
                 Assert.That(userInfo.Id == "1035111022");
-                Assert.That(userInfo.Name == "test");
+                Assert.That(userInfo.username == "test");
                 Assert.That(userInfo.Avatar == "8342729096ea3675442027381ff50dfe");
             }
             );
@@ -297,7 +297,7 @@ namespace DiscordStats_Tests
                 Assert.That(serverInfo.Id == "1035111022");
                 Assert.That(serverInfo.Name == "testServer");
                 Assert.That(serverInfo.Icon == "8342729096ea3675442027381ff50dfe");
-                Assert.That(serverInfo.Approximate_Member_Count == 2);
+                Assert.That(serverInfo.ApproximateMemberCount == 2);
             }
             );
 
@@ -312,6 +312,7 @@ namespace DiscordStats_Tests
                 .ReturnsResponse(HttpStatusCode.OK);
 
             DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository);
+            var a = discord.CheckForBot("FakeBotToken", "FakeServerId").Result;
 
             Assert.AreEqual(discord.CheckForBot("FakeBotToken", "FakeServerId").Result, "true");
         }

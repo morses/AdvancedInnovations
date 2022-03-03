@@ -108,11 +108,11 @@ namespace DiscordStats.Controllers
 
         }
         [Authorize(AuthenticationSchemes = "Discord")]
-        public void LeaveServer(string projectId)
+        public void LeaveServer(string ServerId)
         {
             string userid = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-            _discord.LeaveServer(_configuration["API:BotToken"], projectId, userid);
+            _discord.LeaveServer(_configuration["API:BotToken"], ServerId, userid);
         }
     }
 

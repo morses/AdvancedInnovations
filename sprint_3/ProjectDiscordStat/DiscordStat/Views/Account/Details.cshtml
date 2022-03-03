@@ -95,7 +95,7 @@
         var selected = "thisone";
         $.ajax({
             type: "GET",
-            url: '@Url.Action("LeaveServer", "Account")?projectId=${se}',
+            url: '@Url.Action("LeaveServer", "Account")?ServerId=${se}',
             success: function(msg) {
                 $('#taskContainer').html(msg);
                 UpdateCostCenter();
