@@ -57,7 +57,7 @@ namespace DiscordStats.Controllers
 
             return View(allServersNameAndMemCountVM);
         }
-         
+
         [Authorize(AuthenticationSchemes = "Discord")]
         [HttpPost]
         public async Task<IActionResult> AddMemberToPickedServer(string? id)
@@ -76,10 +76,9 @@ namespace DiscordStats.Controllers
             return View();
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
         public IActionResult Privacy()
         {
-            ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            //ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             return View();
         }
 

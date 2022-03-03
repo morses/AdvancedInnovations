@@ -16,7 +16,7 @@ namespace DiscordStats.ViewModel
 
         public IList<ServerPartial>? AllServerNameAndMemCountContainer()
         {
-            var servers = _serverRepository.GetAll();
+            var servers = _serverRepository.GetAll().Where(s => s.Privacy == "public");
             List<ServerPartial> serverNameAndCountList = new();
             foreach(var server in servers)
             {

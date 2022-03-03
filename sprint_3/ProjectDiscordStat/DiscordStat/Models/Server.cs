@@ -45,6 +45,8 @@ namespace DiscordStats.Models
         [Column("approximate_presence_count")]
         [StringLength(50)]
         public string ApproximatePresenceCount { get; set; } = null!;
+        [StringLength(50)]
+        public string Privacy { get; set; } = null!;
 
         [InverseProperty(nameof(ServerPresenceJoin.ServerPkNavigation))]
         public virtual ICollection<ServerPresenceJoin> ServerPresenceJoins { get; set; }

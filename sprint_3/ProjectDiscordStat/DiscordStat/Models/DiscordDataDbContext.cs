@@ -35,19 +35,19 @@ namespace DiscordStats.Models
             modelBuilder.Entity<DiscordUser>(entity =>
             {
                 entity.HasKey(e => e.DiscordUserPk)
-                    .HasName("PK__DiscordU__1F12BE95AE3D0F09");
+                    .HasName("PK__DiscordU__1F12BE95A1EF1025");
             });
 
             modelBuilder.Entity<Presence>(entity =>
             {
                 entity.HasKey(e => e.PresencePk)
-                    .HasName("PK__Presence__4981B3D94DB2D7C4");
+                    .HasName("PK__Presence__4981B3D959DDA0B9");
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-                    .HasName("PK__Server__C56B038642B96E0D");
+                    .HasName("PK__Server__C56B0386AD7AAC9B");
             });
 
             modelBuilder.Entity<ServerPresenceJoin>(entity =>
