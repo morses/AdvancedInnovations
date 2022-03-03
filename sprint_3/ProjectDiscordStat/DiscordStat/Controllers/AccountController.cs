@@ -88,7 +88,7 @@ namespace DiscordStats.Controllers
             var SelectedServer = servers.Where(m => m.Name == name).FirstOrDefault();
             SelectedServer.HasBot = await _discord.CheckForBot(_configuration["API:BotToken"], SelectedServer.Id);
             var vm = new ServerOwnerViewModel();
-
+            var test = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
             if (SelectedServer.HasBot == "true")
             {
                 vm = await _discord.GetFullGuild(_configuration["API:BotToken"], SelectedServer.Id);
@@ -106,6 +106,13 @@ namespace DiscordStats.Controllers
 
             return View(vm);
 
+        }
+        [Authorize(AuthenticationSchemes = "Discord")]
+        public void LeaveServer(string projectId)
+        {
+            string userid = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+            _discord.LeaveServer(_configuration["API:BotToken"], projectId, userid);
         }
     }
 
