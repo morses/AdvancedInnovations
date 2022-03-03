@@ -33,6 +33,7 @@ namespace DiscordStats.DAL.Abstract
         void ServerEntryDbCheck(Server server, string hasBot, string serverOwner);
 
         Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId);
+        Task<string?> LeaveServer(string botToken, string serverId, string UserId);
 
     }
 }

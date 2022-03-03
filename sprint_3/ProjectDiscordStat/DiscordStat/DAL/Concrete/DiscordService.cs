@@ -85,7 +85,33 @@ namespace DiscordStats.DAL.Concrete
                 throw new HttpRequestException();
             }
         }
-
+        public async Task<string> GetJsonStringFromEndpointDelete(string botToken, string uri)
+        {
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri)
+            {
+                Headers =
+                {
+                    { HeaderNames.Accept, "application/json" },
+                    { HeaderNames.Authorization, "Bot " + botToken},
+                    { HeaderNames.UserAgent, "DiscordStat" }
+                }
+            };
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            // Note this is the blocking version.  Would be better to use the Async version
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
+            // This is only a minimal version; make sure to cover all your bases here
+            if (response.IsSuccessStatusCode)
+            {
+                // same here, this is blocking; use ReadAsStreamAsync instead
+                string responseText = await response.Content.ReadAsStringAsync();
+                return responseText;
+            }
+            else
+            {
+                // What to do if failure? Should throw specific exceptions that explain what happened
+                throw new HttpRequestException();
+            }
+        }
         public async Task<string> PutToDiscordEndPoint(string botToken, string uri, string bearerToken)
         {
             var bodyAsJSON = $"{{\"access_token\": \"{botToken}\"}}";
@@ -248,6 +274,12 @@ namespace DiscordStats.DAL.Concrete
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null" });
 
             }
+        }
+        public async Task<string?> LeaveServer(string botToken, string serverId, string UserId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId +"/members/" + UserId;
+            string response = await GetJsonStringFromEndpointDelete(botToken, uri);
+            return response;
         }
 
     }

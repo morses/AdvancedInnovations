@@ -1,4 +1,5 @@
-﻿@model DiscordStats.ViewModels.ServerOwnerViewModel
+﻿@using System.Security.Claims
+@model DiscordStats.ViewModels.ServerOwnerViewModel
 <div class="row">
     <div class="col-2">
         @{
@@ -11,21 +12,110 @@
         <p>Id: @Model.Id</p>
     </div>
 </div>
+
+
 <div class="row">
-    @{
-        if (@Model.HasBot == "false")
-        {
-            <h1 style="text-align:center">This is all the information we could gather about this server. Please add the bot to see more.</h1>
-        }
-        else
-        {
-            <p>Owner: @Model.Owner</p>
-            <P>Total members: @Model.Approximate_Member_Count</P>
-            <P>Online members: @Model.Approximate_Presence_Count</P>
-            <P>Verification Level: @Model.Verification_Level</P>
-            <P>Boost Level: @Model.Premium_Tier</P>
-            <p>Description: @Model.Description</p>
-        }
+@{
+    if (@Model.HasBot == "false")
+    {
+    <h1 style="text-align: center">This is all the information we could gather about this server. Please add the bot to see more.</h1>
+    }
+    else
+    {
+    <p>Owner: @Model.Owner</p>
+    <P>Total members: @Model.Approximate_Member_Count</P>
+    <P>Online members: @Model.Approximate_Presence_Count</P>
+    <P>Verification Level: @Model.Verification_Level</P>
+    <P>Boost Level: @Model.Premium_Tier</P>
+    <p>Description: @Model.Description</p>
+    }
+
+
+    
+<div class="row">
+<div class="col-2">
+    <button type="button" class="btn btn-danger" data-toggle="modal"  onclick="OpenModal()" data-target="#exampleModal">Leave Server</button>
+</div>
+</div>
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    @if (User.Claims.First(c => c.Type == ClaimTypes.Name).Value != @Model.Owner)
+                    {
+
+                    <div class="modal-header">
+                        <h4 class="modal-title">Leave Server</h4>
+                    </div>
+                    <div class="modal-body" style="text-align: center; font-weight: bold">
+                        Are you sure you want to leave the server? You won't be able to join again unless you get an invite.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="CloseModal()" style="margin-right: 59%">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" onclick="LeaveServer()">
+                            Leave Server
+                        </button>
+                    </div>
+                    }
+                    else
+                    {
+                        <div class="modal-header">
+                            <h4 class="modal-title">Leave Server</h4>
+                        </div>
+                        <div class="modal-body" style="text-align: center; font-weight: bold">
+                            As the owner of this server you won't be able to leave until you transfer ownership to another user. Please try again later.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" onclick="CloseModal()" style="">
+                                Close
+                            </button>
+                        </div>
+                    }
+             </div>
+            </div>
+        </div>
+    
+
+    
+
+}
+</div>
+<script>
+
+    function OpenModal() {
+        $('#myModal').modal('show');
+    }
+    
+    function CloseModal() {
+        $('#myModal').modal('hide');
+    }
+    function LeaveServer() {
+        var a = @Model.Id;
+        var selected = "thisone";
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LeaveServer", "Account")?ServerId=${se}',
+            success: function(msg) {
+                $('#taskContainer').html(msg);
+                UpdateCostCenter();
+                $("#Task").on('change', UpdateCostCenter);
+
+            }
+        });
+    }
+</script>
+@section scripts {
+    <script>
+    function LeaveServer() {
+    $.ajax({
+    type: "GET",
+    url: '@Url.Action("LeaveServer", "Account")?projectId=@Model.Id',
+    success: function() {
+       window.location.href = '/Account/Account/';
 
     }
-</div>
+    });
+    }
+    </script>
+}
