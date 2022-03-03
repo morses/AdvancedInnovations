@@ -20,9 +20,7 @@ namespace DiscordStats.DAL.Concrete
             {
                 servers.Add(s);
             }
-
             return servers;
-
         }
 
         public bool CreateServer(Server server)
@@ -31,6 +29,7 @@ namespace DiscordStats.DAL.Concrete
                 return false;
             if (CheckForDuplicates(server.Id) == false)
                 return false;
+            AddOrUpdate(server);
             return true;
         }
 
@@ -41,6 +40,20 @@ namespace DiscordStats.DAL.Concrete
             {
                 if (serverId == server.Id)
                 {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool UpdatePrivacy(string serverId, string privacy)
+        {
+            foreach (Server server in GetAll())
+            {
+                if (server.Id == serverId)
+                {
+                    server.Privacy = privacy;
+                    AddOrUpdate(server);
                     return true;
                 }
             }
