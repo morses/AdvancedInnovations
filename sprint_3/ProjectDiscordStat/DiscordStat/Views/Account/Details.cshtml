@@ -40,7 +40,7 @@
         <div class="modal fade" id="myModal">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    @if (User.Claims.First(c => c.Type != ClaimTypes.Name).Value == @Model.Owner)
+                    @if (User.Claims.First(c => c.Type == ClaimTypes.Name).Value != @Model.Owner)
                     {
 
                     <div class="modal-header">
@@ -108,13 +108,11 @@
 @section scripts {
     <script>
     function LeaveServer() {
-    var a = @Model.Id;
-    var selected = "gh";
     $.ajax({
     type: "GET",
     url: '@Url.Action("LeaveServer", "Account")?projectId=@Model.Id',
     success: function() {
-       
+       window.location.href = '/Account/Account/';
 
     }
     });
