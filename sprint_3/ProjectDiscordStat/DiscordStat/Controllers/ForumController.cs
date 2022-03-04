@@ -6,6 +6,7 @@ using System.Security.Claims;
 using DiscordStats.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using DiscordStats.ViewModel;
 
 namespace DiscordStats.Controllers
 {
@@ -24,15 +25,21 @@ namespace DiscordStats.Controllers
             _serverRepository = serverRepository;
         }
 
+        public IActionResult Index()
+        {
+            IEnumerable<Server> servers = _serverRepository.GetServers();
+            return View(servers);
+        }
+
         [HttpGet]
         [Authorize(AuthenticationSchemes = "Discord")]
         public IActionResult Forum()
         {
-
-            IEnumerable<Server>? servers = _serverRepository.GetAll();
+            RetrieveItemFromDbForForumVM getAllServersFromDb = new(_serverRepository);
+            var servers = getAllServersFromDb.RetrieveServers(_serverRepository);
 
             var selectList = new SelectList(
-            servers.Where(m => m.Owner == "true").ToList().Select(s => new{Text = $"{s.Name}", Value = s.Id}),
+            servers.Where(m => m.Owner == "true").ToList().Select(s => new { Text = $"{s.Name}", Value = s.Id }),
             "Value", "Text");
             ViewData["Id"] = selectList;
 
@@ -41,13 +48,15 @@ namespace DiscordStats.Controllers
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = "Discord")]
-        public IActionResult Forum([Bind("Id")] ServerOwnerViewModel server)
+        public IActionResult ServerOnForum([Bind("Id")] ServerOwnerViewModel server)
         {
-            //ModelState.Remove("Id,Name,Owner,HasBot,Icon,Owner_Id,Verification_Level,Description,Premium_Tier,Approximate_Member_Count,Approximate_Presence_Count");
-            //if(ModelState.IsValid)
-            if(server.Id != null)
+            if (server.Id != null)
             {
-                ViewBag.Hello = "Hello";
+
+                string onForum = "true";
+                _serverRepository.UpdateOnForum(server.Id, onForum);
+                return RedirectToAction("Index");
+
             }
             else
             {
@@ -57,10 +66,32 @@ namespace DiscordStats.Controllers
                 servers.Where(m => m.Owner == "true").ToList().Select(s => new { Text = $"{s.Name}", Value = s.Id }),
                 "Value", "Text");
                 ViewData["ServerBroadcasting"] = selectList;
-
+                return View();
             }
-            
-            return View();
+                     
+        }
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = "Discord")]
+        public IActionResult ServerOffForum([Bind("Id")] ServerOwnerViewModel server)
+        {
+            if (server.Id != null)
+            {
+                string onForum = "false";
+                _serverRepository.UpdateOnForum(server.Id, onForum);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                IEnumerable<Server>? servers = _serverRepository.GetAll();
+
+                var selectList = new SelectList(
+                servers.Where(m => m.Owner == "true").ToList().Select(s => new { Text = $"{s.Name}", Value = s.Id }),
+                "Value", "Text");
+                ViewData["ServerBroadcasting"] = selectList;
+                return View();
+            }
+
         }
     }
 }

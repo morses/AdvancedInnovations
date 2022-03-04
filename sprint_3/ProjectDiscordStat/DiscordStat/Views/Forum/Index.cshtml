@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Server>
+
+<div class = "row">
+    <ul>
+        <li><h3>
+            <u>Verification Level:</u> It's a form of security for messaging in text channels, users within the server have to 
+            meet a certain level of security to message, disragarding members that have assigned roles.
+        </h3></li>
+        <li><h3>
+            <u>Premuim Tier:</u> Seems to be perks for a server. eg: boosts, monetize servers, and the likes. 
+        </h3></li>
+        <li><h3>
+            <u>App Presence #:</u> Is the "Approximate Presence Count". Which includes (and perhaps not limited to) 
+            "Playing"/"Streaming"/"Watching"/"Competing"; Custome Status; User Status: online, idel, dnd, or offline.
+        </h3></li>
+    </ul>
+</div>
+<div class = "row">
+    <table id="filterTable" class="display" style="color:white">
+
+            <tr>
+                <th>Server Name</th>
+                <th>Verification Level</th>
+                <th>Premium Tier</th>
+                <th>App Presence #</th>
+            </tr>
+
+            @foreach(var s in Model.OrderByDescending(s => s.ApproximatePresenceCount).ToList())
+            {
+	            @if(s.OnForum == "true")
+	            {
+		            <tr>
+                        <td>@s.Name</td>
+                        <td>@s.VerificationLevel</td>
+                        <td>@s.PremiumTier</td>
+                        <td>@s.ApproximatePresenceCount</td>
+		            </tr>
+	            }
+            }
+    </table>
+</div>
+

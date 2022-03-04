@@ -59,5 +59,17 @@ namespace DiscordStats.DAL.Concrete
             }
             return false;
         }
+
+        public void UpdateOnForum(string serverId, string onForum)
+        {
+            foreach(Server server in GetAll())
+            {
+                if(server.Id == serverId)
+                {
+                    server.OnForum = onForum;
+                    AddOrUpdate(server);
+                }
+            }
+        }
     }
 }
