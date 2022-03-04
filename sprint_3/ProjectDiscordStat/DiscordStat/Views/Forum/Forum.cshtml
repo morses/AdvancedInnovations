@@ -1,0 +1,57 @@
+﻿@model DiscordStats.Models.Server
+
+@{
+	ViewData["Title"] = "Broad cast your server";
+}
+
+<div class="text-center">
+    <div class="jumbotron rounder p-3">
+        <h1>@ViewData["Title"]</h1>
+        <div class="text-left">
+        </div>
+    </div>    
+</div>
+
+<form asp-action="Forum" method="post">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="row">
+                <label asp-for="Id" class="control-label">Which Server would you like to Broadcast?</label>
+                <select asp-for="Id" class="form-control" asp-items="ViewBag.Id"></select>
+                <span asp-validation-for="Id" class="text-danger"></span>
+                </div>
+@*                <div class="row">
+                <label asp-for="StartDate" class="control-label">Date Expedition Started</label>
+                <input asp-for="StartDate" class="form-control">
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>*@
+            </div>
+@*            <div class="col-sm-6">
+                <div class="row">
+                <label asp-for="TrekkingAgencyId" class="control-label">Trekking Agency Used</label>
+                <select asp-for="TrekkingAgencyId" class="form-control" asp-items="ViewBag.TrekkingAgencyId"></select>
+                <span asp-validation-for="TrekkingAgencyId" class="text-danger"></span>
+                </div>
+                <div class="row">
+                <label asp-for="OxygenUsed" class="control-label">Was O<sub>2</sub> Used?</label>
+                <input asp-for="OxygenUsed" class="form-control">
+                <span asp-validation-for="OxygenUsed" class="toggle"></span>
+                </div>
+            </div>*@
+
+        </div>
+@*            <div class="row">
+                <label for="text" asp-for="TerminationReason" class="control-label">Why was the expedition terminated?</label>
+                <input type="text" asp-for="TerminationReason" class="form-control" >
+                <span asp-validation-for="TerminationReason" class="text-danger"></span>
+            </div>
+                <p>Common reasons:<br>
+                Success (main peak)<br>
+                Badweather (storms, high winds) illness, AMS, exhaustion, or frostbite<br>
+                Route technically too difficult, lack of experience, strength or motivation<br>
+                Bad conditions (deep snow, avalanching, falling ice, or rock<br></p>*@
+
+    <div class="form-group mt-3 text-center">
+        <input type="submit" value="BroadCast" class="btn btn-online-primary" />
+    </div>
+</form>

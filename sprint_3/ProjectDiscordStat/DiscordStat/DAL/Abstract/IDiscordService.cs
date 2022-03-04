@@ -21,7 +21,7 @@ namespace DiscordStats.DAL.Abstract
 
         Task<DiscordUser?> GetCurrentUserInfo(string bearerToken);
 
-        Task<Server?> GetCurrentGuild(string botToken, string serverId);
+        //Task<Server?> GetCurrentGuild(string botToken, string serverId);
 
         Task<DiscordUser?> GetUserInfoById(string bearerToken, string UserId);
 
@@ -30,7 +30,7 @@ namespace DiscordStats.DAL.Abstract
 
         Task<string?> AddMemberToGuild(string botToken, string serverId, string userId, string bearerToken);
 
-        void ServerEntryDbCheck(Server server, string hasBot, string serverOwner);
+        void ServerEntryDbCheck(ServerOwnerViewModel server, string hasBot, string serverOwner);
 
         Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId);
 

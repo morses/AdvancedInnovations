@@ -20,7 +20,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using DiscordStats.ViewModels;
 
 namespace DiscordStats.Controllers
 {
@@ -53,7 +53,7 @@ namespace DiscordStats.Controllers
         [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> AllServers()
         {
-            AllServersVM allServersNameAndMemCountVM = new (_serverRepository);
+            AllServersVM allServersNameAndMemCountVM = new(_serverRepository);
 
             return View(allServersNameAndMemCountVM);
         }
