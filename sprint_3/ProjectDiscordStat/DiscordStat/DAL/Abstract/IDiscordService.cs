@@ -1,4 +1,5 @@
 using DiscordStats.Models;
+using DiscordStats.ViewModel;
 using DiscordStats.ViewModels;
 
 
@@ -34,6 +35,7 @@ namespace DiscordStats.DAL.Abstract
 
         Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId);
         Task<string?> LeaveServer(string botToken, string serverId, string UserId);
-
+        Task<List<GuildUsers>?> GetCurrentGuildUsers(string botToken, string serverId);
+        Task<string?> KickUser(string botToken, string serverId, string userId);
     }
 }
