@@ -86,11 +86,10 @@ namespace DiscordStats.DAL.Concrete
             }
         }
 
-        public async Task<string> PutToDiscordEndPoint(string botToken, string uri, string bearerToken)
+        public async Task<string> PostToDiscordEndPoint(string botToken, string uri)
         {
-            var bodyAsJSON = $"{{\"access_token\": \"{botToken}\"}}";
+            var bodyAsJSON = $"{{\"access_token\": \"{ botToken}\"}}";
 
-            //var requestContent = JsonContent.Create(body);
             HttpContent body = new StringContent(bodyAsJSON);
 
             body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
@@ -100,17 +99,17 @@ namespace DiscordStats.DAL.Concrete
             {
                 // might have 
                 Headers =
-                    {
-                        { HeaderNames.Accept, "application/json" },
-                        { HeaderNames.Authorization, "Bot " + botToken},
-                        { HeaderNames.UserAgent, "DiscordStat" },
-                        { HeaderNames.ContentType, "application/json" }
-                    }
+                {
+                    { HeaderNames.Accept, "application/json" },
+                    { HeaderNames.Authorization, "Bot " + botToken},
+                    { HeaderNames.UserAgent, "DiscordStat" }
+                },
+                Content = body
 
             };
             HttpClient httpClient = _httpClientFactory.CreateClient();
             // Note this is the blocking version.  Would be better to use the Async version
-            HttpResponseMessage response = await httpClient.PutAsync(uri, body);
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
             //HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
             // This is only a minimal version; make sure to cover all your bases here
             if (response.IsSuccessStatusCode)
@@ -213,12 +212,19 @@ namespace DiscordStats.DAL.Concrete
             // And here
 
             return response;
-        }   
+        }
 
-        public async Task<string?> AddMemberToGuild(string botToken, string serverId, string userId, string bearerToken)
+        public async Task<string?> AddMemberToGuild(string botToken, string channelId)
         {
-            string uri = "https://discord.com/api/guilds/" + serverId + "/members/" + userId;
-            string response = await PutToDiscordEndPoint(botToken, uri, bearerToken);
+            string uri = "https://discord.com/api/channels/" + channelId + "/invites";
+            string response = await PostToDiscordEndPoint(botToken, uri);
+            return response;
+        }
+
+        public async Task<string?> FindChannels(string botToken, string serverId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
+            string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
             return response;
         }
 
@@ -249,6 +255,7 @@ namespace DiscordStats.DAL.Concrete
 
             }
         }
+
 
     }
 }
