@@ -6,6 +6,8 @@ using DiscordStats.ViewModels;
 
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using System.Web.Helpers;
+using DiscordStats.ViewModel;
 
 namespace DiscordStats.DAL.Concrete
 {
@@ -198,7 +200,15 @@ namespace DiscordStats.DAL.Concrete
             DiscordUser? userInfo = JsonConvert.DeserializeObject<DiscordUser>(response);
             return userInfo;
         }
-
+        public async Task<List<GuildUsers>?> GetCurrentGuildUsers(string botToken, string serverId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId + "/members?limit=1000";
+            // Remember to handle errors here
+            string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
+            // And here
+            List<GuildUsers>? userInfo = JsonConvert.DeserializeObject<List<GuildUsers>?>(response);
+            return userInfo;
+        }
 
         public async Task<DiscordUser?> GetUserInfoById(string botToken, string UserId)
         {
@@ -239,7 +249,7 @@ namespace DiscordStats.DAL.Concrete
             // And here
 
             return response;
-        }   
+        }
 
         public async Task<string?> AddMemberToGuild(string botToken, string serverId, string userId, string bearerToken)
         {
@@ -279,6 +289,15 @@ namespace DiscordStats.DAL.Concrete
         {
             string uri = "https://discord.com/api/guilds/" + serverId +"/members/" + UserId;
             string response = await GetJsonStringFromEndpointDelete(botToken, uri);
+            return response;
+        }
+        public async Task<string?> KickUser(string botToken, string serverId, string userId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId + "/members/" + userId;
+            // Remember to handle errors here
+            string response = await GetJsonStringFromEndpointDelete(botToken, uri);
+            // And here
+
             return response;
         }
 

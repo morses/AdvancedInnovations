@@ -3,6 +3,7 @@ using DiscordStats.DAL.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
+using DiscordStats.ViewModel;
 using DiscordStats.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 
@@ -94,7 +95,8 @@ namespace DiscordStats.Controllers
                 vm = await _discord.GetFullGuild(_configuration["API:BotToken"], SelectedServer.Id);
                 var ServerOwner = await _discord.GetUserInfoById(_configuration["API:BotToken"], vm.Owner_Id);
                 vm.HasBot = SelectedServer.HasBot;
-                vm.Owner = ServerOwner.username;
+                vm.Owner = ServerOwner.Username;
+                vm.users = await _discord.GetCurrentGuildUsers(_configuration["API:BotToken"], vm.Id);
             }
             else
             {
@@ -104,6 +106,7 @@ namespace DiscordStats.Controllers
                 vm.HasBot = "false";
             }
 
+          
             return View(vm);
 
         }
@@ -113,6 +116,19 @@ namespace DiscordStats.Controllers
             string userid = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
             _discord.LeaveServer(_configuration["API:BotToken"], ServerId, userid);
+        }
+        
+        public async void KickUser(string ServerId,string user)
+        {
+            var users = await _discord.GetCurrentGuildUsers(_configuration["API:BotToken"], ServerId);
+            string UserId = "";
+            foreach (var u in users)
+            {
+                if (u.user.UserName == user)
+                    UserId = u.user.Id;
+            }
+
+            await _discord.KickUser(_configuration["API:BotToken"], ServerId, UserId);
         }
     }
 
