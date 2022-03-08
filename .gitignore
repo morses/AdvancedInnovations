@@ -351,5 +351,7 @@ MigrationBackup/
 
 # Suggested from Scot to add so it will ignore user config files when someone uses VSCode with your project
 .vscode
+.env
+*.env
 sprint_3/Bot/.env
 sprint_3/ProjectDiscordStat/DiscordStat/wwwroot/js/.env
