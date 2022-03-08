@@ -1,8 +1,9 @@
-﻿@model DiscordStats.ViewModel.RetrieveItemFromDbForForumVM
+﻿@*@model DiscordStats.ViewModel.RetrieveItemFromDbForForumVM*@
+@model DiscordStats.Models.Server
 
 
 @{
-	ViewData["Title"] = "Broadcast your server";
+	ViewData["Title"] = "Add/Un-Add to/from Forum";
 }
 
 <div class="text-center">
@@ -17,19 +18,19 @@
 
         <div class="align-content-lg-center">
             <div class="row">
-            <label asp-for="Id" class="control-label">Which Server would you like to Broadcast?</label>
+            <label asp-for="Id" class="control-label">Which Server would you like to add to forum?</label>
             <select asp-for="Id" class="form-control" asp-items="ViewBag.Id"></select>
             <span asp-validation-for="Id" class="text-danger"></span>
             </div>
         </div>
-              @*<div class="col">
-            <div class="form-group mt-3 text-center">
-                <input type="submit" value="Broadcast" style="color:white" class="btn btn-online-primary" />
-            </div>
-        </div>*@
+         <div class="row">
+                <label for="text" asp-for="Message" class="control-label">Leave a message (5ish words):</label>
+                <input type="text" asp-for="Message" class="form-control" >
+                <span asp-validation-for="Message" class="text-danger"></span>
+        </div>
         <div class="col">
             <div class="form-group mt-3 text-center">
-                <input type="submit" value="Broadcast" style="background:black; color:white"  class="btn btn-online-primary"/>
+                <input type="submit" value="Add to Forum" style="background:black; color:white"  class="btn btn-online-primary"/>
             </div>
         </div>
 
@@ -37,7 +38,7 @@
 <form asp-controller="Forum" asp-action="ServerOffForum" method="post">
         <div class="align-content-lg-center">
             <div class="row">
-            <label asp-for="Id" class="control-label">Which Server would you like to Un-Broadcast?</label>
+            <label asp-for="Id" class="control-label">Which Server would you like to un-add from forum?</label>
             <select asp-for="Id" class="form-control" asp-items="ViewBag.Id"></select>
             <span asp-validation-for="Id" class="text-danger"></span>
             </div>
@@ -46,14 +47,14 @@
  
         <div class="col">
             <div class="form-group mt-3 text-center">
-                <input type="submit" value="Un-Broadcast" style="background:black; color:white"  class="btn btn-online-primary"/>
+                <input type="submit" value="Un-Add from Forum" style="background:black; color:white"  class="btn btn-online-primary"/>
             </div>
         </div>
 </form>
 
 <div class="col">
     <div class="form-group mt-3 text-center">
-        <input type="button" value="View BroadCasts" style="background:black; color:white" onclick="location.href='@Url.Action("Index","Forum")'" />
+        <input type="button" value="View Forum" style="background:black; color:white" onclick="location.href='@Url.Action("Index","Forum")'" />
     </div>
 </div>
 

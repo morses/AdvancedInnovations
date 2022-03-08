@@ -5,7 +5,9 @@ namespace DiscordStats.DAL.Abstract
 {
     public interface IPresenceRepository : IRepository<Presence>
     {
-        IEnumerable<Presence> GetPresences();
+        //IEnumerable<Presence> GetPresences();
+
+        void UpdatePresence(string presenceId, string presenceName);
 
     }
 }

@@ -6,6 +6,7 @@ using DiscordStats.ViewModels;
 
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace DiscordStats.DAL.Concrete
 {
@@ -18,13 +19,15 @@ namespace DiscordStats.DAL.Concrete
         // Use constructor injection to get the http client factory, which we'll use to get an http client
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IServerRepository _serverRepository;
+        private readonly IPresenceRepository _presenceRepository;
 
         private DiscordDataDbContext _db = new DiscordDataDbContext();
 
-        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository)
+        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository, IPresenceRepository presenceRepository)
         {
             _serverRepository = serverRepository;   
             _httpClientFactory = httpClientFactory;
+            _presenceRepository = presenceRepository;
         }
 
 
@@ -243,7 +246,7 @@ namespace DiscordStats.DAL.Concrete
             if (dbServers.Count() == 0)
             {
                 var servMemberCount = server.Approximate_Member_Count;
-                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = server.Owner_Id, VerificationLevel = server.Verification_Level, Description = server.Description, PremiumTier = server.Premium_Tier, ApproximatePresenceCount = server.Approximate_Presence_Count, Privacy="private", OnForum="false" });
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = server.Owner_Id, VerificationLevel = server.Verification_Level, Description = server.Description, PremiumTier = server.Premium_Tier, ApproximatePresenceCount = server.Approximate_Presence_Count, Privacy="private", OnForum="false", Message="null" });
                 duplicate = true;
 
             }
@@ -258,9 +261,52 @@ namespace DiscordStats.DAL.Concrete
             if (!duplicate)
             {
                 var servMemberCount = server.Approximate_Member_Count;
-                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = server.Owner_Id, VerificationLevel = server.Verification_Level, Description = server.Description, PremiumTier = server.Premium_Tier, ApproximatePresenceCount = server.Approximate_Presence_Count, Privacy="private", OnForum="false" });
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = server.Owner_Id, VerificationLevel = server.Verification_Level, Description = server.Description, PremiumTier = server.Premium_Tier, ApproximatePresenceCount = server.Approximate_Presence_Count, Privacy="private", OnForum="false", Message="null" });
 
             }
+        }
+
+        public async Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences)
+        {
+            foreach (var presence in presences)
+            {
+                Debug.Write(presence.Name);
+
+
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var duplicate = false;
+                    var upDatePresence = false;
+
+
+                    var allPresences = _presenceRepository.GetAll().ToList();
+
+                    for (int i = 0; i < allPresences.Count(); i++)
+                    {
+                        if (presence.ServerId == allPresences[i].ServerId)
+                        {
+                            duplicate = true;
+                        }
+                        if (presence.ServerId == allPresences[i].ServerId && presence.Name != allPresences[i].Name)
+                        {
+                            upDatePresence = true;
+                            duplicate = true;
+                        }
+                    }
+                    if (!duplicate)
+                    {
+                        _presenceRepository.AddOrUpdate(presence);
+                    }
+                    if (duplicate == true && upDatePresence == true)
+                    {
+                        _presenceRepository.UpdatePresence(presence.ServerId, presence.Name);
+                    }
+                });
+
+            }
+
+            return "It Worked";
         }
 
     }

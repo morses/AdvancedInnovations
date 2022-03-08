@@ -30,9 +30,12 @@ namespace DiscordStats.DAL.Abstract
 
         Task<string?> AddMemberToGuild(string botToken, string serverId, string userId, string bearerToken);
 
+        Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId);
+
         void ServerEntryDbCheck(ServerOwnerViewModel server, string hasBot, string serverOwner);
 
-        Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId);
+
+        Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences);
 
     }
 }

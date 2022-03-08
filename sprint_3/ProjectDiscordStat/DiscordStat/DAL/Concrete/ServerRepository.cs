@@ -71,5 +71,17 @@ namespace DiscordStats.DAL.Concrete
                 }
             }
         }
+
+        public void UpdateMessage(string serverId, string message)
+        {
+            foreach (Server server in GetAll())
+            {
+                if (server.Id == serverId)
+                {
+                    server.Message = message;
+                    AddOrUpdate(server);
+                }
+            }
+        }
     }
 }

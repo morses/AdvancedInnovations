@@ -20,7 +20,8 @@ CREATE TABLE [Server]
   [premium_tier] nvarchar(50) Not Null,
   [approximate_presence_count]nvarchar(50) Not Null,
   [Privacy] nvarchar(50) Not Null,
-  [OnForum] nvarchar(50) Not Null
+  [OnForum] nvarchar(50) Not Null,
+  [Message] nvarchar(256) Not Null
 );
 
 CREATE TABLE [ServerUserJoin] 

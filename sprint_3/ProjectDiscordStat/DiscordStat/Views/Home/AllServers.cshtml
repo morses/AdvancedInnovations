@@ -1,6 +1,9 @@
 ﻿@model DiscordStats.ViewModel.AllServersVM;
 @*@using DiscordStats.DAL.Concrete. check this from class example repo*@
-
+<head>
+    <meta name="viewport" content="width=device-width" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</head>
 
 <div class="col">
 	<div class="row">
@@ -35,3 +38,4 @@
             <button class="button" name="id" value="@s.Id">Server Name: @s.Name <br> Member Count: @s.Approximate_Member_Count</button>
         }
 </div>*@
+

@@ -35,26 +35,34 @@ namespace DiscordStats.Controllers
         [Authorize(AuthenticationSchemes = "Discord")]
         public IActionResult Forum()
         {
-            RetrieveItemFromDbForForumVM getAllServersFromDb = new(_serverRepository);
-            var servers = getAllServersFromDb.RetrieveServers(_serverRepository);
+            //RetrieveItemFromDbForForumVM getAllServersFromDb = new(_serverRepository);
+            //var servers = getAllServersFromDb.RetrieveServers(_serverRepository);
+            var servers = _serverRepository.GetAll();
 
             var selectList = new SelectList(
             servers.Where(m => m.Owner == "true").ToList().Select(s => new { Text = $"{s.Name}", Value = s.Id }),
             "Value", "Text");
             ViewData["Id"] = selectList;
 
+            ViewData["Message"] = servers.Where(m => m.Owner == "true").ToList().Select(s => s.Message);
+
             return View();
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = "Discord")]
-        public IActionResult ServerOnForum([Bind("Id")] ServerOwnerViewModel server)
+        public IActionResult ServerOnForum([Bind("Id, Message")] Server server)
         {
             if (server.Id != null)
             {
 
                 string onForum = "true";
+                if(server.Message == null)
+                {
+                    server.Message = "null";
+                }
                 _serverRepository.UpdateOnForum(server.Id, onForum);
+                _serverRepository.UpdateMessage(server.Id, server.Message);
                 return RedirectToAction("Index");
 
             }
@@ -73,12 +81,14 @@ namespace DiscordStats.Controllers
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = "Discord")]
-        public IActionResult ServerOffForum([Bind("Id")] ServerOwnerViewModel server)
+        public IActionResult ServerOffForum([Bind("Id, Message")] Server server)
         {
             if (server.Id != null)
             {
                 string onForum = "false";
+                server.Message = "null";
                 _serverRepository.UpdateOnForum(server.Id, onForum);
+                _serverRepository.UpdateMessage(server.Id, server.Message);
                 return RedirectToAction("Index");
             }
             else
