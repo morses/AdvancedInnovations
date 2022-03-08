@@ -43,14 +43,14 @@ CREATE TABLE [DiscordUser]
 CREATE TABLE [Presence]
 (
   [PresencePk] int PRIMARY KEY IDENTITY(1, 1),
-  [ID] nvarchar(256) NOT NULL,
-  [applicationID] nvarchar(256) Not Null,
-  [Name]    nvarchar(256)  NOT NULL,
-  [Details] nvarchar(256) NOT NULL,
-  [CreatedAt] nvarchar(256) NOT NULL,
+  [ID] nvarchar(256) NULL,
+  [applicationID] nvarchar(256) Null,
+  [Name]    nvarchar(256)  NULL,
+  [Details] nvarchar(256) NULL,
+  [CreatedAt] nvarchar(256) NULL,
   [LargeImageId] nvarchar(256) NULL,
   [SmallImageId] nvarchar(256) NULL,
-  [ServerId] nvarchar(256) NOT NULL
+  [ServerId] nvarchar(256) NULL
 );
 
 CREATE TABLE [ServerPresenceJoin] 

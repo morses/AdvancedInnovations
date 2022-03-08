@@ -10,8 +10,7 @@ namespace DiscordStats.ViewModel
     public class PresenceChartDataVM
     {
         public Dictionary<string, int>? AllPresenceNameListAndCount(List<Presence> presences)
-        {
-
+        {           
             Dictionary<string, int> keyValueCounts = presences
             .GroupBy(x => x.Name)
             .ToDictionary(g => g.Key, g => g.Count());
