@@ -49,7 +49,7 @@ namespace DiscordStats.Models
         public string Privacy { get; set; } = null!;
         [StringLength(50)]
         public string OnForum { get; set; } = null!;
-        [StringLength(256)]
+        [StringLength(50)]
         public string Message { get; set; } = null!;
 
         [InverseProperty(nameof(ServerPresenceJoin.ServerPkNavigation))]

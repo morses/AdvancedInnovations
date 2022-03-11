@@ -21,7 +21,7 @@ CREATE TABLE [Server]
   [approximate_presence_count]nvarchar(50) Not Null,
   [Privacy] nvarchar(50) Not Null,
   [OnForum] nvarchar(50) Not Null,
-  [Message] nvarchar(256) Not Null
+  [Message] nvarchar(50) Not Null
 );
 
 CREATE TABLE [ServerUserJoin] 
