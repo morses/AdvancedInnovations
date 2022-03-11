@@ -11,9 +11,7 @@ namespace DiscordStats.DAL.Abstract
         bool CheckForDuplicates(string serverId);
         bool UpdatePrivacy(string serverId, string Privacy);
 
-        void UpdateOnForum(string serverId, string onForum);
-
-        void UpdateMessage(string serverId, string message);
+        void UpdateOnServerWithForumInfo(string serverId, string onForum, string message);
 
     }
 }
