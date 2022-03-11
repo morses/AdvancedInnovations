@@ -4,18 +4,15 @@
 
 
 // Write your JavaScript code.
-
-//$(".change").on("click", function () {
-//    if ($("body").hasClass("dark")) {
-//        $("body").removeClass("dark");
-
-//    } else {
-//        $("body").addClass("dark");
-
-//    }
-//});
-
-/*setInterval(function () { $("body").addClass("dark") });*/
+$(".change").on("click", function () {
+    if ($("body").hasClass("dark")) {
+        $("body").removeClass("dark");
+        $(".change").text("OFF");
+    } else {
+        $("body").addClass("dark");
+        $(".change").text("ON");
+    }
+});
 
 /*JQuery for graphs on home page and bar and pie graphs on home page*/
 $.ajax({

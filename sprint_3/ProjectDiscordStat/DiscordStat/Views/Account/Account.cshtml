@@ -1,12 +1,9 @@
 ﻿@model IEnumerable<DiscordStats.Models.Server>
-<head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
-</head>
 
 <div class="mode">
-    <div onclick="false" class="change"></div>
-    @*<span onclick="true" class="change"></span>*@
+Dark mode:	
+    <span class="change">ON</span>
 </div>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
@@ -37,7 +34,7 @@
 @if (Model != null)
 {
     <form id="form1" runaat="server">
-<table id="filterTable" class="display" style="color:white">
+<table id="filterTable" class="display" >
     <thead>
     <tr>
         <th><b>Server Owner</b></th>
@@ -94,3 +91,7 @@
     </div>
 }
 
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}

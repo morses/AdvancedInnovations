@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<Server>
 
+
+<div class="mode">
+Dark mode:	
+    <span class="change">ON</span>
+</div>
+
 <div class = "row">
     <ul>
         <li><h3>
@@ -52,4 +58,7 @@
 </div>
 
 
-@*or i could use this: <a asp-action="Create" class="btn btn-primary">Add a new Expedition!</a>*@
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}
