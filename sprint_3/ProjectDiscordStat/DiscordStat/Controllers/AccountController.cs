@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DiscordStats.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
 
@@ -26,7 +27,7 @@ namespace DiscordStats.Controllers
             _serverRepository = serverRepository;
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
+        [Authorize (AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> Account()
         {
             // Don't use the ViewBag!  Use a viewmodel instead.
@@ -37,12 +38,12 @@ namespace DiscordStats.Controllers
             string botToken = _configuration["API:BotToken"];
 
             IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
-            
+
             foreach (Server server in servers)
             {
 
                 string hasBot = await _discord.CheckForBot(botToken, server.Id);
-                if(hasBot == "true")
+                if (hasBot == "true")
                 {
                     var serverWithMemCount = await _discord.GetCurrentGuild(botToken, server.Id);
 
@@ -66,7 +67,8 @@ namespace DiscordStats.Controllers
             return View(servers);
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
+
+
         public async Task<IActionResult> Servers()
         {
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
@@ -95,10 +97,17 @@ namespace DiscordStats.Controllers
         }
 
 
+        [AllowAnonymous]
+        public IActionResult Logout()
+        {
+            foreach (var cookie in HttpContext.Request.Cookies)
+            {
+                Response.Cookies.Delete(cookie.Key);
+            }
+            return RedirectToAction("Index", "Home");
+        }
 
-
-
-        [Authorize(AuthenticationSchemes = "Discord")]
+        [Authorize]
         public async Task<IActionResult> Details(string? name)
         {
             string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;

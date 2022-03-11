@@ -50,7 +50,7 @@ namespace DiscordStats.Controllers
             return View();
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
+        [Authorize]
         public async Task<IActionResult> AllServers()
         {
             AllServersVM allServersNameAndMemCountVM = new (_serverRepository);
@@ -58,7 +58,7 @@ namespace DiscordStats.Controllers
             return View(allServersNameAndMemCountVM);
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddMemberToPickedServer(string? id)
         {
