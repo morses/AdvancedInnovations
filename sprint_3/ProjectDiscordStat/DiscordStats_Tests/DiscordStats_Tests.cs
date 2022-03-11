@@ -49,16 +49,24 @@ namespace DiscordStats_Tests
             new Server{Id = "151516415641361", ServerPk = 3, Name = "fake server", Owner = "false", Icon = "", HasBot = "false", ApproximateMemberCount=23532}
         };
 
-            _mockServerDbSet = GetMockDbSet<Server>(ser.AsQueryable<Server>());
+        _mockServerDbSet = GetMockDbSet<Server>(ser.AsQueryable<Server>());
             //_mockPartialServerDbSet = GetMockDbSet(_serverPartial.AsQueryable());
 
             _mockContext = new Mock<DiscordDataDbContext>();
             _mockContext.Setup(ctx => ctx.Servers).Returns(_mockServerDbSet.Object);
             _mockContext.Setup(ctx => ctx.Set<Server>()).Returns(_mockServerDbSet.Object);
+            _mockContext.Setup(ctx => ctx.Update(It.IsAny<Server>()))
+                        .Callback((Server s) => { ser.Add(s); })
+                        .Returns((Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Server>)null);
+            // do not rely on the return value from Update since it's just null
+            _mockContext.Setup(ctx => ctx.SaveChanges())
+                        .Returns(0);
+            // do not rely on the return value as it is just a placeholder
 
             //how do I do the ServerPartial?
             //_mockContext.Setup(ctx => ctx.ServersPartial).Returns(_mockServerDbSet.Object);
             //_mockContext.Setup(ctx => ctx.Set<Server>()).Returns(_mockServerDbSet.Object);
+
         }
 
         [Test]
@@ -69,15 +77,19 @@ namespace DiscordStats_Tests
             _serverRepository = new ServerRepository(_mockContext.Object);
             DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, _presenceRepository);
 
-            //ServerOwnerViewModel server = FakeData.ServersVM[0];
-            var serverGetAll2 = _serverRepository.GetAll();
-            int count = serverGetAll2.Count();
-
             var serverGetAll = _serverRepository.GetAll();
             int initialCount = serverGetAll.Count();
+            List<ServerOwnerViewModel> ServersVM = new List<ServerOwnerViewModel>
+            {
+                new ServerOwnerViewModel{Id = "789317480325316640", ServerPk = 1, Name = "input/output server", Owner = "true", Icon = "4e428f7fb657dbf3b733e7b691e56997", HasBot = "true", Approximate_Member_Count=5},
+                new ServerOwnerViewModel{Id = "928010025958510632", ServerPk = 2, Name = "Advanced Innovations", Owner = "false", Icon = "d8f49d144185733c210456853906b631", HasBot = "true", Approximate_Member_Count=5},
+                new ServerOwnerViewModel{Id = "151516415641361", ServerPk = 3, Name = "fake server", Owner = "false", Icon = "", HasBot = "false", Approximate_Member_Count=23532}
+            };
 
             // Act
-            //discord.ServerEntryDbCheck(server, "fakeHasbot", "fakeServerOwner");
+            discord.ServerEntryDbCheck(ServersVM[0], "fakeHasbot", "fakeServerOwner");
+            var serverGetAll2 = _serverRepository.GetAll();
+            int count = serverGetAll.Count();
 
 
             // Assert
