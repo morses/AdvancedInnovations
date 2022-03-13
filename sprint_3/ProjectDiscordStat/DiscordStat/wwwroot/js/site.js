@@ -137,7 +137,7 @@ function pieGraphTopUsersPerGam(data) {
             legend: { display: false },
             title: {
                 display: true,
-                text: "Users Playing top 5 games"
+                text: "First 5 Presences and Count"
             }
 
         }
