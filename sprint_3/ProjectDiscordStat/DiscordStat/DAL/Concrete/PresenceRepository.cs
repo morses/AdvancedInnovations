@@ -12,16 +12,29 @@ namespace DiscordStats.DAL.Concrete
         {
         }
 
-        public IEnumerable<Presence> GetPresences()
+        //public IEnumerable<Presence> GetPresences()
+        //{
+        //    List<Presence> presences = new List<Presence>();
+        //    foreach (var s in _dbSet)
+        //    {
+        //        presences.Add(s);
+        //    }
+
+        //    return presences;
+
+        //}
+
+        public void UpdatePresence(string presenceServerId, string presenceName)
         {
-            List<Presence> presences = new List<Presence>();
-            foreach (var s in _dbSet)
+            foreach (Presence presence in GetAll())
             {
-                presences.Add(s);
+                if(presence.ServerId == presenceServerId)
+                {
+                    presence.Name = presenceName;
+                    AddOrUpdate(presence);
+                }
             }
-
-            return presences;
-
         }
+
     }
 }

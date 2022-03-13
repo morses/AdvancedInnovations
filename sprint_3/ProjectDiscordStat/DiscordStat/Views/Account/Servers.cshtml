@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<DiscordStats.Models.Server>
 
+
+<div class="mode">
+Dark mode:	
+    <span class="change">ON</span>
+</div>
+
 <script src="https://kit.fontawesome.com/5b2bd23d5f.js" crossorigin="anonymous"></script>
 <h1 style="text-align:center">Here is a list of servers that you own. Please select which one you would like to add a bot to.</h1>
 
@@ -64,3 +70,8 @@
     }
 
 </script>
+
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}

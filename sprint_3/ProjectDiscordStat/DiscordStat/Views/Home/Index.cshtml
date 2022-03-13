@@ -7,10 +7,9 @@
     <meta name="viewport" content="width=device-width" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
-
 <div class="mode">
-    <div onclick="false" class="change"></div>
-@*    <span onclick="true" class="change"> hello </span>*@
+Dark mode:	
+    <span class="change">ON</span>
 </div>
 
 <body>
@@ -32,36 +31,21 @@
     </div>
 </div>
 
+</body>
+</html>
+
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}
 
 <script>
-var xValues = ["1", "2", "3", "4", "5"];
-var yValues = [62, 49, 23, 70, 32];
-var barColors = ["red", "green","blue","orange","brown"];
-
-new Chart("barChart", {
-  type: "bar",
-  data: {
-    labels: xValues,
-    datasets: [{
-      backgroundColor: barColors,
-      data: yValues
-    }]
-  },
-  options: {
-    legend: {display: false},
-    title: {
-      display: true,
-      text: "Users per Servers",
-    }
-    
-  }
-})
 
 var xValues = ["COD", "FortNite", "VisualStudio", "Spotify", "Roblox"];
 var yValues = [24, 49, 57, 24, 32];
 var barColors = ["red", "green","blue","orange","brown"];
 
-new Chart("pieChart", {
+new Chart("pieChart1", {
   type: "pie",
   data: {
     labels: xValues,
@@ -81,5 +65,3 @@ new Chart("pieChart", {
 });
 	
 </script>
-</body>
-</html>
