@@ -63,7 +63,7 @@ namespace DiscordStats_Tests
             handler.SetupAnyRequest()
                         .ReturnsResponse(HttpStatusCode.NotFound);
             DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository);
-            Task<string?> Act() => discord.LeaveServer("FakeBot", "11111", "thisUser");
+            Task<string?> Act() => discord.RemoveUserServer("FakeBot", "11111", "thisUser");
             Assert.That(Act, Throws.TypeOf<HttpRequestException>());
         }
 

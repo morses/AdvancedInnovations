@@ -1,0 +1,58 @@
+﻿@model DiscordStats.ViewModel.CreateServerVM
+
+<div class="row" style="text-align: center">
+    <h1>Please use the form below to create your server</h1>
+</div>
+
+<form asp-action="ServerForm"> 
+    <div class="row">
+        <div class="col-6" style="padding-top: 1%;">
+
+            <div class="form-control">
+                <div class="row">
+                    <div class="col-3">
+                        <p style="margin-top: 4%; color: black; font-weight: 400;">Server Name:</p>
+                    </div>
+                    <div class="col-6" style="margin-left: -5%">
+                        <input asp-for="name" class="form-control"required="required"/>
+                        <span asp-validation-for="name" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3">
+                        <p style="margin-top: 4%; color: black; font-weight: 400;">Region:</p>
+                    </div>
+                    <div class="col-6" style="margin-left: -5%">
+                        <input asp-for="region" class="form-control"required="required"/>
+                        <span asp-validation-for="region" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3">
+                        <p style="margin-top: 4%; color: black; font-weight: 400;">Verification Level:</p>
+                    </div>
+                    <div class="col-6" style="margin-left: -5%">
+                        <input asp-for="verification_level" class="form-control" required="required" min="0" max="4"/>
+                        <span asp-validation-for="verification_level" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-6" style="padding-top: 1%;">
+            <div class="form-control">
+
+                <p style="color: black; font-weight: 400;">Verification Levels:</p>
+
+                <li>0 - None</li>
+                <li>1 - Low</li>
+                <li>2 - Medium</li>
+                <li>3 - High</li>
+                <li>4 - Highest</li>
+            </div>
+        </div>
+    </div>
+    <button value="Submit"  class="btn btn-primary" style="margin-left: 45%; margin-top: 2%">Create Server</button>
+</form>

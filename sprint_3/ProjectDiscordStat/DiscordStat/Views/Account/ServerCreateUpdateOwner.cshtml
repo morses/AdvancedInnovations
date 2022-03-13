@@ -1,0 +1,23 @@
+﻿@model DiscordStats.ViewModel.CreateServerVM
+
+<input asp-for="accessCode" id="serverUrl" style="display:none"/>
+
+<h1 style="text-align: center">Your server @Model.name has been created click the button below to claim ownership</h1>
+<button type="button" class="btn btn-primary" onclick="SetOwner()" style="margin-left:45%">Next</button>
+<script>
+    window.onload = function() {
+        var a = $('#serverUrl').val();
+        var url = "https://www.discord.gg/" + a;
+       
+       window.open(url, "_blank");
+    }
+    function SetOwner() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ServerCreateUpdateOwner", "Account")?ServerId=@Model.Id',
+            success: function() {
+                window.location.href = '/Account/Details?name=@Model.name';
+            }
+        });
+    }
+</script>

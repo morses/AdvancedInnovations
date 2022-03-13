@@ -2,10 +2,17 @@
 @model DiscordStats.ViewModels.ServerOwnerViewModel
 <div class="row">
     <div class="col-2">
-        @{
+        @if (@Model.Icon == null)
+        {
+            var link = "https://w7.pngwing.com/pngs/609/846/png-transparent-discord-logo-discord-computer-icons-logo-computer-software-avatar-miscellaneous-blue-angle.png";
+            <img src="@link" style="height:100px"/>
+        }
+        else
+        {
             var link = "https://cdn.discordapp.com/icons/" + @Model.Id + "//" + @Model.Icon + ".png";
             <img src="@link"/>
         }
+       
     </div>
     <div class="col-6" style="text-align:left">
         <h1>@Model.Name</h1>
