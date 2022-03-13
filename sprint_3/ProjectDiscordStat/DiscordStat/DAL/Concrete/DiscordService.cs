@@ -296,7 +296,7 @@ namespace DiscordStats.DAL.Concrete
             if (dbServers.Count() == 0)
             {
                 var servMemberCount = server.ApproximateMemberCount;
-                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null" });
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null", Privacy="private" });
                 duplicate = true;
 
             }
@@ -311,7 +311,7 @@ namespace DiscordStats.DAL.Concrete
             if (!duplicate)
             {
                 var servMemberCount = server.ApproximateMemberCount;
-                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null" });
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null", Privacy="private" });
 
             }
         }

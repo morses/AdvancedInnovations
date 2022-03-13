@@ -17,12 +17,14 @@ namespace DiscordStats.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IDiscordService _discord;
         private readonly IConfiguration _configuration;
+        private readonly IServerRepository _serverRepository;
 
-        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config)
+        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository)
         {
             _logger = logger;
             _discord = discord;
             _configuration = config;
+            _serverRepository = serverRepository;
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
@@ -84,8 +86,24 @@ namespace DiscordStats.Controllers
                 s.HasBot = await _discord.CheckForBot(_configuration["API:BotToken"], s.Id);
             }
 
+
             return View(servers.Where(m => m.Owner == "true").ToList());
         }
+
+        [HttpPost]
+        public IActionResult ChangePrivacy(string privacyString)
+        {
+            var listPrivacyChanges = privacyString.Split(' ');
+            string privacy = listPrivacyChanges[0];
+            string serverId = listPrivacyChanges[1];
+            _serverRepository.UpdatePrivacy(serverId, privacy);
+            return RedirectToAction("Servers");
+        }
+
+
+
+
+
         [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> Details(string? name)
         {
@@ -102,7 +120,9 @@ namespace DiscordStats.Controllers
                 var ServerOwner = await _discord.GetUserInfoById(_configuration["API:BotToken"], vm.Owner_Id);
                 vm.HasBot = SelectedServer.HasBot;
                 vm.Owner = ServerOwner.Username;
+
                 vm.users = await _discord.GetCurrentGuildUsers(_configuration["API:BotToken"], vm.Id);
+
             }
             else
             {
@@ -188,6 +208,5 @@ namespace DiscordStats.Controllers
             return codeValue;
         }
     }
-
 }
 

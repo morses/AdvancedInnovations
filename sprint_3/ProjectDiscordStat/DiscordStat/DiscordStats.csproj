@@ -12,6 +12,14 @@
     <Content Remove="Content\**" />
     <EmbeddedResource Remove="Content\**" />
     <None Remove="Content\**" />
+    <Compile Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="NewFolder\**" />
+    <Content Remove="NewFolder\**" />
+    <Compile Remove="NewFolder1\**" />
+    <EmbeddedResource Remove="NewFolder1\**" />
+    <None Remove="NewFolder1\**" />
+    <Content Remove="NewFolder1\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -81,6 +89,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
 	 <PackageReference Include="RestSharp" Version="107.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Images" />
   </ItemGroup>
 
 </Project>
