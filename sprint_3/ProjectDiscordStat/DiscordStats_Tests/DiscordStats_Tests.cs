@@ -257,7 +257,7 @@ namespace DiscordStats_Tests
             Assert.Multiple(() =>
             {
                 Assert.That(userInfo.Id == "1035111022");
-                Assert.That(userInfo.username == "test");
+                Assert.That(userInfo.Username == "test");
                 Assert.That(userInfo.Avatar == "8342729096ea3675442027381ff50dfe");
             }
             );
@@ -363,7 +363,7 @@ namespace DiscordStats_Tests
             DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository);
 
             // Act
-            string? responseInfo = await discord.AddMemberToGuild("fakeBotToken", "fakeServerId", "fakeUserId", "fakeBearerToken");
+            string? responseInfo = await discord.AddMemberToGuild("fakeBotToken", "fakeServerId");
             var returnAnswer = addedMemberProcessInfoVM.infoOfProcessOfBeingAdded(responseInfo);
             var realAnswer = "You've already joined. From discord:  \r\n        \"joined_at\": \"2022-01-04T19:41:39.926000+00:00\"";
 
