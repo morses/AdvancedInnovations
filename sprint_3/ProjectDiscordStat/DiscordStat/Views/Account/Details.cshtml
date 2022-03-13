@@ -1,4 +1,9 @@
 ﻿@model DiscordStats.ViewModels.ServerOwnerViewModel
+
+<div class="mode">
+Dark mode:	
+    <span class="change">ON</span>
+</div>
 <div class="row">
     <div class="col-2">
         @{
@@ -29,3 +34,8 @@
 
     }
 </div>
+
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}

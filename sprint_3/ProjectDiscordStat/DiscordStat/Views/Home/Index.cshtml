@@ -7,10 +7,9 @@
     <meta name="viewport" content="width=device-width" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
-
 <div class="mode">
-    <div onclick="false" class="change"></div>
-@*    <span onclick="true" class="change"> hello </span>*@
+Dark mode:	
+    <span class="change">ON</span>
 </div>
 
 <body>
@@ -18,12 +17,8 @@
     <div class="row">
         <div class="text-center">
             <h1>Welcome</h1>
-            <p>This app is the ultimate location to see your discord server and game activity. Once you log in through Discord the following information will be shown: 
-               if you own the server, the servers name, and the servers id. Also once logged in a "Servers" option will appear in the header. If clicked on, and if you are 
-               the owner of any servers the servers avatar will be there, an option for privacy level, and the option to "Add Bot". Here the bot, if added, will retrieve 
-               awesome info about the server and game it's added to. Such as frequent gaming hours, which games are being played, etc. 
-               Enough blabbing, click "Login" and begin an adventure of a lifetime!
-            </p>
+            <h3><center>This app is the ultimate location to see discord server and game activity. It's as easy as "up down A B up down start" to log in.</center></h3><br />
+            <h3><center>Making graphs and charts cool through displaying top games and server activities. Also giving new insight on users by displaying them in orderly tables. Enough blabbing, click "Login" and begin an adventure of a lifetime! </center></h3>
         </div>
     </div>
     <div class="row">
@@ -36,36 +31,21 @@
     </div>
 </div>
 
+</body>
+</html>
+
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}
 
 <script>
-var xValues = ["1", "2", "3", "4", "5"];
-var yValues = [62, 49, 23, 70, 32];
-var barColors = ["red", "green","blue","orange","brown"];
 
-new Chart("barChart", {
-  type: "bar",
-  data: {
-    labels: xValues,
-    datasets: [{
-      backgroundColor: barColors,
-      data: yValues
-    }]
-  },
-  options: {
-    legend: {display: false},
-    title: {
-      display: true,
-      text: "Users per Servers",
-    }
-    
-  }
-})
-
-var xValues = ["1", "2", "3", "4", "5"];
+var xValues = ["COD", "FortNite", "VisualStudio", "Spotify", "Roblox"];
 var yValues = [24, 49, 57, 24, 32];
 var barColors = ["red", "green","blue","orange","brown"];
 
-new Chart("pieChart", {
+new Chart("pieChart1", {
   type: "pie",
   data: {
     labels: xValues,
@@ -85,5 +65,3 @@ new Chart("pieChart", {
 });
 	
 </script>
-</body>
-</html>

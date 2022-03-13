@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiscordStats.Models
-{ 
+{
     public partial class ServerPartial
     {
         [StringLength(128)]

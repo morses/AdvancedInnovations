@@ -20,7 +20,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using DiscordStats.ViewModels;
 
 namespace DiscordStats.Controllers
 {
@@ -43,7 +43,15 @@ namespace DiscordStats.Controllers
         {
 
             return View();
-        }     
+        }
+
+
+        public IActionResult GetDataAsynchronousParallel()
+        {
+            _logger.LogInformation("GetDataAsynchronousParallel");
+            IEnumerable<Server> servers = _serverRepository.GetAll().ToList().Where(a => a.Privacy == "public").OrderByDescending(m => m.ApproximateMemberCount).Take(5);
+            return Json(new { userPerServer = servers });
+        }
 
         public IActionResult Contact()
         {
@@ -53,11 +61,11 @@ namespace DiscordStats.Controllers
         [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> AllServers()
         {
-            AllServersVM allServersNameAndMemCountVM = new (_serverRepository);
+            AllServersVM allServersNameAndMemCountVM = new(_serverRepository);
 
             return View(allServersNameAndMemCountVM);
         }
-         
+
         [Authorize(AuthenticationSchemes = "Discord")]
         [HttpPost]
         public async Task<IActionResult> AddMemberToPickedServer(string? id)
@@ -76,10 +84,9 @@ namespace DiscordStats.Controllers
             return View();
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
         public IActionResult Privacy()
         {
-            ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            //ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             return View();
         }
 

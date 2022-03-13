@@ -1,18 +1,51 @@
 ﻿@model DiscordStats.ViewModel.AllServersVM;
 @*@using DiscordStats.DAL.Concrete. check this from class example repo*@
+<head>
+    <meta name="viewport" content="width=device-width" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</head>
 
+<div class="mode">
+Dark mode:	
+    <span class="change">ON</span>
+</div>
 
 <div class="col">
 	<div class="row">
 		<h1><center>Click on the server you want to be a member of!</center></h1> 
 	</div>
     <form asp-controller="Home" asp-action="AddMemberToPickedServer" method="post">
-        <div class="row">
+        <table id="filterTable" class="display" style="color:white">
+            <thead>
+            <tr>
+                <th><b>Member #</b></th>
+                <th><b>Server Name</b></th>
+                <th></th>
+            </tr>
+
+            </thead>
+            <tbody>
                 @foreach (var s in Model.AllServerNameAndMemCountContainer())
                 {
-                    <button class="button" name="id" value="@s.Id">Server Name: @s.Name <br> Member Count: @s.Approximate_Member_Count</button>
+                    <tr>
+                        <td>@s.Approximate_Member_Count</td>
+                        <td>@s.Name</td>
+                    </tr>
                 }
-        </div>
+            </tbody>
+        </table>
      </form>
 </div>
 
+@*<div class="row">
+        @foreach (var s in Model.AllServerNameAndMemCountContainer())
+        {
+            <button class="button" name="id" value="@s.Id">Server Name: @s.Name <br> Member Count: @s.Approximate_Member_Count</button>
+        }
+</div>*@
+
+
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}

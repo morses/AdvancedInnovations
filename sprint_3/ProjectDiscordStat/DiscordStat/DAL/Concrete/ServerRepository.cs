@@ -20,9 +20,7 @@ namespace DiscordStats.DAL.Concrete
             {
                 servers.Add(s);
             }
-
             return servers;
-
         }
 
         public bool CreateServer(Server server)
@@ -31,6 +29,7 @@ namespace DiscordStats.DAL.Concrete
                 return false;
             if (CheckForDuplicates(server.Id) == false)
                 return false;
+            AddOrUpdate(server);
             return true;
         }
 
@@ -45,6 +44,44 @@ namespace DiscordStats.DAL.Concrete
                 }
             }
             return false;
+        }
+
+        public bool UpdatePrivacy(string serverId, string privacy)
+        {
+            foreach (Server server in GetAll().ToList())
+            {
+                if (server.Id == serverId)
+                {
+                    server.Privacy = privacy;
+                    AddOrUpdate(server);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void UpdateOnForum(string serverId, string onForum)
+        {
+            foreach(Server server in GetAll())
+            {
+                if(server.Id == serverId)
+                {
+                    server.OnForum = onForum;
+                    AddOrUpdate(server);
+                }
+            }
+        }
+
+        public void UpdateMessage(string serverId, string message)
+        {
+            foreach (Server server in GetAll())
+            {
+                if (server.Id == serverId)
+                {
+                    server.Message = message;
+                    AddOrUpdate(server);
+                }
+            }
         }
     }
 }

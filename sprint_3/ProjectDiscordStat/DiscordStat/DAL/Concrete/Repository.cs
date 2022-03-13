@@ -34,11 +34,11 @@ namespace DiscordStats.DAL.Concrete
         }
 
 
-        public List<TEntity> GetAll()
+        public IQueryable<TEntity> GetAll()
         {
             // note, no includes here and we're returning it as an IQueryable, NOT a DbSet, on purpose
             // so the caller cannot do other things (which should go here or in a subclass)
-            return _dbSet.ToList();
+            return _dbSet;
 
         }
 
@@ -59,8 +59,8 @@ namespace DiscordStats.DAL.Concrete
             {
                 throw new ArgumentNullException("Entity must not be null to add or update");
             }
-            _context.AddAsync(entity);
-            _context.SaveChangesAsync();
+            _context.Update(entity);
+            _context.SaveChanges();
             return entity;
         }
 

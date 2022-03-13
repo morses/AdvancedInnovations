@@ -1,44 +1,61 @@
 ﻿@model IEnumerable<DiscordStats.Models.Server>
+
+
+<div class="mode">
+Dark mode:	
+    <span class="change">ON</span>
+</div>
+
 <script src="https://kit.fontawesome.com/5b2bd23d5f.js" crossorigin="anonymous"></script>
 <h1 style="text-align:center">Here is a list of servers that you own. Please select which one you would like to add a bot to.</h1>
+
+@*@{int count = 0;}*@
 @foreach (var s in Model)
 {
     <div class="row" style="padding-top: 3%">
         <div class="col-2">
-            @{
+            @if (s.Icon == null)
+            {
+                <img src="https://nektony.com/wp-content/uploads/2019/07/discord-icon.png" width="125" height="125"/>
+            }
+            else
+            {
                 var link = "https://cdn.discordapp.com/icons/" + @s.Id + "//" + @s.Icon + ".png";
                 <img src="@link"/>
             } 
         </div>
         <div class ="col-3" style="font-weight:bold">
-            @s.Name
-            <div class="row" style="width:50%;">
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Privacy Level</option>
-                    <option value="1">Public</option>
-                    <option value="2">Private</option>
-                </select>
+            <h3>@s.Name</h3>
 
-
-            </div>
             @if(s.HasBot == "false")
             {
-            <div class="row" style="width: 50%; margin-top: 2%">
-            @{
-                var url = "https://discord.com/oauth2/authorize?client_id=938808510932746350&scope=bot&permissions=8&guild_id=" + s.Id;
-            }
-            <a id="anchorID" href="@url" target="_blank" class="btn btn-primary">Add Bot</a>
-              </div>
+                <div class="row" style="width: 50%; margin-top: 2%">
+                @{
+                    var url = "https://discord.com/oauth2/authorize?client_id=938808510932746350&scope=bot&permissions=8&guild_id=" + s.Id;
+                }
+                <a id="anchorID" href="@url" target="_blank" class="btn btn-primary">Add Bot</a>
+                </div>
             }
             @if(s.HasBot == "true")
             {
+                <div class="row form-inline" style="width:50%;">
+                    <form method="post" action="ChangePrivacy">
+                        <select class="form-select" aria-label="Default select example" itemid="privacy @s" name="privacyString" id="privacyChangeForm">
+                            <option value="private @s.Id">Private</option>
+                            <option value="public @s.Id">Public</option>
+                        </select>
+                        <input type="submit" value="Submit" style="float:left;">
+                    </form>
+                    <br/>
+
+
+                </div>
                 <div class="row" style="width: 50%; margin-top: 2%;white-space: nowrap; display: inline-block; color: green; font-size:18px">
                    
                     <span>Bot added </span> <span class="fa fa-check" style="margin-left: -15%"></span>
                 </div>
             }
         </div>
-
     </div>
 }
 
@@ -51,4 +68,10 @@
     function AddBot(val) {
         alert(val);
     }
+
 </script>
+
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}
