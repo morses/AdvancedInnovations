@@ -1,5 +1,11 @@
+
+﻿@model DiscordStats.ViewModels.ServerOwnerViewModel
 ﻿@using System.Security.Claims
-@model DiscordStats.ViewModels.ServerOwnerViewModel
+<div class="mode">
+Dark mode:	
+    <span class="change">ON</span>
+</div>
+
 <div class="row">
     <div class="col-2">
         @if (@Model.Icon == null)
@@ -172,6 +178,7 @@
         document.getElementById('modalbodykick').textContent = "Are you sure you want to kick " + clicked.id + " from your server? They won't be able to rejoin without an invite.";
         document.getElementById('kickuser').value = clicked.id;
     }
+
     
     function CloseModal() {
         $('#myModal').modal('hide');
@@ -205,3 +212,11 @@
         }
     </script>
 }
+
+</div>
+
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}
+

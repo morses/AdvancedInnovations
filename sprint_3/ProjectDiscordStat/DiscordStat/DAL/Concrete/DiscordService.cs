@@ -6,8 +6,11 @@ using DiscordStats.ViewModels;
 
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+
 using System.Web.Helpers;
 using DiscordStats.ViewModel;
+using System.Diagnostics;
+
 
 namespace DiscordStats.DAL.Concrete
 {
@@ -20,13 +23,15 @@ namespace DiscordStats.DAL.Concrete
         // Use constructor injection to get the http client factory, which we'll use to get an http client
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IServerRepository _serverRepository;
+        private readonly IPresenceRepository _presenceRepository;
 
         private DiscordDataDbContext _db = new DiscordDataDbContext();
 
-        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository)
+        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository, IPresenceRepository presenceRepository)
         {
             _serverRepository = serverRepository;   
             _httpClientFactory = httpClientFactory;
+            _presenceRepository = presenceRepository;
         }
 
 
@@ -252,6 +257,7 @@ namespace DiscordStats.DAL.Concrete
             return userInfo;
         }
 
+
         public async Task<Server?> GetCurrentGuild(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId + "/preview";
@@ -259,6 +265,7 @@ namespace DiscordStats.DAL.Concrete
             Server? server = JsonConvert.DeserializeObject<Server>(response);
             return server;
         }
+
 
 
         public async Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId)
@@ -283,20 +290,38 @@ namespace DiscordStats.DAL.Concrete
             return response;
         }
 
+
         public async Task<string?> FindChannels(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
             string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
             return response;
         }
-        public void ServerEntryDbCheck(Server server, string hasBot, string serverOwner)
+        
+
+        //need to test
+        public void ServerEntryDbCheck(ServerOwnerViewModel server, string hasBot, string serverOwner)
+
         {
             var dbServers = _serverRepository.GetAll();
             var duplicate = false;
+            if (server.Description == null)
+            {
+                server.Description = "null";
+            }
+            if (server.Icon == null)
+            {
+                server.Icon = "null";
+            }
+            if (server.Owner == null)
+            {
+                server.Owner = "null";
+            }
+
             if (dbServers.Count() == 0)
             {
-                var servMemberCount = server.ApproximateMemberCount;
-                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null", Privacy="private" });
+                var servMemberCount = server.Approximate_Member_Count;
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = server.Owner_Id, VerificationLevel = server.Verification_Level, Description = server.Description, PremiumTier = server.Premium_Tier, ApproximatePresenceCount = server.Approximate_Presence_Count, Privacy="private", OnForum="false", Message="null" });
                 duplicate = true;
 
             }
@@ -310,10 +335,53 @@ namespace DiscordStats.DAL.Concrete
             }
             if (!duplicate)
             {
-                var servMemberCount = server.ApproximateMemberCount;
-                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = "null", VerificationLevel = "null", Description = "null", PremiumTier = "null", ApproximatePresenceCount = "null", Privacy="private" });
+                var servMemberCount = server.Approximate_Member_Count;
+                _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = server.Owner_Id, VerificationLevel = server.Verification_Level, Description = server.Description, PremiumTier = server.Premium_Tier, ApproximatePresenceCount = server.Approximate_Presence_Count, Privacy="private", OnForum="false", Message="null" });
 
             }
+        }
+
+        public async Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences)
+        {
+            foreach (var presence in presences)
+            {
+                Debug.Write(presence.Name);
+
+
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var duplicate = false;
+                    var upDatePresence = false;
+
+
+                    var allPresences = _presenceRepository.GetAll().ToList();
+
+                    for (int i = 0; i < allPresences.Count(); i++)
+                    {
+                        if (presence.ServerId == allPresences[i].ServerId)
+                        {
+                            duplicate = true;
+                        }
+                        if (presence.ServerId == allPresences[i].ServerId && presence.Name != allPresences[i].Name)
+                        {
+                            upDatePresence = true;
+                            duplicate = true;
+                        }
+                    }
+                    if (!duplicate)
+                    {
+                        _presenceRepository.AddOrUpdate(presence);
+                    }
+                    if (duplicate == true && upDatePresence == true)
+                    {
+                        _presenceRepository.UpdatePresence(presence.ServerId, presence.Name);
+                    }
+                });
+
+            }
+
+            return "It Worked";
         }
         public async Task<string?> RemoveUserServer(string botToken, string serverId, string UserId)
         {

@@ -2,29 +2,31 @@
     ViewData["Title"] = "Privacy Policy";
 }
 
+<div class="mode">
+Dark mode:	
+    <span class="change">ON</span>
+</div>
+
 <body>
     <h1>Stat Tracker Privacy Policy</b></h1>
 
-    <p>Last updated: February 24, 2022</p>
+    <p>Last updated: March 2, 2022</p>
 
     <h1>Two Levels of Information we collect and how:</h1>
     <ul>
         <li><h2>Discord user info by logging in with discord.</h2></li>
         <p>Once you log in with discord we have minimal access to your info. We use that to create your user "Account"" page and store whats on your user 
-           page into our database. The third party database we use privacy page can be found here: <a href="https://privacy.microsoft.com/en-us/PrivacyStatement">Azure in Microsoft</a>
+           page in the cloud. 
         </p>
-        <li><h2>Discord server info by adding our bot to an owned server.</h2></li>
-        <p>When adding our bot to a server you must be the owner(the one who created it), and you must already have logged in through discord.
-           Only servers that have our bot will be stored in our database. Servers in our database are shown on a page for all user to view and 
-           request to be a member.
+        <li><h2>Discord server and user info by adding our bot to a server.</h2></li>
+        <p>When adding our bot permissions enabled are deleting/adding servers, deleting/adding members. Plus
+           relative information of servers and users.
         </p>
-    </ul>
-    <h1>Privacy pages from discord:</h1>
-    <ul>
-        <li><p>For your account privacy page go to <a href="https://discord.com/channels/" + @ViewBag.id >Your account</a>
-            then click "User Settings"" then "Privacy &amp; Safety"</p></li>        
-        <li><p><a href="https://discord.com/privacy">Discords Privacy page</a></p></li>
     </ul>
 </body>
 
 
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}

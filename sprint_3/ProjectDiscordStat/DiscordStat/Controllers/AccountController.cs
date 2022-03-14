@@ -49,7 +49,7 @@ namespace DiscordStats.Controllers
                 string hasBot = await _discord.CheckForBot(botToken, server.Id);
                 if(hasBot == "true")
                 {
-                    var serverWithMemCount = await _discord.GetCurrentGuild(botToken, server.Id);
+                    var serverWithMemCount = await _discord.GetFullGuild(botToken, server.Id);
 
                     _discord.ServerEntryDbCheck(serverWithMemCount, hasBot, server.Owner);
                 }

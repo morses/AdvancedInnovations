@@ -30,7 +30,7 @@ namespace DiscordStats.DAL.Abstract
         /// </summary>
         /// <returns>All the entities</returns>
 
-        List<TEntity> GetAll();
+        IQueryable<TEntity> GetAll();
 
 
         /// <summary>

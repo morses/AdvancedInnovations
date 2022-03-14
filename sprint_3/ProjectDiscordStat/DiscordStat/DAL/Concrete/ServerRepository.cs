@@ -48,7 +48,7 @@ namespace DiscordStats.DAL.Concrete
 
         public bool UpdatePrivacy(string serverId, string privacy)
         {
-            foreach (Server server in GetAll())
+            foreach (Server server in GetAll().ToList())
             {
                 if (server.Id == serverId)
                 {
@@ -59,5 +59,20 @@ namespace DiscordStats.DAL.Concrete
             }
             return false;
         }
+
+        public void UpdateOnServerWithForumInfo(string serverId, string onForum, string message)
+        {
+            foreach(Server server in GetAll().ToList())
+            {
+                if(server.Id == serverId)
+                {
+                    server.OnForum = onForum;
+                    server.Message = message;
+                    AddOrUpdate(server);
+                }
+            }
+
+        }
+
     }
 }
