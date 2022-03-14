@@ -6,6 +6,8 @@ using System.Security.Claims;
 using DiscordStats.ViewModel;
 using DiscordStats.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using DiscordStats.ViewModel;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 
@@ -19,13 +21,15 @@ namespace DiscordStats.Controllers
         private readonly IDiscordService _discord;
         private readonly IConfiguration _configuration;
         private readonly IServerRepository _serverRepository;
+        private readonly IChannelRepository _channelRepository;
 
-        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository)
+        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository, IChannelRepository channelRepository)
         {
             _logger = logger;
             _discord = discord;
             _configuration = config;
             _serverRepository = serverRepository;
+            _channelRepository = channelRepository;
         }
 
         [Authorize (AuthenticationSchemes = "Discord")]
@@ -45,8 +49,7 @@ namespace DiscordStats.Controllers
             IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
 
             foreach (Server server in servers)
-            {
-
+            {              
                 string hasBot = await _discord.CheckForBot(botToken, server.Id);
                 if (hasBot == "true")
                 {
@@ -73,7 +76,35 @@ namespace DiscordStats.Controllers
             return View(servers);
         }
 
+        [Authorize(AuthenticationSchemes = "Discord")]
+        public async Task<IActionResult> ServerChannels(string? serverId)
+        {
+            string botToken = _configuration["API:BotToken"];
+            var servers = _serverRepository.GetAll();
+            var selectedServer = servers.Where(m => m.Id == serverId).FirstOrDefault();
+            IList<Channel> channels = new List<Channel>();
+            if (selectedServer != null)
+            {
+                if (selectedServer.HasBot == "true")
+                {
+                    channels = await _discord.GetGuildChannels(botToken, serverId);
+                    ViewBag.hasBot = "true";
 
+                }
+                else
+                {
+                    ViewBag.hasBot = "false";
+                }
+            }
+            else
+            {
+                ViewBag.hasBot = "false";
+            }
+
+            return View(channels);
+        }
+
+            [Authorize(AuthenticationSchemes = "Discord")]
 
         public async Task<IActionResult> Servers()
         {

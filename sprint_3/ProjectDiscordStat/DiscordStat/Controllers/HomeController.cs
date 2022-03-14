@@ -47,10 +47,10 @@ namespace DiscordStats.Controllers
         }
 
 
-        public IActionResult GetDataAsynchronousParallel()
+        public IActionResult GetServerDataFromDb()
         {
-            _logger.LogInformation("GetDataAsynchronousParallel");
-            IEnumerable<Server> servers = _serverRepository.GetAll().ToList().Where(a => a.Privacy == "public").OrderByDescending(m => m.ApproximateMemberCount).Take(5);
+            //_logger.LogInformation("GetServerDataFromDb");
+            IEnumerable<Server> servers = _serverRepository.GetAll().Where(a => a.Privacy == "public").OrderByDescending(m => m.ApproximateMemberCount).Take(5).ToList();
             return Json(new { userPerServer = servers });
         }
 

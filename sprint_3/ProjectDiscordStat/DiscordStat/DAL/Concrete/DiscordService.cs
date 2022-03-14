@@ -259,13 +259,14 @@ namespace DiscordStats.DAL.Concrete
             return userInfo;
         }
 
-
-        public async Task<Server?> GetCurrentGuild(string botToken, string serverId)
+        public async Task<List<Channel>?> GetGuildChannels(string botToken, string serverId)
         {
-            string uri = "https://discord.com/api/guilds/" + serverId + "/preview";
+            string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
+            // Remember to handle errors here
             string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
-            Server? server = JsonConvert.DeserializeObject<Server>(response);
-            return server;
+            // And here
+            List<Channel>? channel = JsonConvert.DeserializeObject<List<Channel>>(response);
+            return channel;
         }
 
 

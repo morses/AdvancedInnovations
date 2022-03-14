@@ -47,7 +47,7 @@ Dark mode:
     <thead>
     <tr>
         <th><b>Server Owner</b></th>
-        <th><b>Server Name</b></th>
+        <th><b>Server Name (click to see channels)</b></th>
         <th><b>Server Id</b></th>
         <th></th>
 
@@ -70,7 +70,7 @@ Dark mode:
                     <p>No</p>
                 }
             </td>
-            <td>@item.Name</td>
+            <td><a href="@Url.Action("ServerChannels", "Account", new {serverId = item.Id})"/> @item.Name</td>
             <td>@item.Id</td>
             <td>
                 <a href="@Url.Action("Details", "Account", new {name = item.Name})" class="btn btn-primary"/>

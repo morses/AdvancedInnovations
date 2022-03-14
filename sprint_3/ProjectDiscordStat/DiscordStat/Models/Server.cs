@@ -11,6 +11,7 @@ namespace DiscordStats.Models
     {
         public Server()
         {
+            ServerChannelJoins = new HashSet<ServerChannelJoin>();
             ServerPresenceJoins = new HashSet<ServerPresenceJoin>();
             ServerUserJoins = new HashSet<ServerUserJoin>();
         }
@@ -52,6 +53,8 @@ namespace DiscordStats.Models
         [StringLength(50)]
         public string Message { get; set; } = null!;
 
+        [InverseProperty(nameof(ServerChannelJoin.ServerPkNavigation))]
+        public virtual ICollection<ServerChannelJoin> ServerChannelJoins { get; set; }
         [InverseProperty(nameof(ServerPresenceJoin.ServerPkNavigation))]
         public virtual ICollection<ServerPresenceJoin> ServerPresenceJoins { get; set; }
         [InverseProperty(nameof(ServerUserJoin.ServerPkNavigation))]

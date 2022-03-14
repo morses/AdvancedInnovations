@@ -1,8 +1,8 @@
--- CREATE DATABASE [DiscordData];
--- GO
+CREATE DATABASE [DiscordData];
+GO
 
--- USE [DiscordData];
--- GO
+USE [DiscordData];
+GO
 
 -- *************** Create tables/entities ********************
 CREATE TABLE [Server] 
@@ -61,8 +61,31 @@ CREATE TABLE [ServerPresenceJoin]
   [PresencePk]   int
 );
 
+CREATE TABLE [Channel]
+(
+  [ChannelsPk] int PRIMARY KEY IDENTITY(1,1),
+  [ID] nvarchar(256) Not Null,
+  [Type] int Not Null,
+  [Name] nvarchar(256) Not Null,
+  [Position] int Not Null,
+  [Parent_id] nvarchar(256) Not Null,
+  [Guild_id] nvarchar(256) Not Null,
+  [Permission_overwrites] nvarchar(256) Null,
+  [Nsfw] nvarchar(50) Null
+)
+
+CREATE TABLE [ServerChannelJoin]
+(
+  [ID] int PRIMARY KEY IDENTITY(1,1),
+  [ServerPk] int,
+  [ChannelsPk]   int
+)
+
+
 -- *************** Add foreign key relations ********************
 ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerUserJoinServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerUserJoinDiscordUserPk]   FOREIGN KEY ([DiscordUserPk])   REFERENCES [DiscordUser]   ([DiscordUserPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE [ServerPresenceJoin] ADD CONSTRAINT [ServerPresenceJoinServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE [ServerPresenceJoin] ADD CONSTRAINT [ServerPresenceJoinPresencePk]   FOREIGN KEY ([PresencePk])   REFERENCES [Presence]   ([PresencePk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE [ServerChannelJoin] ADD CONSTRAINT [ServerChannelJoinServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE [ServerChannelJoin] ADD CONSTRAINT [ServerChannelJoinChannelsPk]   FOREIGN KEY ([ChannelPk])   REFERENCES [Channel]   ([ChannelPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;

@@ -13,6 +13,8 @@ using System.Linq;
 using DiscordStats.DAL.Abstract;
 using DiscordStats.ViewModel;
 using DiscordStats.ViewModels;
+using DiscordStats.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DiscordStats_Tests
 {
@@ -47,25 +49,44 @@ namespace DiscordStats_Tests
             new Server{Id = "789317480325316640", ServerPk = 1, Name = "input/output server", Owner = "true", Icon = "4e428f7fb657dbf3b733e7b691e56997", HasBot = "true", ApproximateMemberCount=5},
             new Server{Id = "928010025958510632", ServerPk = 2, Name = "Advanced Innovations", Owner = "false", Icon = "d8f49d144185733c210456853906b631", HasBot = "true", ApproximateMemberCount=5},
             new Server{Id = "151516415641361", ServerPk = 3, Name = "fake server", Owner = "false", Icon = "", HasBot = "false", ApproximateMemberCount=23532}
-        };
+        }.AsQueryable();
 
         _mockServerDbSet = GetMockDbSet<Server>(ser.AsQueryable<Server>());
-            //_mockPartialServerDbSet = GetMockDbSet(_serverPartial.AsQueryable());
-
+        var q = _mockServerDbSet.As<IQueryable<Server>>();
+        q.Setup(m => m.GetEnumerator()).Returns(() => ser.GetEnumerator());
             _mockContext = new Mock<DiscordDataDbContext>();
-            _mockContext.Setup(ctx => ctx.Servers).Returns(_mockServerDbSet.Object);
-            _mockContext.Setup(ctx => ctx.Set<Server>()).Returns(_mockServerDbSet.Object);
-            _mockContext.Setup(ctx => ctx.Update(It.IsAny<Server>()))
-                        .Callback((Server s) => { ser.Add(s); })
-                        .Returns((Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Server>)null);
-            // do not rely on the return value from Update since it's just null
-            _mockContext.Setup(ctx => ctx.SaveChanges())
-                        .Returns(0);
-            // do not rely on the return value as it is just a placeholder
+        //_mockContext.Setup(ctx => ctx.Servers).Returns(_mockServerDbSet.Object);
+        //_mockContext.Setup(ctx => ctx.Set<Server>()).Returns(_mockServerDbSet.Object);
+        _mockContext.Setup(ctx => ctx.Update(It.IsAny<Server>()))
+                    .Callback((Server s) => { ser.Append(s); })
+                    .Returns((Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Server>)null);
+        // do not rely on the return value from Update since it's just null
+        _mockContext.Setup(ctx => ctx.SaveChanges())
+                    .Returns(0);
+        //_mockContext.Setup(m => m.GetEnumerator()).Returns(() => _mockServerDbSet.GetEnumerator());
+        // do not rely on the return value as it is just a placeholder
 
-            //how do I do the ServerPartial?
-            //_mockContext.Setup(ctx => ctx.ServersPartial).Returns(_mockServerDbSet.Object);
-            //_mockContext.Setup(ctx => ctx.Set<Server>()).Returns(_mockServerDbSet.Object);
+        //how do I do the ServerPartial?
+        //_mockContext.Setup(ctx => ctx.ServersPartial).Returns(_mockServerDbSet.Object);
+        //_mockContext.Setup(ctx => ctx.Set<Server>()).Returns(_mockServerDbSet.Object);
+
+        }
+
+        [Test]
+        public void GetServerDataFromDb_ShouldReturnFiveServersOrderedByMemberCount()
+        {
+            // Arrange
+            var handler = new Mock<HttpMessageHandler>();
+            _serverRepository = new ServerRepository(_mockContext.Object);
+
+            HomeController controller = new HomeController(null, _serverRepository, null, null);
+            controller.ControllerContext = new ControllerContext();
+
+            // Act
+            JsonResult result = (JsonResult)controller.GetServerDataFromDb();
+            var something = result.Value;
+            // Arrange
+
 
         }
 
