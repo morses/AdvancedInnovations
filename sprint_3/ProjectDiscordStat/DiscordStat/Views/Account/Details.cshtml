@@ -1,5 +1,4 @@
-
-﻿@model DiscordStats.ViewModels.ServerOwnerViewModel
+@model DiscordStats.ViewModels.ServerOwnerViewModel
 ﻿@using System.Security.Claims
 <div class="mode">
 Dark mode:	
@@ -47,7 +46,7 @@ Dark mode:
             </div>
             <div class="col-8">
                 <h3>Users</h3>
-                <table id="filterTable" class="display" style="color: white">
+                <table id="filterTable" class="display">
                     <thead>
                     <tr>
                         <th><b>Avatar</b></th>
@@ -72,16 +71,18 @@ Dark mode:
                             }
 
                             <td>@u.user.UserName</td>
-                    @if (User.Claims.First(c => c.Type == ClaimTypes.Name).Value != u.user.UserName)
+                    @if (Model.Owner == User.Claims.First(c => c.Type == ClaimTypes.Name).Value){
+                    @if (User.Claims.First(c => c.Type == ClaimTypes.Name).Value != u.user.UserName && u.user.UserName != "Stat Tracker")
                     {
                         <td><button type="button" class="btn btn-danger" data-toggle="modal" onclick="OpenModalKick(this)" id="@u.user.UserName" data-target="#exampleModal">Kick</button></td>
                     }
+                            }
                         </tr>
                     }
                     </tbody>
                 </table>
             </div>
-                }
+        }
 
 
 
@@ -144,7 +145,7 @@ Dark mode:
                                     </button>
                                 </div>
                             }
-                            else
+                            @if (User.Claims.First(c => c.Type == ClaimTypes.Name).Value == @Model.Owner)
                             {
                                 <div class="modal-header">
                                     <h4 class="modal-title">Leave Server</h4>
@@ -211,12 +212,7 @@ Dark mode:
             });
         }
     </script>
-}
+    <script type="text/javascript" src="~/js/site.js"></script>
 
-</div>
-
-@section Scripts {
-
-     <script type="text/javascript" src="~/js/site.js"></script>
 }
 

@@ -298,9 +298,6 @@ namespace DiscordStats.DAL.Concrete
             string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
             return response;
         }
-        
-
-        //need to test
         public void ServerEntryDbCheck(ServerOwnerViewModel server, string hasBot, string serverOwner)
 
         {
@@ -361,23 +358,14 @@ namespace DiscordStats.DAL.Concrete
 
                     for (int i = 0; i < allPresences.Count(); i++)
                     {
-                        if (presence.ServerId == allPresences[i].ServerId)
+                        if (presence.UserId == allPresences[i].UserId)
                         {
-                            duplicate = true;
-                        }
-                        if (presence.ServerId == allPresences[i].ServerId && presence.Name != allPresences[i].Name)
-                        {
-                            upDatePresence = true;
                             duplicate = true;
                         }
                     }
                     if (!duplicate)
                     {
                         _presenceRepository.AddOrUpdate(presence);
-                    }
-                    if (duplicate == true && upDatePresence == true)
-                    {
-                        _presenceRepository.UpdatePresence(presence.ServerId, presence.Name);
                     }
                 });
 

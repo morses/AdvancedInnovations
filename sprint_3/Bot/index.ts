@@ -218,7 +218,8 @@ async function sendPresence (){
                     "CreatedAt": member.presence?.activities[0].createdAt.toString(),
                     "LargeImageId": member.presence?.activities[0].assets?.largeImage,
                     "SmallImageId": member.presence?.activities[0].assets?.smallImage,
-                    "ServerId": guild.id
+                    "ServerId": guild.id,
+                    "UserId": member.id
                 };
                 presences.push(newPresence);
             };
