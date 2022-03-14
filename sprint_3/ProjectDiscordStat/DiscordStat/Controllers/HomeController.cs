@@ -75,7 +75,7 @@ namespace DiscordStats.Controllers
             var userId = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var serverId = id;
 
-            string? response = await _discord.AddMemberToGuild(botToken, serverId, userId, bearerToken);
+            string? response = await _discord.AddMemberToGuild(botToken, serverId);
 
             AddMemberToPickedServerVM addedMemberProcessInfoVM = new();
             //addedMemberProcessInfoVM.infoOfProcessOfBeingAdded = response;

@@ -1,41 +1,222 @@
-﻿@model DiscordStats.ViewModels.ServerOwnerViewModel
 
+﻿@model DiscordStats.ViewModels.ServerOwnerViewModel
+﻿@using System.Security.Claims
 <div class="mode">
 Dark mode:	
     <span class="change">ON</span>
 </div>
+
 <div class="row">
     <div class="col-2">
-        @{
+        @if (@Model.Icon == null)
+        {
+            var link = "https://w7.pngwing.com/pngs/609/846/png-transparent-discord-logo-discord-computer-icons-logo-computer-software-avatar-miscellaneous-blue-angle.png";
+            <img src="@link" style="height:100px"/>
+        }
+        else
+        {
             var link = "https://cdn.discordapp.com/icons/" + @Model.Id + "//" + @Model.Icon + ".png";
             <img src="@link"/>
         }
+       
     </div>
     <div class="col-6" style="text-align:left">
         <h1>@Model.Name</h1>
         <p>Id: @Model.Id</p>
     </div>
 </div>
+
+
 <div class="row">
+
     @{
         if (@Model.HasBot == "false")
         {
-            <h1 style="text-align:center">This is all the information we could gather about this server. Please add the bot to see more.</h1>
+            <h1 style="text-align: center">This is all the information we could gather about this server. Please add the bot to see more.</h1>
         }
         else
         {
-            <p>Owner: @Model.Owner</p>
-            <P>Total members: @Model.Approximate_Member_Count</P>
-            <P>Online members: @Model.Approximate_Presence_Count</P>
-            <P>Verification Level: @Model.Verification_Level</P>
-            <P>Boost Level: @Model.Premium_Tier</P>
-            <p>Description: @Model.Description</p>
+            <div class="col-4">
+                <p>Owner: @Model.Owner</p>
+                <P>Total members: @Model.Approximate_Member_Count</P>
+                <P>Online members: @Model.Approximate_Presence_Count</P>
+                <P>Verification Level: @Model.Verification_Level</P>
+                <P>Boost Level: @Model.Premium_Tier</P>
+                <p>Description: @Model.Description</p>
+                <button type="button" class="btn btn-danger" data-toggle="modal" onclick="OpenModal()" data-target="#exampleModal">Leave Server</button>
+            </div>
+            <div class="col-8">
+                <h3>Users</h3>
+                <table id="filterTable" class="display" style="color: white">
+                    <thead>
+                    <tr>
+                        <th><b>Avatar</b></th>
+                        <th><b>Name</b></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    @foreach (var u in @Model.users)
+                    {
+                        <tr>
+                            @if (u.user.Avatar == null)
+                            {
+                                var i = "https://w7.pngwing.com/pngs/609/846/png-transparent-discord-logo-discord-computer-icons-logo-computer-software-avatar-miscellaneous-blue-angle.png";
+                               <td><img src="@i" style="height: 80px;"/></td>
+                            }
+                            else
+                            {
+                                var i = "https://cdn.discordapp.com/avatars/" + u.user.Id + "//" + u.user.Avatar + ".png";
+                                <td><img src="@i" style="height: 80px;"/></td>
+                            }
+
+                            <td>@u.user.UserName</td>
+                    @if (User.Claims.First(c => c.Type == ClaimTypes.Name).Value != u.user.UserName)
+                    {
+                        <td><button type="button" class="btn btn-danger" data-toggle="modal" onclick="OpenModalKick(this)" id="@u.user.UserName" data-target="#exampleModal">Kick</button></td>
+                    }
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+                }
+
+
+
+
+
+        <div class="modal fade" id="myModalKick">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                    <h4 class="modal-title">Kick User</h4>
+                                </div>
+                                <div class="modal-body" id="modalbodykick" style="text-align: center; font-weight: bold">
+                                    Are you sure you want to leave the server? You won't be able to join again unless you get an invite.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" onclick="CloseModalKick()" style="margin-right: 59%">
+                                        Close
+                                    </button>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" id="kickuser" onclick="KickUser()">
+                                        Kick
+                                    </button>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="modal fade" id="myModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            @if (User.Claims.First(c => c.Type == ClaimTypes.Name).Value != @Model.Owner)
+                            {
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Leave Server</h4>
+                                </div>
+                                <div class="modal-body" style="text-align: center; font-weight: bold">
+                                    Are you sure you want to leave the server? You won't be able to join again unless you get an invite.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" onclick="CloseModal()" style="margin-right: 59%">
+                                        Close
+                                    </button>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" onclick="LeaveServer()">
+                                        Leave Server
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Leave Server</h4>
+                                </div>
+                                <div class="modal-body" style="text-align: center; font-weight: bold">
+                                    As the owner of this server you won't be able to leave until you transfer ownership to another user. Please try again later.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" onclick="CloseModal()" style="margin-right: 59%">
+                                        Close
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                }
+            </div>
+<script>
+
+    function OpenModal() {
+        $('#myModal').modal('show');
+    }
+    function OpenModalKick(clicked) {
+        
+        $('#myModalKick').modal('show');
+        document.getElementById('modalbodykick').textContent = "Are you sure you want to kick " + clicked.id + " from your server? They won't be able to rejoin without an invite.";
+        document.getElementById('kickuser').value = clicked.id;
+    }
+
+    
+    function CloseModal() {
+        $('#myModal').modal('hide');
+    }
+    function CloseModalKick() {
+        $('#myModalKick').modal('hide');
+    }
+    
+</script>
+@section scripts {
+    <script>
+        function LeaveServer() {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("LeaveServer", "Account")?ServerId=@Model.Id',
+                success: function() {
+                    window.location.href = '/Account/Account/';
+                }
+            });
         }
 
-    }
+        function KickUser() {
+            var username = document.getElementById('kickuser').value;
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("KickUser", "Account")?ServerId=@Model.Id&user='+ username,
+                success: function() {
+                    window.location.href = window.location.href;
+                }
+            });
+        }
+    </script>
+}
+
 </div>
 
 @section Scripts {
 
      <script type="text/javascript" src="~/js/site.js"></script>
 }
+
