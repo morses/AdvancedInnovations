@@ -62,9 +62,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     })
-    .AddCookie()
+    .AddCookie(o => o.LoginPath = new PathString("/Identity/Account/Login"))
     .AddOAuth("Discord",
             options =>
             {

@@ -44,17 +44,21 @@ namespace DiscordStats.Models
             {
                 entity.HasKey(e => e.DiscordUserPk)
                     .HasName("PK__DiscordU__1F12BE9576AF3B30");
+
             });
 
             modelBuilder.Entity<Presence>(entity =>
             {
                 entity.HasKey(e => e.PresencePk)
+
                     .HasName("PK__Presence__4981B3D9E36B8DF5");
+
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
+
                     .HasName("PK__Server__C56B0386ED04E5A6");
             });
 
@@ -64,6 +68,7 @@ namespace DiscordStats.Models
                     .WithMany(p => p.ServerChannelJoins)
                     .HasForeignKey(d => d.ServerPk)
                     .HasConstraintName("ServerChannelJoinServerPk");
+
             });
 
             modelBuilder.Entity<ServerPresenceJoin>(entity =>

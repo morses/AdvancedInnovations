@@ -50,7 +50,8 @@ CREATE TABLE [Presence]
   [CreatedAt] nvarchar(256) NULL,
   [LargeImageId] nvarchar(256) NULL,
   [SmallImageId] nvarchar(256) NULL,
-  [ServerId] nvarchar(256) NULL
+  [ServerId] nvarchar(256) NULL,
+  [UserId] NVARCHAR(256) NULL
 );
 
 CREATE TABLE [ServerPresenceJoin] 
