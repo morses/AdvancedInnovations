@@ -38,7 +38,8 @@ namespace DiscordStats.Controllers
             _discord = discord;
             _config = config;    
         }
-        // Get: Home
+
+
         public IActionResult Index()
         {
 
@@ -53,6 +54,9 @@ namespace DiscordStats.Controllers
         [Authorize]
         public async Task<IActionResult> AllServers()
         {
+
+
+
             AllServersVM allServersNameAndMemCountVM = new (_serverRepository);
 
             return View(allServersNameAndMemCountVM);
@@ -63,17 +67,29 @@ namespace DiscordStats.Controllers
         public async Task<IActionResult> AddMemberToPickedServer(string? id)
         {
             string botToken = _config["API:BotToken"];
-            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-            var userId = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var serverId = id;
 
-            string? response = await _discord.AddMemberToGuild(botToken, serverId, userId, bearerToken);
 
-            AddMemberToPickedServerVM addedMemberProcessInfoVM = new();
-            //addedMemberProcessInfoVM.infoOfProcessOfBeingAdded = response;
-            ViewBag.Response = addedMemberProcessInfoVM.infoOfProcessOfBeingAdded(response);
+            var getResponse = await _discord.FindChannels(botToken, id);
+            var channelList = getResponse.Split("},")[2];
+            var channelId = channelList.Split(",")[0].Split(":")[1];
+            channelId = channelId.Remove(0, 2);
+            channelId = channelId.Remove(channelId.Length - 1, 1);
 
-            return View();
+
+            var postResponse = await _discord.AddMemberToGuild(botToken, channelId);
+            //foreach ()
+            string codeValue = "";
+
+            codeValue = postResponse.Split(",")[0].Split(":")[1];
+            codeValue = codeValue.Remove(0,2);
+            codeValue = codeValue.Remove(codeValue.Length - 1, 1);
+
+            string link = "https://discord.gg/" + codeValue;
+
+
+            ViewBag.Response = link;
+
+            return Redirect(link);
         }
 
         public IActionResult Privacy()
