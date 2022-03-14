@@ -56,7 +56,7 @@ client.on('messageCreate', async(message) => {
     }
 
     setTimeout(() => {
-        axios.post('https://localhost:7228/api/PostMessageData', MessageData)
+        axios.post('https://discordstats.azurewebsites.net/api/PostMessageData', MessageData)
             .then((result: any) => {
                 console.log(result);
             })
@@ -201,7 +201,7 @@ async function sendUsers (){
     setTimeout(() => {
         console.log("The users of all servers: ")
         console.log(users)
-        axios.post('https://localhost:7228/api/postusers', users)
+        axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
             .then((result: any) => {
                 console.log(result);
             })
@@ -249,7 +249,7 @@ async function sendServers (){
         if (servers.length != 0) {
             console.log("All Servers: ")
             console.log(servers)
-            axios.post('https://localhost:7228/api/postservers', servers)
+            axios.post('https://discordstats.azurewebsites.net/api/postservers', servers)
                 .then((result: any) => {
                     console.log(result);
                 })
@@ -279,7 +279,7 @@ async function sendChannels (){
         if (channels.length != 0) {
             console.log("All Channels: ")
             console.log(channels)
-            axios.post('https://localhost:7228/api/postchannels', channels)
+            axios.post('https://discordstats.azurewebsites.net/api/postchannels', channels)
                 .then((result: any) => {
                     console.log(result);
                 })
@@ -335,7 +335,7 @@ async function sendPresence (){
         if (presences.length > 0) {
             console.log("The presence of all users: ")
             console.log(presences)
-            axios.post('https://localhost:7228/api/postpresence', presences)
+            axios.post('https://discordstats.azurewebsites.net/api/postpresence', presences)
             .then((result: any) => {
                 console.log(result);
             })
