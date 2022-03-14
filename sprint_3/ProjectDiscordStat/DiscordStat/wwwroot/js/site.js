@@ -17,7 +17,7 @@ $(".change").on("click", function () {
 /*JQuery for graphs on home page and bar and pie graphs on home page*/
 $.ajax({
     type: 'GET',
-    url: 'Home/GetDataAsynchronousParallel',
+    url: 'Home/GetServerDataFromDb',
     success: retrieveDataForBarChart,
     error: handleError
 });

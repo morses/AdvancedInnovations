@@ -54,6 +54,7 @@ builder.Services.AddScoped<ServerOwnerViewModel, ServerOwnerViewModel>();
 builder.Services.AddScoped<IServerUserJoinRepository, ServerUserJoinRepository>();
 builder.Services.AddScoped<IDiscordUserRepository, DiscordUserRepository>();
 builder.Services.AddScoped<IPresenceRepository, PresenceRepository>();
+builder.Services.AddScoped<IChannelRepository, ChannelRepository>();
 
 
 // Add services to the container.

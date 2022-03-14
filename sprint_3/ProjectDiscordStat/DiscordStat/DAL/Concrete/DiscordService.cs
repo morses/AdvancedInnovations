@@ -187,15 +187,15 @@ namespace DiscordStats.DAL.Concrete
             return userInfo;
         }
 
-        //public async Task<Server?> GetCurrentGuild(string botToken, string serverId)
-        //{
-        //    string uri = "https://discord.com/api/guilds/" + serverId + "/preview";
-        //    // Remember to handle errors here
-        //    string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
-        //    // And here
-        //    Server? server = JsonConvert.DeserializeObject<Server>(response);
-        //    return server;
-        //}
+        public async Task<List<Channel>?> GetGuildChannels(string botToken, string serverId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
+            // Remember to handle errors here
+            string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
+            // And here
+            List<Channel>? channel = JsonConvert.DeserializeObject<List<Channel>>(response);
+            return channel;
+        }
 
 
         public async Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId)
