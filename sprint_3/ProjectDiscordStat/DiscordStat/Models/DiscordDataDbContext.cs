@@ -36,39 +36,39 @@ namespace DiscordStats.Models
         {
             modelBuilder.Entity<Channel>(entity =>
             {
-                entity.HasKey(e => e.ChannelsPk)
-                    .HasName("PK__Channel__68B0E65889856A5B");
+                entity.HasKey(e => e.ChannelPk)
+                    .HasName("PK__Channel__38C3B1266007C38C");
             });
 
             modelBuilder.Entity<DiscordUser>(entity =>
             {
                 entity.HasKey(e => e.DiscordUserPk)
-                    .HasName("PK__DiscordU__1F12BE9576AF3B30");
-
+                    .HasName("PK__DiscordU__1F12BE9550BFF97E");
             });
 
             modelBuilder.Entity<Presence>(entity =>
             {
                 entity.HasKey(e => e.PresencePk)
-
-                    .HasName("PK__Presence__4981B3D9E36B8DF5");
-
+                    .HasName("PK__Presence__4981B3D9E172AA1E");
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-
-                    .HasName("PK__Server__C56B0386ED04E5A6");
+                    .HasName("PK__Server__C56B0386B8EB12CD");
             });
 
             modelBuilder.Entity<ServerChannelJoin>(entity =>
             {
+                entity.HasOne(d => d.ChannelPkNavigation)
+                    .WithMany(p => p.ServerChannelJoins)
+                    .HasForeignKey(d => d.ChannelPk)
+                    .HasConstraintName("ServerChannelJoinChannelPk");
+
                 entity.HasOne(d => d.ServerPkNavigation)
                     .WithMany(p => p.ServerChannelJoins)
                     .HasForeignKey(d => d.ServerPk)
                     .HasConstraintName("ServerChannelJoinServerPk");
-
             });
 
             modelBuilder.Entity<ServerPresenceJoin>(entity =>

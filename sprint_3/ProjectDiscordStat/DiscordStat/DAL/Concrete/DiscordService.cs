@@ -304,6 +304,7 @@ namespace DiscordStats.DAL.Concrete
         {
             var dbServers = _serverRepository.GetAll();
             var duplicate = false;
+            var serverDuplicate = new Server();
             if (server.Description == null)
             {
                 server.Description = "null";
@@ -330,6 +331,7 @@ namespace DiscordStats.DAL.Concrete
                 if (dbServer.Id == server.Id)
                 {
                     duplicate = true;
+                    serverDuplicate = dbServer;
                 }
             }
             if (!duplicate)
@@ -337,6 +339,11 @@ namespace DiscordStats.DAL.Concrete
                 var servMemberCount = server.Approximate_Member_Count;
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = server.Owner_Id, VerificationLevel = server.Verification_Level, Description = server.Description, PremiumTier = server.Premium_Tier, ApproximatePresenceCount = server.Approximate_Presence_Count, Privacy="private", OnForum="false", Message="null" });
 
+            }
+            if (duplicate)
+            {
+                serverDuplicate.ApproximateMemberCount = server.Approximate_Member_Count;
+                _serverRepository.AddOrUpdate(serverDuplicate);
             }
         }
 

@@ -9,25 +9,26 @@ namespace DiscordStats.Models
     [Table("Channel")]
     public partial class Channel
     {
+        public Channel()
+        {
+            ServerChannelJoins = new HashSet<ServerChannelJoin>();
+        }
+
         [Key]
-        public int ChannelsPk { get; set; }
+        public int ChannelPk { get; set; }
         [Column("ID")]
         [StringLength(256)]
-        public string Id { get; set; } = null!;
-        public int Type { get; set; }
+        public string? Id { get; set; }
         [StringLength(256)]
-        public string Name { get; set; } = null!;
-        public int Position { get; set; }
-        [Column("Parent_id")]
+        public string? Type { get; set; }
         [StringLength(256)]
-        public string ParentId { get; set; } = null!;
+        public string? Name { get; set; }
+        public int? Count { get; set; }
         [Column("Guild_id")]
         [StringLength(256)]
-        public string GuildId { get; set; } = null!;
-        [Column("Permission_overwrites")]
-        [StringLength(256)]
-        public string? PermissionOverwrites { get; set; }
-        [StringLength(50)]
-        public string? Nsfw { get; set; }
+        public string? GuildId { get; set; }
+
+        [InverseProperty(nameof(ServerChannelJoin.ChannelPkNavigation))]
+        public virtual ICollection<ServerChannelJoin> ServerChannelJoins { get; set; }
     }
 }
