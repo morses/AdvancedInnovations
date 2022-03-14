@@ -20,7 +20,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using DiscordStats.ViewModels;
 
 namespace DiscordStats.Controllers
 {
@@ -44,7 +44,15 @@ namespace DiscordStats.Controllers
         {
 
             return View();
-        }     
+        }
+
+
+        public IActionResult GetDataAsynchronousParallel()
+        {
+            _logger.LogInformation("GetDataAsynchronousParallel");
+            IEnumerable<Server> servers = _serverRepository.GetAll().ToList().Where(a => a.Privacy == "public").OrderByDescending(m => m.ApproximateMemberCount).Take(5);
+            return Json(new { userPerServer = servers });
+        }
 
         public IActionResult Contact()
         {
@@ -54,11 +62,7 @@ namespace DiscordStats.Controllers
         [Authorize]
         public async Task<IActionResult> AllServers()
         {
-
-
-
             AllServersVM allServersNameAndMemCountVM = new (_serverRepository);
-
             return View(allServersNameAndMemCountVM);
         }
 
@@ -67,7 +71,6 @@ namespace DiscordStats.Controllers
         public async Task<IActionResult> AddMemberToPickedServer(string? id)
         {
             string botToken = _config["API:BotToken"];
-
 
             var getResponse = await _discord.FindChannels(botToken, id);
             var channelList = getResponse.Split("},")[2];

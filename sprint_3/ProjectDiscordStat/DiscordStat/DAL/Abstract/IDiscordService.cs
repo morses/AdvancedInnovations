@@ -1,4 +1,5 @@
 using DiscordStats.Models;
+using DiscordStats.ViewModel;
 using DiscordStats.ViewModels;
 
 
@@ -21,20 +22,31 @@ namespace DiscordStats.DAL.Abstract
 
         Task<DiscordUser?> GetCurrentUserInfo(string bearerToken);
 
-        Task<Server?> GetCurrentGuild(string botToken, string serverId);
+        //Task<Server?> GetCurrentGuild(string botToken, string serverId);
 
         Task<DiscordUser?> GetUserInfoById(string bearerToken, string UserId);
 
 
         Task<string?> CheckForBot(string botToken, string serverId);
 
-        Task<string?> AddMemberToGuild(string botToken, string serverId);
+        Task<string?> AddMemberToGuild(string botToken, string channelId);
 
         Task<string?> FindChannels(string botToken, string serverId);
 
-        void ServerEntryDbCheck(Server server, string hasBot, string serverOwner);
 
         Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId);
+
+
+        Task<List<GuildUsers>?> GetCurrentGuildUsers(string botToken, string serverId);
+        Task<string?> RemoveUserServer(string botToken, string serverId, string userId);
+        Task<string?> CreateServer(string botToken, CreateServerVM vm);
+        Task<string?> UpdateOwner(string botToken, string serverId, string currentUser);
+
+        void ServerEntryDbCheck(ServerOwnerViewModel server, string hasBot, string serverOwner);
+
+
+        Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences);
+
 
     }
 }

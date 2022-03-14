@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using DiscordStats.DAL.Abstract;
 using DiscordStats.DAL.Concrete;
 using DiscordStats.Models;
+using DiscordStats.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,7 @@ builder.Services.AddHttpClient();
 // Add our repositories and services
 builder.Services.AddScoped<IDiscordService, DiscordService>();
 builder.Services.AddScoped<IServerRepository, ServerRepository>();
+builder.Services.AddScoped<ServerOwnerViewModel, ServerOwnerViewModel>();
 builder.Services.AddScoped<IServerUserJoinRepository, ServerUserJoinRepository>();
 builder.Services.AddScoped<IDiscordUserRepository, DiscordUserRepository>();
 builder.Services.AddScoped<IPresenceRepository, PresenceRepository>();

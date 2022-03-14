@@ -18,22 +18,22 @@ namespace DiscordStats.Models
         public int PresencePk { get; set; }
         [Column("ID")]
         [StringLength(256)]
-        public string Id { get; set; } = null!;
+        public string? Id { get; set; }
         [Column("applicationID")]
         [StringLength(256)]
-        public string ApplicationId { get; set; } = null!;
+        public string? ApplicationId { get; set; }
         [StringLength(256)]
-        public string Name { get; set; } = null!;
+        public string? Name { get; set; }
         [StringLength(256)]
-        public string Details { get; set; } = null!;
+        public string? Details { get; set; }
         [StringLength(256)]
-        public string CreatedAt { get; set; } = null!;
+        public string? CreatedAt { get; set; }
         [StringLength(256)]
         public string? LargeImageId { get; set; }
         [StringLength(256)]
         public string? SmallImageId { get; set; }
         [StringLength(256)]
-        public string ServerId { get; set; } = null!;
+        public string? ServerId { get; set; }
 
         [InverseProperty(nameof(ServerPresenceJoin.PresencePkNavigation))]
         public virtual ICollection<ServerPresenceJoin> ServerPresenceJoins { get; set; }

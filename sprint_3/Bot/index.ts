@@ -40,36 +40,6 @@ const prefix = "!";
 
 client.on('ready', () => {
     console.log('The bot is ready')
-
-    // app.get('/guilds', (req: any, res: any) => {
-    //     let allGuilds: string = "";
-    //     client.guilds.cache.each((guild) => {
-    //         allGuilds += guild.name + "," + guild.id + ";";
-    //     })
-    //     res.status(200).send({
-    //         allGuilds
-    //     })
-    // })
-
-    // app.get('/members', async (req: any, res: any) => {
-    //     const list = client.guilds.cache.get(String(ServerID))
-    //     const members = await list?.members.fetch();
-    //     // var allMembersString = ""
-    //     // members?.each((member) => {
-    //     //     let presence;
-    //     //     if (member.presence?.activities[0]?.name == undefined) {
-    //     //         presence = "n/a"
-    //     //     }
-    //     //     else {
-    //     //         presence = member.presence?.activities[0]?.name
-    //     //     }
-    //     //     allMembersString += member.user.username + "          Playing:  " + presence;
-    //     //     allMembersString += '\n';
-    //     // })
-    //     res.status(200).send({
-    //         members
-    //     })
-    // })
 })
 
 
@@ -217,55 +187,63 @@ async function sendUsers (){
     }, 5000);
 }
 
-async function sendPresence (serverId: string){
+async function sendPresence (){
     let presences: any = []
-    const list = client.guilds.cache.get(String(serverId))
-    const members = await list?.members.fetch();
 
+    client.guilds.cache.each(async (guild) => {
 
-    members?.forEach((member) => {
-        if (member.presence === undefined || member.presence === null) {
-            return;
-        };
-
-        if (member.presence.activities.length === 0) {
-            return;
-        };
-
-        if (member.user.bot === false) {
-            let newPresence = {
-                "Id": member.presence.activities[0].id,
-                "ApplicationId": member.presence?.activities[0].applicationId,
-                "Name": member.presence?.activities[0].name,
-                "Details": member.presence?.activities[0].details,
-                "CreatedAt": member.presence?.activities[0].createdAt.toString(),
-                "LargeImageId": member.presence?.activities[0].assets?.largeImage,
-                "SmallImageId": member.presence?.activities[0].assets?.smallImage,
-                "ServerId": serverId
+        const list = client.guilds.cache.get(String(guild.id))
+        const members = await list?.members.fetch();
+    
+    
+        members?.forEach((member) => {
+            if (member.presence === undefined || member.presence === null) {
+                return;
             };
-            // console.log(newPresence);
-            presences.push(newPresence);
-        };
-    });
-    presences.forEach((presence: any) => {
-        console.log(presence);
+    
+            if (member.presence.activities.length === 0) {
+                return;
+            };
+            let details = member.presence?.activities[0].details
+            if (member.presence?.activities[0].details == null) {
+                details = "null";
+            }
+    
+            if (member.user.bot === false) {
+                let newPresence = {
+                    "Id": member.presence.activities[0].id,
+                    "ApplicationId": member.presence?.activities[0].applicationId,
+                    "Name": member.presence?.activities[0].name,
+                    "Details": details,
+                    "CreatedAt": member.presence?.activities[0].createdAt.toString(),
+                    "LargeImageId": member.presence?.activities[0].assets?.largeImage,
+                    "SmallImageId": member.presence?.activities[0].assets?.smallImage,
+                    "ServerId": guild.id
+                };
+                presences.push(newPresence);
+            };
+            
+        })
+    
     });
 
-    axios.post('https://localhost:7228/api/postpresence', presences)
-        .then((result: any) => {
-            console.log(result);
-        })
-        .catch((error: any) => {
-            console.log(error);
-        });
+    setTimeout(() => {
+        if (presences.length > 0) {
+            console.log("The presence of all users: ")
+            console.log(presences)
+            axios.post('https://localhost:7228/api/postpresence', presences)
+            .then((result: any) => {
+                console.log(result);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
+        }
+    }, 5000);
 };
 
 function updataData() {
-    // client.guilds.cache.each((guild) => {
-    //     sendUsers(guild.id);
-    //     // console.log("sending presence status");
-    //     // sendPresence(guild.id)
-    // });
+    sendPresence();
     sendUsers();
 }
 
