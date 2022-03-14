@@ -30,6 +30,7 @@ namespace DiscordStats.DAL.Abstract
         Task<string?> CheckForBot(string botToken, string serverId);
 
         Task<string?> AddMemberToGuild(string botToken, string channelId);
+
         Task<string?> FindChannels(string botToken, string serverId);
 
 

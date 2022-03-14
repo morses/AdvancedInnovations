@@ -89,6 +89,7 @@ namespace DiscordStats.DAL.Concrete
                 throw new HttpRequestException();
             }
         }
+
         public async Task<string> GetJsonStringFromEndpointDelete(string botToken, string uri)
         {
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri)
@@ -131,6 +132,7 @@ namespace DiscordStats.DAL.Concrete
                     { HeaderNames.UserAgent, "DiscordStat" }
                 },
                 Content = body
+
             };
             HttpClient httpClient = _httpClientFactory.CreateClient();
             HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
@@ -290,7 +292,6 @@ namespace DiscordStats.DAL.Concrete
             return response;
         }
 
-
         public async Task<string?> FindChannels(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
@@ -340,6 +341,7 @@ namespace DiscordStats.DAL.Concrete
 
             }
         }
+
 
         public async Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences)
         {

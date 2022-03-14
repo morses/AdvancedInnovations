@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 namespace DiscordStats.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
 
@@ -27,7 +28,7 @@ namespace DiscordStats.Controllers
             _serverRepository = serverRepository;
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
+        [Authorize (AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> Account()
         {
             // Don't use the ViewBag!  Use a viewmodel instead.
@@ -42,12 +43,12 @@ namespace DiscordStats.Controllers
             //var updatedOwner = await _discord.UpdateOwner(_configuration["API:BotToken"], "952358862059614218", userId);
 
             IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
-            
+
             foreach (Server server in servers)
             {
 
                 string hasBot = await _discord.CheckForBot(botToken, server.Id);
-                if(hasBot == "true")
+                if (hasBot == "true")
                 {
                     var serverWithMemCount = await _discord.GetFullGuild(botToken, server.Id);
 
@@ -72,7 +73,8 @@ namespace DiscordStats.Controllers
             return View(servers);
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
+
+
         public async Task<IActionResult> Servers()
         {
             ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
@@ -101,10 +103,17 @@ namespace DiscordStats.Controllers
         }
 
 
+        [AllowAnonymous]
+        public IActionResult Logout()
+        {
+            foreach (var cookie in HttpContext.Request.Cookies)
+            {
+                Response.Cookies.Delete(cookie.Key);
+            }
+            return RedirectToAction("Index", "Home");
+        }
 
-
-
-        [Authorize(AuthenticationSchemes = "Discord")]
+        [Authorize]
         public async Task<IActionResult> Details(string? name)
         {
 
