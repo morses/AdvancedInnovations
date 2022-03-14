@@ -14,16 +14,18 @@ Dark mode:
     <tr>
         <th><b>Channel Name</b></th>
         <th><b>Channel Id</b></th>
+        <th><b>Message Count</b></th>
         <th></th>
     </tr>
 
     </thead>
     <tbody>
-        @foreach (var s in Model)
+        @foreach (var s in Model.OrderByDescending(c => c.Count))
         {
             <tr>
                 <td>@s.Name</td>
                 <td>@s.Id</td>
+                <td>@s.Count</td>
             </tr>
         }
     </tbody>

@@ -13,8 +13,11 @@ namespace DiscordStats.Models
         [Column("ID")]
         public int Id { get; set; }
         public int? ServerPk { get; set; }
-        public int? ChannelsPk { get; set; }
+        public int? ChannelPk { get; set; }
 
+        [ForeignKey(nameof(ChannelPk))]
+        [InverseProperty(nameof(Channel.ServerChannelJoins))]
+        public virtual Channel? ChannelPkNavigation { get; set; }
         [ForeignKey(nameof(ServerPk))]
         [InverseProperty(nameof(Server.ServerChannelJoins))]
         public virtual Server? ServerPkNavigation { get; set; }

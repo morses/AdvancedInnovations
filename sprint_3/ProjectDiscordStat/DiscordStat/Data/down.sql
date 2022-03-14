@@ -3,7 +3,7 @@
  ALTER TABLE [ServerPresenceJoin] DROP CONSTRAINT [ServerPresenceJoinServerPk]
  ALTER TABLE [ServerPresenceJoin] DROP CONSTRAINT [ServerPresenceJoinPresencePk]
  ALTER TABLE [ServerChannelJoin] DROP CONSTRAINT [ServerChannelJoinServerPk]
- ALTER TABLE [ServerChannelJoin] DROP CONSTRAINT [ServerChannelJoinChannelsPk]
+ ALTER TABLE [ServerChannelJoin] DROP CONSTRAINT [ServerChannelJoinChannelPk]
 
  DROP TABLE [Server];
  DROP TABLE [ServerUserJoin];

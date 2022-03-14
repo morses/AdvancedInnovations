@@ -82,12 +82,15 @@ namespace DiscordStats.Controllers
             string botToken = _configuration["API:BotToken"];
             var servers = _serverRepository.GetAll();
             var selectedServer = servers.Where(m => m.Id == serverId).FirstOrDefault();
+
+
             IList<Channel> channels = new List<Channel>();
             if (selectedServer != null)
             {
                 if (selectedServer.HasBot == "true")
                 {
-                    channels = await _discord.GetGuildChannels(botToken, serverId);
+                    channels = _channelRepository.GetAll().Where(x => x.GuildId == selectedServer.Id).ToList();
+
                     ViewBag.hasBot = "true";
 
                 }

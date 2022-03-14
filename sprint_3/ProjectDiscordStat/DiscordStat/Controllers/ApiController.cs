@@ -21,6 +21,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using DiscordStats.ViewModels;
 
 namespace DiscordStats.Controllers
 {
@@ -39,14 +40,18 @@ namespace DiscordStats.Controllers
         private readonly IPresenceRepository _presenceRepository;
         private readonly ILogger<ApiController> _logger;
         private readonly IDiscordService _discord;
+        private readonly IServerRepository _serverRepository;
+        private readonly IChannelRepository _channelRepository;
 
 
-        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord)
+        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord, IServerRepository serverRepository, IChannelRepository channelRepository)
         {
             _logger = logger;
             _discordUserRepository = discordUserRepo;
             _presenceRepository = presenceRepository;
             _discord = discord;
+            _serverRepository = serverRepository;
+            _channelRepository = channelRepository;
         }
 
 
@@ -97,6 +102,123 @@ namespace DiscordStats.Controllers
             var presencesNameAndCount = presenceChartDataVM.AllPresenceNameListAndCount(presences);
 
             return Json(new { userPerGame = presencesNameAndCount });
+        }
+
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> PostServers(Server[] servers)
+        {
+            foreach (var server in servers)
+            {
+                var duplicate = false;
+
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var allServers = _serverRepository.GetAll().ToList();
+                    var duplicateServer = new Server();
+                    for (int i = 0; i < allServers.Count(); i++)
+                    {
+                        if (server.Id == allServers[i].Id)
+                        {
+                            duplicate = true;
+                            duplicateServer = allServers[i];
+                        }
+                    }
+                    if (!duplicate)
+                    {
+                        _serverRepository.AddOrUpdate(server);
+                    }
+                    if (duplicate)
+                    {
+                        duplicateServer.Name = server.Name;
+                        duplicateServer.Id = server.Id;
+                        duplicateServer.ApproximateMemberCount = server.ApproximateMemberCount;
+                        duplicateServer.ApproximatePresenceCount = server.ApproximatePresenceCount;
+                        duplicateServer.Icon = server.Icon;
+                        duplicateServer.HasBot = server.HasBot;
+                        duplicateServer.OwnerId = server.OwnerId;
+                        duplicateServer.PremiumTier = server.PremiumTier;
+                        duplicateServer.VerificationLevel = server.VerificationLevel;
+                        _serverRepository.AddOrUpdate(duplicateServer);
+                    }
+                });
+
+            }
+            return Json("It worked");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> PostChannels(Channel[] channels)
+        {
+            foreach (var channel in channels)
+            {
+                var duplicate = false;
+
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var allChannels = _channelRepository.GetAll().ToList();
+                    var duplicateChannel = new Channel();
+                    for (int i = 0; i < allChannels.Count(); i++)
+                    {
+                        if (channel.Id == allChannels[i].Id)
+                        {
+                            duplicate = true;
+                            duplicateChannel = allChannels[i];
+                        }
+                    }
+                    if (!duplicate)
+                    {
+                        _channelRepository.AddOrUpdate(channel);
+                    }
+                    if (duplicate)
+                    {
+
+                        _channelRepository.AddOrUpdate(duplicateChannel);
+                    }
+                });
+
+            }
+            return Json("It worked");
+        }
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> PostMessageData(MessageData message)
+        {
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var channelTruth = false;
+                    var tempChannel = new Channel();
+                    foreach (Channel channel in _channelRepository.GetAll().ToList())
+                    {
+                        if (channel.Id == message.ChannelId)
+                        {
+                            channelTruth = true;
+                            tempChannel = channel;
+                        }
+                    }
+                    if (channelTruth)
+                    {
+                        if (tempChannel.Count == null)
+                        {
+                            tempChannel.Count = 0;
+                        }
+                        tempChannel.Count += 1;
+                        _channelRepository.AddOrUpdate(tempChannel);
+                    }
+
+                });
+
+            return Json("It worked");
         }
     }
 }
