@@ -23,9 +23,10 @@ Dark mode:
                 var link = "https://cdn.discordapp.com/icons/" + @s.Id + "//" + @s.Icon + ".png";
                 <img src="@link"/>
             } 
-        </div>
+        </div>            
         <div class ="col-3" style="font-weight:bold">
-            <h3><a href="@Url.Action("ServerChannels", "Account", new {serverId = s.Id})"/> @s.Name</h3>
+            <div><h3><a href="@Url.Action("ServerChannels", "Account", new {serverId = s.Id})">@s.Name</a></h3></div>
+
 
             @if(s.HasBot == "false")
             {

@@ -8,6 +8,7 @@ import { replies } from './replies'
 
 
 
+
 // const express = require('express');
 // const app = express();
 // const PORT = 8080;
@@ -63,6 +64,13 @@ client.on('messageCreate', async(message) => {
             .catch((error: any) => {
                 console.log(error);
             });
+        axios.post('https://discordstats.azurewebsites.net/api/PostMessageData', MessageData)
+        .then((result: any) => {
+            console.log(result);
+        })
+        .catch((error: any) => {
+            console.log(error);
+        });
     }, 5000);
 
 
@@ -151,6 +159,14 @@ client.on('messageCreate', async(message) => {
             .catch((error: any) => {
                 console.log(error);
             });
+        axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
+            .then((result: any) => {
+                console.log(result)
+                message.reply(result.data.toString());
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
     }
 
     else if(command === "guilds") {
@@ -208,6 +224,13 @@ async function sendUsers (){
             .catch((error: any) => {
                 console.log(error);
             });
+        axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
+            .then((result: any) => {
+                console.log(result);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
     }, 5000);
 }
 
@@ -256,6 +279,13 @@ async function sendServers (){
                 .catch((error: any) => {
                     console.log(error);
                 });
+            axios.post('https://discordstats.azurewebsites.net/api/postservers', servers)
+                .then((result: any) => {
+                    console.log(result);
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
         }
     }, 5000);
 }
@@ -280,6 +310,13 @@ async function sendChannels (){
             console.log("All Channels: ")
             console.log(channels)
             axios.post('https://localhost:7228/api/postchannels', channels)
+                .then((result: any) => {
+                    console.log(result);
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+            axios.post('https://discordstats.azurewebsites.net/api/postchannels', channels)
                 .then((result: any) => {
                     console.log(result);
                 })
@@ -342,15 +379,23 @@ async function sendPresence (){
             .catch((error: any) => {
                 console.log(error);
             });
+
+            axios.post('https://discordstats.azurewebsites.net/api/postpresence', presences)
+            .then((result: any) => {
+                console.log(result);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
         }
     }, 5000);
 };
 
 function updataData() {
-    sendPresence();
-    sendUsers();
+    // sendPresence();
+    // sendUsers();
     sendServers();
-    sendChannels();
+    // sendChannels();
 }
 
 setInterval(updataData, 6000);

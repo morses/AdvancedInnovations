@@ -26,7 +26,7 @@ namespace DiscordStats_Tests
         private IDiscordService discordService;
 
         private Mock<DbSet<ServerPartial>> _mockPartialServerDbSet;
-        private List<ServerPartial> _serverPartial = FakeData.ServersfromPartial;
+        //private List<ServerPartial> _serverPartial = FakeData.ServersfromPartial;
 
         private Mock<DbSet<T>> GetMockDbSet<T>(IQueryable<T> entities) where T : class
         {
@@ -42,7 +42,7 @@ namespace DiscordStats_Tests
         public void Setup()
         {
             _mockServerDbSet = GetMockDbSet(_servers.AsQueryable());
-            _mockPartialServerDbSet = GetMockDbSet(_serverPartial.AsQueryable());
+            //_mockPartialServerDbSet = GetMockDbSet(_serverPartial.AsQueryable());
 
             _mockContext = new Mock<DiscordDataDbContext>();
             _mockContext.Setup(ctx => ctx.Servers).Returns(_mockServerDbSet.Object);
@@ -62,7 +62,7 @@ namespace DiscordStats_Tests
             
             handler.SetupAnyRequest()
                         .ReturnsResponse(HttpStatusCode.NotFound);
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository);
+            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null);
             Task<string?> Act() => discord.RemoveUserServer("FakeBot", "11111", "thisUser");
             Assert.That(Act, Throws.TypeOf<HttpRequestException>());
         }
@@ -74,7 +74,7 @@ namespace DiscordStats_Tests
 
             handler.SetupAnyRequest()
                         .ReturnsResponse(HttpStatusCode.OK);
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository);
+            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null);
             var result = discord.CheckForBot("FakeBotToken", "FakeServerId").Result;
             Assert.AreEqual(result, "true");
         }

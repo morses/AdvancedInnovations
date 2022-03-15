@@ -346,7 +346,7 @@ namespace DiscordStats_Tests
                 Assert.That(serverInfo.Id == "1035111022");
                 Assert.That(serverInfo.Name == "testServer");
                 Assert.That(serverInfo.Icon == "8342729096ea3675442027381ff50dfe");
-                Assert.That(serverInfo.ApproximateMemberCount == 2);
+                Assert.That(serverInfo.Approximate_Member_Count == 2);
             }
             );
 
@@ -361,7 +361,7 @@ namespace DiscordStats_Tests
                 .ReturnsResponse(HttpStatusCode.OK);
 
 
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository);
+            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null);
             var a = discord.CheckForBot("FakeBotToken", "FakeServerId").Result;
 
 
