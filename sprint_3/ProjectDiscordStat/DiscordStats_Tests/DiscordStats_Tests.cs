@@ -593,6 +593,7 @@ namespace DiscordStats_Tests
 
 
             DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, null);
+
             var a = discord.CheckForBot("FakeBotToken", "FakeServerId").Result;
 
 

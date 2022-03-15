@@ -48,6 +48,9 @@ namespace DiscordStats.DAL.Concrete
 
         public bool UpdatePrivacy(string serverId, string privacy)
         {
+            if (privacy != "private" && privacy != "public")
+                return false;
+
             foreach (Server server in GetAll().ToList())
             {
                 if (server.Id == serverId)
@@ -73,6 +76,5 @@ namespace DiscordStats.DAL.Concrete
             }
 
         }
-
     }
 }
