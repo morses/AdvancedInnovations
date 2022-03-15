@@ -24,14 +24,16 @@ namespace DiscordStats.DAL.Concrete
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IServerRepository _serverRepository;
         private readonly IPresenceRepository _presenceRepository;
+        private readonly IChannelRepository _channelRepository;
 
         private DiscordDataDbContext _db = new DiscordDataDbContext();
 
-        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository, IPresenceRepository presenceRepository)
+        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository, IPresenceRepository presenceRepository, IChannelRepository channelRepository)
         {
-            _serverRepository = serverRepository;   
+            _serverRepository = serverRepository;
             _httpClientFactory = httpClientFactory;
             _presenceRepository = presenceRepository;
+            _channelRepository = channelRepository; 
         }
 
 
@@ -153,7 +155,7 @@ namespace DiscordStats.DAL.Concrete
             var bodyAsJSON = $"{{\"name\": \"{vm.name}\", \"region?\": \"{vm.region}\", \"verification_level?\": \"{vm.verification_level}\"}}";
             HttpContent body = new StringContent(bodyAsJSON);
             body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            
+
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
             {
                 Headers =
@@ -166,7 +168,7 @@ namespace DiscordStats.DAL.Concrete
             };
             HttpClient httpClient = _httpClientFactory.CreateClient();
             HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 string responseText = await response.Content.ReadAsStringAsync();
@@ -366,7 +368,7 @@ namespace DiscordStats.DAL.Concrete
 
                     for (int i = 0; i < allPresences.Count(); i++)
                     {
-                        if (presence.UserId == allPresences[i].UserId)
+                        if (presence.UserId == allPresences[i].UserId && presence.Name == allPresences[i].Name)
                         {
                             duplicate = true;
                         }
@@ -376,11 +378,43 @@ namespace DiscordStats.DAL.Concrete
                         _presenceRepository.AddOrUpdate(presence);
                     }
                 });
-
             }
-
             return "It Worked";
         }
+
+        public async Task<string?> ChannelEntryAndUpdateDbCheck(Channel[] channels)
+        {
+            foreach (var channel in channels)
+            {
+                var duplicate = false;
+
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var allChannels = _channelRepository.GetAll().ToList();
+                    var duplicateChannel = new Channel();
+                    for (int i = 0; i < allChannels.Count(); i++)
+                    {
+                        if (channel.Id == allChannels[i].Id)
+                        {
+                            duplicate = true;
+                            duplicateChannel = allChannels[i];
+                        }
+                    }
+                    if (!duplicate)
+                    {
+                        _channelRepository.AddOrUpdate(channel);
+                    }
+                    if (duplicate)
+                    {
+
+                        _channelRepository.AddOrUpdate(duplicateChannel);
+                    }
+                });
+            }
+            return "It Worked";
+        }
+
         public async Task<string?> RemoveUserServer(string botToken, string serverId, string UserId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId +"/members/" + UserId;

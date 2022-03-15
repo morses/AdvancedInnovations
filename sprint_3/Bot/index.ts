@@ -1,5 +1,5 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED='0'
-import  DiscordJS, { Intents, Presence } from 'discord.js'
+import  DiscordJS, { Guild, Intents, Presence } from 'discord.js'
 import { MembershipStates } from 'discord.js/typings/enums';
 import dotenv from 'dotenv'
 dotenv.config()
@@ -85,7 +85,6 @@ client.on('messageCreate', async(message) => {
     // gets the ID of the server in which the message was sent from
 
     // gets the ID of the channel in which the message was sent from
-
 
     //removes the prefix and makes the command its own string
     const commandBody = message.content.slice(prefix.length);
@@ -390,6 +389,64 @@ async function sendPresence (){
         }
     }, 5000);
 };
+
+
+function guildIdAndAllUsersId(){
+    let users: any = []
+    client.guilds.cache.each(async (guild) => {
+        let list = await client.guilds.cache.get(String(guild.id))?.members.fetch()
+        list?.each((user) => {
+            if (user.user.bot === false) {
+                if (user.user.avatar === null) {
+                    user.user.avatar = "null";
+                }
+                let newUser = {
+                    "Id": user.user.id.toString(),
+                    "Username": user.user.username,
+                    "Servers": guild.id,
+                    "Avatar": user.user.avatar
+                }
+                // console.log(newUser)
+                users.push(newUser);
+                setTimeout(() => 100);
+            }
+        })
+    })
+
+    client.guilds.cache.each(async (guild) => {
+        let list = client.guilds.cache.get(String(guild.id))?.channels.cache.forEach(ch => {
+            if (ch.type === "GUILD_TEXT"){
+                ch.messages.fetch({
+                    limit: 100
+                }).then(messages => {
+                    const msgs = messages.filter(m => m.author.id === users)
+                    msgs.forEach(m => {
+                        console.log(`${m.content} - ${m.channel}`)
+                        console.log('hello')
+                    })
+                })
+            } else {
+                return;
+            }
+        })
+    })
+};
+// async function userMessages(guildID, userID){
+//     client.guilds.cache.get(guildID).channels.cache.forEach(ch => {
+//         if (ch.type === 'text'){
+//             ch.messages.fetch({
+//                 limit: 100
+//             }).then(messages => {
+//                 const msgs = messages.filter(m => m.author.id === userID)
+//                 msgs.forEach(m => {
+//                     console.log(`${m.content} - ${m.channel.name}`)
+//                 })
+//             })
+//         } else {
+//             return;
+//         }
+//     })
+// }
 
 function updataData() {
     // sendPresence();

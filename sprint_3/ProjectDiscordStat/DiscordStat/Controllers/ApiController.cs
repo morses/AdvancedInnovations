@@ -94,9 +94,9 @@ namespace DiscordStats.Controllers
             return Json(itWorked);
         }
 
-        public IActionResult GetDataAsynchronousParallel()
+        public IActionResult GetPresenceDataFromDb()
         {
-            _logger.LogInformation("GetDataAsynchronousParallel");
+            _logger.LogInformation("GetPresenceDataFromDb");
             List<Presence> presences = _presenceRepository.GetAll().ToList(); // .Where(a => a. Privacy == "public").OrderByDescending(m => m.ApproximateMemberCount).Take(5);
             PresenceChartDataVM presenceChartDataVM = new();
             var presencesNameAndCount = presenceChartDataVM.AllPresenceNameListAndCount(presences);
@@ -155,40 +155,10 @@ namespace DiscordStats.Controllers
         [HttpPost]
         public async Task<IActionResult> PostChannels(Channel[] channels)
         {
-            foreach (var channel in channels)
-            {
-                var duplicate = false;
+            var itWorked = await _discord.ChannelEntryAndUpdateDbCheck(channels);
 
-                Task.Delay(300).Wait();
-                await Task.Run(() =>
-                {
-                    var allChannels = _channelRepository.GetAll().ToList();
-                    var duplicateChannel = new Channel();
-                    for (int i = 0; i < allChannels.Count(); i++)
-                    {
-                        if (channel.Id == allChannels[i].Id)
-                        {
-                            duplicate = true;
-                            duplicateChannel = allChannels[i];
-                        }
-                    }
-                    if (!duplicate)
-                    {
-                        _channelRepository.AddOrUpdate(channel);
-                    }
-                    if (duplicate)
-                    {
-
-                        _channelRepository.AddOrUpdate(duplicateChannel);
-                    }
-                });
-
-            }
-            return Json("It worked");
+            return Json(itWorked);
         }
-
-
-
 
         [HttpPost]
         public async Task<IActionResult> PostMessageData(MessageData message)

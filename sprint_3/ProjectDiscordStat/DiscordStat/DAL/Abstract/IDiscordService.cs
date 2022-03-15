@@ -46,6 +46,7 @@ namespace DiscordStats.DAL.Abstract
 
 
         Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences);
+        Task<string?> ChannelEntryAndUpdateDbCheck(Channel[] channel);
 
 
     }
