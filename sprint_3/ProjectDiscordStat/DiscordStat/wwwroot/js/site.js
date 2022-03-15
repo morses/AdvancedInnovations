@@ -24,7 +24,7 @@ $.ajax({
 
 $.ajax({
     type: 'GET',
-    url: 'Api/GetDataAsynchronousParallel',
+    url: 'Api/GetPresenceDataFromDb',
     success: retrieveDataForPieChart,
     error: handleError
 });
@@ -51,7 +51,7 @@ function barGraphTopUsersPerServer(data) {
     for (var i = 0; i < data.length; ++i) {
         xValues.push(data[i].name);
         yValues.push(data[i].approximateMemberCount);
-        
+
         if (count == 3) {
             break;
         }
@@ -73,27 +73,33 @@ function barGraphTopUsersPerServer(data) {
             title: {
                 display: true,
                 text: "Top 5: Users per Servers",
-            },
-            xValues: {
-                title: {
-                    text: 'Servers',
-                    font: {
-                        family: 'Courier New, monospace',
-                        size: 18,
-                        color: 'white'
-                    }
-                },
-            },
-            yValues: {
-                title: {
-                    text: 'Users',
-                    font: {
-                        family: 'Courier New, monospace',
-                        size: 18,
-                        color: 'white'
-                    }
-                }
             }
+            //scales: {
+            //    yAxes: [{
+            //        ticks: {
+            //            beginAtZero: true
+            //        }
+            //    }]
+            //xValues: {
+            //    title: {
+            //        text: 'Servers',
+            //        font: {
+            //            family: 'Courier New, monospace',
+            //            size: 18,
+            //            color: 'white'
+            //        }
+            //    },
+            //},
+            //yValues: {
+            //    title: {
+            //        text: 'Users',
+            //        font: {
+            //            family: 'Courier New, monospace',
+            //            size: 18,
+            //            color: 'white'
+            //        }
+            //    }
+            //}
 
         }
     })
@@ -104,7 +110,7 @@ function pieGraphTopUsersPerGam(data) {
 
     var countForX = 0;
     var countForY = 0;
-    var  xValues = [];
+    var xValues = [];
     var yValues = [];;
 
     for (let value of Object.keys(data)) {

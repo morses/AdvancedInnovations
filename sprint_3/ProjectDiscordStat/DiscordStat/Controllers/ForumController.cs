@@ -27,7 +27,7 @@ namespace DiscordStats.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Server> servers = _serverRepository.GetServers();
+            IEnumerable<Server> servers = _serverRepository.GetAll();
             return View(servers);
         }
 

@@ -19,7 +19,8 @@ namespace DiscordStats_Tests
 
         public static readonly List<Server> Servers = new List<Server>
         {
-            new Server{Id = "789317480325316640", ServerPk = 1, Name = "First Most Member Count", Owner = "true", Icon = "4e428f7fb657dbf3b733e7b691e56997", HasBot = "true", ApproximateMemberCount=500, OwnerId="null", VerificationLevel="null", Description="null", PremiumTier="null", ApproximatePresenceCount="null", Privacy="true",OnForum="null",Message="null"},
+            //new Server{Id = "789317480325316640", ServerPk = 1, Name = "First Most Member Count", Owner = "true", Icon = "4e428f7fb657dbf3b733e7b691e56997", HasBot = "true", ApproximateMemberCount=500, OwnerId="null", VerificationLevel="null", Description="null", PremiumTier="null", ApproximatePresenceCount="null", Privacy="true",OnForum="null",Message="null"},
+            new Server{Id = "789317480325316640", ServerPk = 1, Name = "First Most Member Count", Owner = "true", Icon = "4e428f7fb657dbf3b733e7b691e56997", HasBot = "true", ApproximateMemberCount=500},
             new Server{Id = "928010025958510632", ServerPk = 2, Name = "Second Most Member Count", Owner = "false", Icon = "d8f49d144185733c210456853906b631", HasBot = "true",Privacy="true", ApproximateMemberCount=400},
             new Server{Id = "151516415641361", ServerPk = 3, Name = "Third Most Member Count", Owner = "false", Icon = "", HasBot = "false",Privacy="true", ApproximateMemberCount=300},
             new Server{Id = "78931748032531134", ServerPk = 4, Name = "Fourth Most Member Count", Owner = "true", Icon = "4e428f7fb657dbf3b733e7b691e56997", HasBot = "true",Privacy="true", ApproximateMemberCount=200},
