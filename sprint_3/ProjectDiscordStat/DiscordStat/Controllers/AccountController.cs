@@ -1,14 +1,11 @@
-﻿using DiscordStats.Models;
-using DiscordStats.DAL.Abstract;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Security.Claims;
+﻿using DiscordStats.DAL.Abstract;
+using DiscordStats.Models;
 using DiscordStats.ViewModel;
 using DiscordStats.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using DiscordStats.ViewModel;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 
 namespace DiscordStats.Controllers
@@ -77,12 +74,29 @@ namespace DiscordStats.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Discord")]
+        public async Task<IActionResult> Servers()
+        {
+            ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+
+            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
+
+            foreach (var s in servers.Where(m => m.Owner == "true"))
+            {
+                s.HasBot = await _discord.CheckForBot(_configuration["API:BotToken"], s.Id);
+            }
+
+
+            return View(servers.Where(m => m.Owner == "true").ToList());
+        }
+
+        [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> ServerChannels(string? serverId)
         {
             string botToken = _configuration["API:BotToken"];
             var servers = _serverRepository.GetAll();
             var selectedServer = servers.Where(m => m.Id == serverId).FirstOrDefault();
-
 
             IList<Channel> channels = new List<Channel>();
             if (selectedServer != null)
@@ -105,25 +119,6 @@ namespace DiscordStats.Controllers
             }
 
             return View(channels);
-        }
-
-            [Authorize(AuthenticationSchemes = "Discord")]
-
-        public async Task<IActionResult> Servers()
-        {
-            ViewBag.id = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            ViewBag.name = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
-            string bearerToken = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-
-            IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
-
-            foreach (var s in servers.Where(m => m.Owner == "true"))
-            {
-                s.HasBot = await _discord.CheckForBot(_configuration["API:BotToken"], s.Id);
-            }
-
-
-            return View(servers.Where(m => m.Owner == "true").ToList());
         }
 
         [HttpPost]

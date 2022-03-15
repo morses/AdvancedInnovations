@@ -50,7 +50,7 @@ namespace DiscordStats.Controllers
         public IActionResult GetServerDataFromDb()
         {
             //_logger.LogInformation("GetServerDataFromDb");
-            IEnumerable<Server> servers = _serverRepository.GetAll().Where(a => a.Privacy == "public").OrderByDescending(m => m.ApproximateMemberCount).Take(5).ToList();
+            IList<Server> servers = _serverRepository.GetAll().Where(a => a.Privacy == "public").OrderByDescending(m => m.ApproximateMemberCount).Take(5).ToList();
             return Json(new { userPerServer = servers });
         }
 
