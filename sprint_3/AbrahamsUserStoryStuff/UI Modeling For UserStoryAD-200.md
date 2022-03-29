@@ -1,6 +1,5 @@
 Images for User Story AD-200
 =====================================
 
-![Getting Started](ChannelPage.PNG)
-![Getting Started](WebHooksOrCreateWebHookPage.PNG)
-![Getting Started](SendData.PNG)
+![Getting Started](AccountPageForAD-200.PNG)
+![Getting Started](AllServersPageForAD-200.PNG)
