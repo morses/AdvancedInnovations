@@ -152,13 +152,13 @@ namespace DiscordStats.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> PostChannels(Channel[] channels)
-        {
-            var itWorked = await _discord.ChannelEntryAndUpdateDbCheck(channels);
+        //[HttpPost]
+        //public async Task<IActionResult> PostChannels(Channel[] channels)
+        //{
+        //    var itWorked = await _discord.ChannelEntryAndUpdateDbCheck(channels);
 
-            return Json(itWorked);
-        }
+        //    return Json(itWorked);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> PostMessageData(MessageData message)
