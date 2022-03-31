@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Web.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiscordStats.Models
@@ -20,14 +19,12 @@ namespace DiscordStats.Models
         public string Id { get; set; } = null!;
         [Key]
         public int DiscordUserPk { get; set; }
-
         [StringLength(128)]
         public string Username { get; set; } = null!;
         [StringLength(256)]
         public string Servers { get; set; } = null!;
         [StringLength(256)]
         public string? Avatar { get; set; }
-
 
         [InverseProperty(nameof(ServerUserJoin.DiscordUserPkNavigation))]
         public virtual ICollection<ServerUserJoin> ServerUserJoins { get; set; }

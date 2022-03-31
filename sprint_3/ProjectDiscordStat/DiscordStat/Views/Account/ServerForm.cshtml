@@ -14,7 +14,7 @@
                         <p style="margin-top: 4%; color: black; font-weight: 400;">Server Name:</p>
                     </div>
                     <div class="col-6" style="margin-left: -5%">
-                        <input asp-for="name" class="form-control"required="required"/>
+                        <input asp-for="name" class="form-control"required="required" maxlength="32"/>
                         <span asp-validation-for="name" class="text-danger"></span>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         <p style="margin-top: 4%; color: black; font-weight: 400;">Region:</p>
                     </div>
                     <div class="col-6" style="margin-left: -5%">
-                        <input asp-for="region" class="form-control"required="required"/>
+                        <input asp-for="region" class="form-control"required="required" maxlength="32"/>
                         <span asp-validation-for="region" class="text-danger"></span>
                     </div>
                 </div>

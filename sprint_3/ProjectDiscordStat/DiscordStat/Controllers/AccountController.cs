@@ -1,16 +1,16 @@
-﻿using DiscordStats.Models;
-using DiscordStats.DAL.Abstract;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Security.Claims;
+﻿using DiscordStats.DAL.Abstract;
+using DiscordStats.Models;
 using DiscordStats.ViewModel;
 using DiscordStats.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 
 namespace DiscordStats.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
 
@@ -18,16 +18,18 @@ namespace DiscordStats.Controllers
         private readonly IDiscordService _discord;
         private readonly IConfiguration _configuration;
         private readonly IServerRepository _serverRepository;
+        private readonly IChannelRepository _channelRepository;
 
-        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository)
+        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository, IChannelRepository channelRepository)
         {
             _logger = logger;
             _discord = discord;
             _configuration = config;
             _serverRepository = serverRepository;
+            _channelRepository = channelRepository;
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
+        [Authorize (AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> Account()
         {
             // Don't use the ViewBag!  Use a viewmodel instead.
@@ -42,12 +44,11 @@ namespace DiscordStats.Controllers
             //var updatedOwner = await _discord.UpdateOwner(_configuration["API:BotToken"], "952358862059614218", userId);
 
             IEnumerable<Server>? servers = await _discord.GetCurrentUserGuilds(bearerToken);
-            
-            foreach (Server server in servers)
-            {
 
+            foreach (Server server in servers)
+            {              
                 string hasBot = await _discord.CheckForBot(botToken, server.Id);
-                if(hasBot == "true")
+                if (hasBot == "true")
                 {
                     var serverWithMemCount = await _discord.GetFullGuild(botToken, server.Id);
 
@@ -90,6 +91,36 @@ namespace DiscordStats.Controllers
             return View(servers.Where(m => m.Owner == "true").ToList());
         }
 
+        [Authorize(AuthenticationSchemes = "Discord")]
+        public async Task<IActionResult> ServerChannels(string? serverId)
+        {
+            string botToken = _configuration["API:BotToken"];
+            var servers = _serverRepository.GetAll();
+            var selectedServer = servers.Where(m => m.Id == serverId).FirstOrDefault();
+
+            IList<Channel> channels = new List<Channel>();
+            if (selectedServer != null)
+            {
+                if (selectedServer.HasBot == "true")
+                {
+                    channels = _channelRepository.GetAll().Where(x => x.GuildId == selectedServer.Id).ToList();
+
+                    ViewBag.hasBot = "true";
+
+                }
+                else
+                {
+                    ViewBag.hasBot = "false";
+                }
+            }
+            else
+            {
+                ViewBag.hasBot = "false";
+            }
+
+            return View(channels);
+        }
+
         [HttpPost]
         public IActionResult ChangePrivacy(string privacyString)
         {
@@ -101,10 +132,17 @@ namespace DiscordStats.Controllers
         }
 
 
+        [AllowAnonymous]
+        public IActionResult Logout()
+        {
+            foreach (var cookie in HttpContext.Request.Cookies)
+            {
+                Response.Cookies.Delete(cookie.Key);
+            }
+            return RedirectToAction("Index", "Home");
+        }
 
-
-
-        [Authorize(AuthenticationSchemes = "Discord")]
+        [Authorize]
         public async Task<IActionResult> Details(string? name)
         {
 

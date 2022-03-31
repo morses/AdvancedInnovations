@@ -21,6 +21,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using DiscordStats.ViewModels;
 
 namespace DiscordStats.Controllers
 {
@@ -39,14 +40,18 @@ namespace DiscordStats.Controllers
         private readonly IPresenceRepository _presenceRepository;
         private readonly ILogger<ApiController> _logger;
         private readonly IDiscordService _discord;
+        private readonly IServerRepository _serverRepository;
+        private readonly IChannelRepository _channelRepository;
 
 
-        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord)
+        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord, IServerRepository serverRepository, IChannelRepository channelRepository)
         {
             _logger = logger;
             _discordUserRepository = discordUserRepo;
             _presenceRepository = presenceRepository;
             _discord = discord;
+            _serverRepository = serverRepository;
+            _channelRepository = channelRepository;
         }
 
 
@@ -89,14 +94,101 @@ namespace DiscordStats.Controllers
             return Json(itWorked);
         }
 
-        public IActionResult GetDataAsynchronousParallel()
+        public IActionResult GetPresenceDataFromDb()
         {
-            _logger.LogInformation("GetDataAsynchronousParallel");
+            _logger.LogInformation("GetPresenceDataFromDb");
             List<Presence> presences = _presenceRepository.GetAll().ToList(); // .Where(a => a. Privacy == "public").OrderByDescending(m => m.ApproximateMemberCount).Take(5);
             PresenceChartDataVM presenceChartDataVM = new();
             var presencesNameAndCount = presenceChartDataVM.AllPresenceNameListAndCount(presences);
 
             return Json(new { userPerGame = presencesNameAndCount });
+        }
+
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> PostServers(Server[] servers)
+        {
+            foreach (var server in servers)
+            {
+                var duplicate = false;
+
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var allServers = _serverRepository.GetAll().ToList();
+                    var duplicateServer = new Server();
+                    for (int i = 0; i < allServers.Count(); i++)
+                    {
+                        if (server.Id == allServers[i].Id)
+                        {
+                            duplicate = true;
+                            duplicateServer = allServers[i];
+                        }
+                    }
+                    if (!duplicate)
+                    {
+                        _serverRepository.AddOrUpdate(server);
+                    }
+                    if (duplicate)
+                    {
+                        duplicateServer.Name = server.Name;
+                        duplicateServer.Id = server.Id;
+                        duplicateServer.ApproximateMemberCount = server.ApproximateMemberCount;
+                        duplicateServer.ApproximatePresenceCount = server.ApproximatePresenceCount;
+                        duplicateServer.Icon = server.Icon;
+                        duplicateServer.HasBot = server.HasBot;
+                        duplicateServer.OwnerId = server.OwnerId;
+                        duplicateServer.PremiumTier = server.PremiumTier;
+                        duplicateServer.VerificationLevel = server.VerificationLevel;
+                        _serverRepository.AddOrUpdate(duplicateServer);
+                    }
+                });
+
+            }
+            return Json("It worked");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> PostChannels(Channel[] channels)
+        {
+            var itWorked = await _discord.ChannelEntryAndUpdateDbCheck(channels);
+
+            return Json(itWorked);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostMessageData(MessageData message)
+        {
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var channelTruth = false;
+                    var tempChannel = new Channel();
+                    foreach (Channel channel in _channelRepository.GetAll().ToList())
+                    {
+                        if (channel.Id == message.ChannelId)
+                        {
+                            channelTruth = true;
+                            tempChannel = channel;
+                        }
+                    }
+                    if (channelTruth)
+                    {
+                        if (tempChannel.Count == null)
+                        {
+                            tempChannel.Count = 0;
+                        }
+                        tempChannel.Count += 1;
+                        _channelRepository.AddOrUpdate(tempChannel);
+                    }
+
+                });
+
+            return Json("It worked");
         }
     }
 }

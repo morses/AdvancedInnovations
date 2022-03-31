@@ -1,9 +1,10 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED='0'
-import  DiscordJS, { Intents, Presence } from 'discord.js'
+import  DiscordJS, { Guild, Intents, Presence } from 'discord.js'
 import { MembershipStates } from 'discord.js/typings/enums';
 import dotenv from 'dotenv'
 dotenv.config()
 import { replies } from './replies'
+
 
 
 
@@ -44,16 +45,46 @@ client.on('ready', () => {
 
 
 client.on('messageCreate', async(message) => {
-    numMessages += 1;
+    const serverID = message.guild?.id;
+    const channelID = message.channel.id;
+
     if (message.author.bot) return;
+
+    let MessageData = {
+        serverId : serverID,
+        channelId : channelID,
+        userId : message.author.id
+    }
+
+    setTimeout(() => {
+        axios.post('https://localhost:7228/api/PostMessageData', MessageData)
+            .then((result: any) => {
+                console.log(result);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
+        axios.post('https://discordstats.azurewebsites.net/api/PostMessageData', MessageData)
+        .then((result: any) => {
+            console.log(result);
+        })
+        .catch((error: any) => {
+            console.log(error);
+        });
+    }, 5000);
+
+
+
+
+
+
+
+
     if (!message.content.startsWith(prefix)) return;
 
     // gets the ID of the server in which the message was sent from
-    const serverID = message.guild?.id;
 
     // gets the ID of the channel in which the message was sent from
-    const channelID = message.channel.id;
-
 
     //removes the prefix and makes the command its own string
     const commandBody = message.content.slice(prefix.length);
@@ -127,6 +158,14 @@ client.on('messageCreate', async(message) => {
             .catch((error: any) => {
                 console.log(error);
             });
+        axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
+            .then((result: any) => {
+                console.log(result)
+                message.reply(result.data.toString());
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
     }
 
     else if(command === "guilds") {
@@ -184,6 +223,106 @@ async function sendUsers (){
             .catch((error: any) => {
                 console.log(error);
             });
+        axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
+            .then((result: any) => {
+                console.log(result);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
+    }, 5000);
+}
+
+
+
+async function sendServers (){
+    let servers: any = []
+    client.guilds.cache.each(async (guild) => {
+        const list = client.guilds.cache.get(String(guild.id))
+        const members = await list?.members.fetch();
+
+
+        let presenceCount = 0;
+        members?.forEach((member) => {
+            if (member.presence != undefined && member.presence != null && member.presence.activities.length != 0 && member.user.bot === false) {
+                presenceCount += 1
+            };
+        });
+
+        let server = {
+            ID: guild.id,
+            Name: guild.name,
+            Owner: "false",
+            Icon: guild.icon,
+            HasBot: "true",
+            ApproximateMemberCount: members?.size,
+            OwnerId: guild.ownerId,
+            VerificationLevel: guild.verificationLevel,
+            Description: guild.description,
+            Premiumtier: guild.premiumTier,
+            ApproximatePresenceCount: presenceCount,
+            Privacy: "null",
+            OnForum: "null",
+            Message: "null"
+        }
+        servers.push(server);
+    })
+    setTimeout(() => {
+        if (servers.length != 0) {
+            console.log("All Servers: ")
+            console.log(servers)
+            axios.post('https://localhost:7228/api/postservers', servers)
+                .then((result: any) => {
+                    console.log(result);
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+            axios.post('https://discordstats.azurewebsites.net/api/postservers', servers)
+                .then((result: any) => {
+                    console.log(result);
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+        }
+    }, 5000);
+}
+
+
+async function sendChannels (){
+    let channels: any = []
+    client.guilds.cache.each(async (guild) => {
+        guild.channels.cache.each(async (channel) => {
+            let newChannel = {
+                Id: channel.id,
+                Type: channel.type,
+                Name: channel.name,
+                Count: null,
+                GuildId: guild.id
+            }
+            channels.push(newChannel);
+        })
+    })
+    setTimeout(() => {
+        if (channels.length != 0) {
+            console.log("All Channels: ")
+            console.log(channels)
+            axios.post('https://localhost:7228/api/postchannels', channels)
+                .then((result: any) => {
+                    console.log(result);
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+            axios.post('https://discordstats.azurewebsites.net/api/postchannels', channels)
+                .then((result: any) => {
+                    console.log(result);
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+        }
     }, 5000);
 }
 
@@ -218,7 +357,8 @@ async function sendPresence (){
                     "CreatedAt": member.presence?.activities[0].createdAt.toString(),
                     "LargeImageId": member.presence?.activities[0].assets?.largeImage,
                     "SmallImageId": member.presence?.activities[0].assets?.smallImage,
-                    "ServerId": guild.id
+                    "ServerId": guild.id,
+                    "UserId": member.id
                 };
                 presences.push(newPresence);
             };
@@ -238,16 +378,84 @@ async function sendPresence (){
             .catch((error: any) => {
                 console.log(error);
             });
+
+            axios.post('https://discordstats.azurewebsites.net/api/postpresence', presences)
+            .then((result: any) => {
+                console.log(result);
+            })
+            .catch((error: any) => {
+                console.log(error);
+            });
         }
     }, 5000);
 };
 
+
+function guildIdAndAllUsersId(){
+    let users: any = []
+    client.guilds.cache.each(async (guild) => {
+        let list = await client.guilds.cache.get(String(guild.id))?.members.fetch()
+        list?.each((user) => {
+            if (user.user.bot === false) {
+                if (user.user.avatar === null) {
+                    user.user.avatar = "null";
+                }
+                let newUser = {
+                    "Id": user.user.id.toString(),
+                    "Username": user.user.username,
+                    "Servers": guild.id,
+                    "Avatar": user.user.avatar
+                }
+                // console.log(newUser)
+                users.push(newUser);
+                setTimeout(() => 100);
+            }
+        })
+    })
+
+    client.guilds.cache.each(async (guild) => {
+        let list = client.guilds.cache.get(String(guild.id))?.channels.cache.forEach(ch => {
+            if (ch.type === "GUILD_TEXT"){
+                ch.messages.fetch({
+                    limit: 100
+                }).then(messages => {
+                    const msgs = messages.filter(m => m.author.id === users)
+                    msgs.forEach(m => {
+                        console.log(`${m.content} - ${m.channel}`)
+                        console.log('hello')
+                    })
+                })
+            } else {
+                return;
+            }
+        })
+    })
+};
+// async function userMessages(guildID, userID){
+//     client.guilds.cache.get(guildID).channels.cache.forEach(ch => {
+//         if (ch.type === 'text'){
+//             ch.messages.fetch({
+//                 limit: 100
+//             }).then(messages => {
+//                 const msgs = messages.filter(m => m.author.id === userID)
+//                 msgs.forEach(m => {
+//                     console.log(`${m.content} - ${m.channel.name}`)
+//                 })
+//             })
+//         } else {
+//             return;
+//         }
+//     })
+// }
+
 function updataData() {
-    sendPresence();
-    sendUsers();
+    // sendPresence();
+    // sendUsers();
+    sendServers();
+    // sendChannels();
 }
 
-setInterval(updataData, 10000);
+setInterval(updataData, 6000);
 
 
 client.login(process.env.TOKEN);

@@ -24,14 +24,16 @@ namespace DiscordStats.DAL.Concrete
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IServerRepository _serverRepository;
         private readonly IPresenceRepository _presenceRepository;
+        private readonly IChannelRepository _channelRepository;
 
         private DiscordDataDbContext _db = new DiscordDataDbContext();
 
-        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository, IPresenceRepository presenceRepository)
+        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository, IPresenceRepository presenceRepository, IChannelRepository channelRepository)
         {
-            _serverRepository = serverRepository;   
+            _serverRepository = serverRepository;
             _httpClientFactory = httpClientFactory;
             _presenceRepository = presenceRepository;
+            _channelRepository = channelRepository; 
         }
 
 
@@ -89,6 +91,7 @@ namespace DiscordStats.DAL.Concrete
                 throw new HttpRequestException();
             }
         }
+
         public async Task<string> GetJsonStringFromEndpointDelete(string botToken, string uri)
         {
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri)
@@ -131,6 +134,7 @@ namespace DiscordStats.DAL.Concrete
                     { HeaderNames.UserAgent, "DiscordStat" }
                 },
                 Content = body
+
             };
             HttpClient httpClient = _httpClientFactory.CreateClient();
             HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
@@ -151,7 +155,7 @@ namespace DiscordStats.DAL.Concrete
             var bodyAsJSON = $"{{\"name\": \"{vm.name}\", \"region?\": \"{vm.region}\", \"verification_level?\": \"{vm.verification_level}\"}}";
             HttpContent body = new StringContent(bodyAsJSON);
             body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            
+
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
             {
                 Headers =
@@ -164,7 +168,7 @@ namespace DiscordStats.DAL.Concrete
             };
             HttpClient httpClient = _httpClientFactory.CreateClient();
             HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 string responseText = await response.Content.ReadAsStringAsync();
@@ -257,13 +261,14 @@ namespace DiscordStats.DAL.Concrete
             return userInfo;
         }
 
-
-        public async Task<Server?> GetCurrentGuild(string botToken, string serverId)
+        public async Task<List<Channel>?> GetGuildChannels(string botToken, string serverId)
         {
-            string uri = "https://discord.com/api/guilds/" + serverId + "/preview";
+            string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
+            // Remember to handle errors here
             string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
-            Server? server = JsonConvert.DeserializeObject<Server>(response);
-            return server;
+            // And here
+            List<Channel>? channel = JsonConvert.DeserializeObject<List<Channel>>(response);
+            return channel;
         }
 
 
@@ -290,21 +295,18 @@ namespace DiscordStats.DAL.Concrete
             return response;
         }
 
-
         public async Task<string?> FindChannels(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
             string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
             return response;
         }
-        
-
-        //need to test
         public void ServerEntryDbCheck(ServerOwnerViewModel server, string hasBot, string serverOwner)
 
         {
             var dbServers = _serverRepository.GetAll();
             var duplicate = false;
+            var serverDuplicate = new Server();
             if (server.Description == null)
             {
                 server.Description = "null";
@@ -331,6 +333,7 @@ namespace DiscordStats.DAL.Concrete
                 if (dbServer.Id == server.Id)
                 {
                     duplicate = true;
+                    serverDuplicate = dbServer;
                 }
             }
             if (!duplicate)
@@ -339,7 +342,13 @@ namespace DiscordStats.DAL.Concrete
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = server.Owner_Id, VerificationLevel = server.Verification_Level, Description = server.Description, PremiumTier = server.Premium_Tier, ApproximatePresenceCount = server.Approximate_Presence_Count, Privacy="private", OnForum="false", Message="null" });
 
             }
+            if (duplicate)
+            {
+                serverDuplicate.ApproximateMemberCount = server.Approximate_Member_Count;
+                _serverRepository.AddOrUpdate(serverDuplicate);
+            }
         }
+
 
         public async Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences)
         {
@@ -359,13 +368,8 @@ namespace DiscordStats.DAL.Concrete
 
                     for (int i = 0; i < allPresences.Count(); i++)
                     {
-                        if (presence.ServerId == allPresences[i].ServerId)
+                        if (presence.UserId == allPresences[i].UserId && presence.Name == allPresences[i].Name)
                         {
-                            duplicate = true;
-                        }
-                        if (presence.ServerId == allPresences[i].ServerId && presence.Name != allPresences[i].Name)
-                        {
-                            upDatePresence = true;
                             duplicate = true;
                         }
                     }
@@ -373,16 +377,44 @@ namespace DiscordStats.DAL.Concrete
                     {
                         _presenceRepository.AddOrUpdate(presence);
                     }
-                    if (duplicate == true && upDatePresence == true)
-                    {
-                        _presenceRepository.UpdatePresence(presence.ServerId, presence.Name);
-                    }
                 });
-
             }
-
             return "It Worked";
         }
+
+        public async Task<string?> ChannelEntryAndUpdateDbCheck(Channel[] channels)
+        {
+            foreach (var channel in channels)
+            {
+                var duplicate = false;
+
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var allChannels = _channelRepository.GetAll().ToList();
+                    var duplicateChannel = new Channel();
+                    for (int i = 0; i < allChannels.Count(); i++)
+                    {
+                        if (channel.Id == allChannels[i].Id)
+                        {
+                            duplicate = true;
+                            duplicateChannel = allChannels[i];
+                        }
+                    }
+                    if (!duplicate)
+                    {
+                        _channelRepository.AddOrUpdate(channel);
+                    }
+                    if (duplicate)
+                    {
+
+                        _channelRepository.AddOrUpdate(duplicateChannel);
+                    }
+                });
+            }
+            return "It Worked";
+        }
+
         public async Task<string?> RemoveUserServer(string botToken, string serverId, string UserId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId +"/members/" + UserId;

@@ -26,7 +26,7 @@ namespace DiscordStats.ViewModels
 
         public string Premium_Tier { get; set; }
 
-        public string Approximate_Presence_Count { get; set; }
+        public int? Approximate_Presence_Count { get; set; }
         public List<GuildUsers> users { get; set; }
     }
 }

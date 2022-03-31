@@ -54,6 +54,7 @@ builder.Services.AddScoped<ServerOwnerViewModel, ServerOwnerViewModel>();
 builder.Services.AddScoped<IServerUserJoinRepository, ServerUserJoinRepository>();
 builder.Services.AddScoped<IDiscordUserRepository, DiscordUserRepository>();
 builder.Services.AddScoped<IPresenceRepository, PresenceRepository>();
+builder.Services.AddScoped<IChannelRepository, ChannelRepository>();
 
 
 // Add services to the container.
@@ -61,9 +62,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     })
-    .AddCookie()
+    .AddCookie(o => o.LoginPath = new PathString("/Identity/Account/Login"))
     .AddOAuth("Discord",
             options =>
             {
