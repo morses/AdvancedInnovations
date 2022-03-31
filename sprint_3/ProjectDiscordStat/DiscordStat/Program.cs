@@ -55,6 +55,8 @@ builder.Services.AddScoped<IServerUserJoinRepository, ServerUserJoinRepository>(
 builder.Services.AddScoped<IDiscordUserRepository, DiscordUserRepository>();
 builder.Services.AddScoped<IPresenceRepository, PresenceRepository>();
 builder.Services.AddScoped<IChannelRepository, ChannelRepository>();
+builder.Services.AddScoped<IMessageInfoRepository, MessageInfoRepository>();
+
 
 
 // Add services to the container.

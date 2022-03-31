@@ -40,6 +40,16 @@ CREATE TABLE [DiscordUser]
   [Avatar] nvarchar(256)     NULL
 );
 
+CREATE TABLE [MessageInfo] 
+(
+  [MessageDataPk] int           PRIMARY KEY IDENTITY(1, 1),
+  [ServerId] nvarchar(256) NULL,
+  [ChannelId] nvarchar(256) NULL,
+  [UserId] nvarchar(256) NULL,
+  [CreatedAt] nvarchar(256) NULL,
+
+);
+
 CREATE TABLE [Presence]
 (
   [PresencePk] int PRIMARY KEY IDENTITY(1, 1),

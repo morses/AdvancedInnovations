@@ -50,27 +50,27 @@ client.on('messageCreate', async(message) => {
 
     if (message.author.bot) return;
 
-    let MessageData = {
+    let MessageInfo = {
         serverId : serverID,
         channelId : channelID,
-        userId : message.author.id
+        userId : message.author.id,
+        createdAt : message.createdAt
     }
-
     setTimeout(() => {
-        axios.post('https://localhost:7228/api/PostMessageData', MessageData)
+        axios.post('https://localhost:7228/api/PostMessageData', MessageInfo)
             .then((result: any) => {
                 console.log(result);
             })
             .catch((error: any) => {
                 console.log(error);
             });
-        axios.post('https://discordstats.azurewebsites.net/api/PostMessageData', MessageData)
-        .then((result: any) => {
-            console.log(result);
-        })
-        .catch((error: any) => {
-            console.log(error);
-        });
+        // axios.post('https://discordstats.azurewebsites.net/api/PostMessageData', MessageData)
+        // .then((result: any) => {
+        //     console.log(result);
+        // })
+        // .catch((error: any) => {
+        //     console.log(error);
+        // });
     }, 5000);
 
 
@@ -158,14 +158,14 @@ client.on('messageCreate', async(message) => {
             .catch((error: any) => {
                 console.log(error);
             });
-        axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
-            .then((result: any) => {
-                console.log(result)
-                message.reply(result.data.toString());
-            })
-            .catch((error: any) => {
-                console.log(error);
-            });
+        // axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
+        //     .then((result: any) => {
+        //         console.log(result)
+        //         message.reply(result.data.toString());
+        //     })
+        //     .catch((error: any) => {
+        //         console.log(error);
+        //     });
     }
 
     else if(command === "guilds") {
@@ -223,13 +223,13 @@ async function sendUsers (){
             .catch((error: any) => {
                 console.log(error);
             });
-        axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
-            .then((result: any) => {
-                console.log(result);
-            })
-            .catch((error: any) => {
-                console.log(error);
-            });
+        // axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
+        //     .then((result: any) => {
+        //         console.log(result);
+        //     })
+        //     .catch((error: any) => {
+        //         console.log(error);
+        //     });
     }, 5000);
 }
 
@@ -278,13 +278,13 @@ async function sendServers (){
                 .catch((error: any) => {
                     console.log(error);
                 });
-            axios.post('https://discordstats.azurewebsites.net/api/postservers', servers)
-                .then((result: any) => {
-                    console.log(result);
-                })
-                .catch((error: any) => {
-                    console.log(error);
-                });
+            // axios.post('https://discordstats.azurewebsites.net/api/postservers', servers)
+            //     .then((result: any) => {
+            //         console.log(result);
+            //     })
+            //     .catch((error: any) => {
+            //         console.log(error);
+            //     });
         }
     }, 5000);
 }
@@ -315,13 +315,13 @@ async function sendChannels (){
                 .catch((error: any) => {
                     console.log(error);
                 });
-            axios.post('https://discordstats.azurewebsites.net/api/postchannels', channels)
-                .then((result: any) => {
-                    console.log(result);
-                })
-                .catch((error: any) => {
-                    console.log(error);
-                });
+            // axios.post('https://discordstats.azurewebsites.net/api/postchannels', channels)
+            //     .then((result: any) => {
+            //         console.log(result);
+            //     })
+            //     .catch((error: any) => {
+            //         console.log(error);
+            //     });
         }
     }, 5000);
 }
@@ -379,13 +379,13 @@ async function sendPresence (){
                 console.log(error);
             });
 
-            axios.post('https://discordstats.azurewebsites.net/api/postpresence', presences)
-            .then((result: any) => {
-                console.log(result);
-            })
-            .catch((error: any) => {
-                console.log(error);
-            });
+            // axios.post('https://discordstats.azurewebsites.net/api/postpresence', presences)
+            // .then((result: any) => {
+            //     console.log(result);
+            // })
+            // .catch((error: any) => {
+            //     console.log(error);
+            // });
         }
     }, 5000);
 };
@@ -449,10 +449,10 @@ function guildIdAndAllUsersId(){
 // }
 
 function updataData() {
-    // sendPresence();
-    // sendUsers();
+    sendPresence();
+    sendUsers();
     sendServers();
-    // sendChannels();
+    sendChannels();
 }
 
 setInterval(updataData, 6000);

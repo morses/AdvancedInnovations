@@ -18,6 +18,7 @@ namespace DiscordStats.Models
 
         public virtual DbSet<Channel> Channels { get; set; } = null!;
         public virtual DbSet<DiscordUser> DiscordUsers { get; set; } = null!;
+        public virtual DbSet<MessageInfo> MessageInfos { get; set; } = null!;
         public virtual DbSet<Presence> Presences { get; set; } = null!;
         public virtual DbSet<Server> Servers { get; set; } = null!;
         public virtual DbSet<ServerChannelJoin> ServerChannelJoins { get; set; } = null!;
@@ -37,25 +38,31 @@ namespace DiscordStats.Models
             modelBuilder.Entity<Channel>(entity =>
             {
                 entity.HasKey(e => e.ChannelPk)
-                    .HasName("PK__Channel__38C3B1263AD7BADB");
+                    .HasName("PK__Channel__38C3B1268629306B");
             });
 
             modelBuilder.Entity<DiscordUser>(entity =>
             {
                 entity.HasKey(e => e.DiscordUserPk)
-                    .HasName("PK__DiscordU__1F12BE9530CF63C3");
+                    .HasName("PK__DiscordU__1F12BE9519BE2DAB");
+            });
+
+            modelBuilder.Entity<MessageInfo>(entity =>
+            {
+                entity.HasKey(e => e.MessageDataPk)
+                    .HasName("PK__MessageI__2389D5B5685B569E");
             });
 
             modelBuilder.Entity<Presence>(entity =>
             {
                 entity.HasKey(e => e.PresencePk)
-                    .HasName("PK__Presence__4981B3D98509F035");
+                    .HasName("PK__Presence__4981B3D9566B114C");
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-                    .HasName("PK__Server__C56B0386020D0A03");
+                    .HasName("PK__Server__C56B03861486B351");
             });
 
             modelBuilder.Entity<ServerChannelJoin>(entity =>

@@ -42,9 +42,10 @@ namespace DiscordStats.Controllers
         private readonly IDiscordService _discord;
         private readonly IServerRepository _serverRepository;
         private readonly IChannelRepository _channelRepository;
+        private readonly IMessageInfoRepository _messageInfoRepository;
 
 
-        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord, IServerRepository serverRepository, IChannelRepository channelRepository)
+        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord, IServerRepository serverRepository, IChannelRepository channelRepository, IMessageInfoRepository messageInfoRepository)
         {
             _logger = logger;
             _discordUserRepository = discordUserRepo;
@@ -52,6 +53,7 @@ namespace DiscordStats.Controllers
             _discord = discord;
             _serverRepository = serverRepository;
             _channelRepository = channelRepository;
+            _messageInfoRepository = messageInfoRepository;
         }
 
 
@@ -161,33 +163,10 @@ namespace DiscordStats.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostMessageData(MessageData message)
+        public async Task<IActionResult> PostMessageData(MessageInfo message)
         {
-                Task.Delay(300).Wait();
-                await Task.Run(() =>
-                {
-                    var channelTruth = false;
-                    var tempChannel = new Channel();
-                    foreach (Channel channel in _channelRepository.GetAll().ToList())
-                    {
-                        if (channel.Id == message.ChannelId)
-                        {
-                            channelTruth = true;
-                            tempChannel = channel;
-                        }
-                    }
-                    if (channelTruth)
-                    {
-                        if (tempChannel.Count == null)
-                        {
-                            tempChannel.Count = 0;
-                        }
-                        tempChannel.Count += 1;
-                        _channelRepository.AddOrUpdate(tempChannel);
-                    }
-
-                });
-
+            _messageInfoRepository.AddOrUpdate(message);
+            await _channelRepository.UpdateMessageCount(message);
             return Json("It worked");
         }
     }

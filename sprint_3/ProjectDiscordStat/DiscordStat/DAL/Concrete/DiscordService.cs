@@ -386,11 +386,12 @@ namespace DiscordStats.DAL.Concrete
         {
             foreach (var channel in channels)
             {
-                var duplicate = false;
 
                 Task.Delay(300).Wait();
                 await Task.Run(() =>
                 {
+                    var duplicate = false;
+
                     var allChannels = _channelRepository.GetAll().ToList();
                     var duplicateChannel = new Channel();
                     for (int i = 0; i < allChannels.Count(); i++)
@@ -405,11 +406,11 @@ namespace DiscordStats.DAL.Concrete
                     {
                         _channelRepository.AddOrUpdate(channel);
                     }
-                    if (duplicate)
-                    {
+                    //if (duplicate)
+                    //{
 
-                        _channelRepository.AddOrUpdate(duplicateChannel);
-                    }
+                    //    _channelRepository.AddOrUpdate(duplicateChannel);
+                    //}
                 });
             }
             return "It Worked";
