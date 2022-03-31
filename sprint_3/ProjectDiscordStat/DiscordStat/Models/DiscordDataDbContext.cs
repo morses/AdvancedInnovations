@@ -16,9 +16,11 @@ namespace DiscordStats.Models
         {
         }
 
+        public virtual DbSet<Channel> Channels { get; set; } = null!;
         public virtual DbSet<DiscordUser> DiscordUsers { get; set; } = null!;
         public virtual DbSet<Presence> Presences { get; set; } = null!;
         public virtual DbSet<Server> Servers { get; set; } = null!;
+        public virtual DbSet<ServerChannelJoin> ServerChannelJoins { get; set; } = null!;
         public virtual DbSet<ServerPresenceJoin> ServerPresenceJoins { get; set; } = null!;
         public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; } = null!;
 
@@ -32,22 +34,41 @@ namespace DiscordStats.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Channel>(entity =>
+            {
+                entity.HasKey(e => e.ChannelPk)
+                    .HasName("PK__Channel__38C3B1263AD7BADB");
+            });
+
             modelBuilder.Entity<DiscordUser>(entity =>
             {
                 entity.HasKey(e => e.DiscordUserPk)
-                    .HasName("PK__DiscordU__1F12BE953539253D");
+                    .HasName("PK__DiscordU__1F12BE9530CF63C3");
             });
 
             modelBuilder.Entity<Presence>(entity =>
             {
                 entity.HasKey(e => e.PresencePk)
-                    .HasName("PK__Presence__4981B3D9CEE0EA98");
+                    .HasName("PK__Presence__4981B3D98509F035");
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-                    .HasName("PK__Server__C56B0386D80EC7CA");
+                    .HasName("PK__Server__C56B0386020D0A03");
+            });
+
+            modelBuilder.Entity<ServerChannelJoin>(entity =>
+            {
+                entity.HasOne(d => d.ChannelPkNavigation)
+                    .WithMany(p => p.ServerChannelJoins)
+                    .HasForeignKey(d => d.ChannelPk)
+                    .HasConstraintName("ServerChannelJoinChannelPk");
+
+                entity.HasOne(d => d.ServerPkNavigation)
+                    .WithMany(p => p.ServerChannelJoins)
+                    .HasForeignKey(d => d.ServerPk)
+                    .HasConstraintName("ServerChannelJoinServerPk");
             });
 
             modelBuilder.Entity<ServerPresenceJoin>(entity =>

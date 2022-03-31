@@ -27,7 +27,7 @@ namespace DiscordStats.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Server> servers = _serverRepository.GetServers();
+            IEnumerable<Server> servers = _serverRepository.GetAll();
             return View(servers);
         }
 
@@ -53,16 +53,15 @@ namespace DiscordStats.Controllers
         [Authorize(AuthenticationSchemes = "Discord")]
         public IActionResult ServerOnForum([Bind("Id, Message")] Server server)
         {
+            //var messageLength = server.Message.Length;
             if (server.Id != null)
-            {
-
+            {             
                 string onForum = "true";
                 if(server.Message == null)
                 {
                     server.Message = "null";
                 }
-                _serverRepository.UpdateOnForum(server.Id, onForum);
-                _serverRepository.UpdateMessage(server.Id, server.Message);
+                _serverRepository.UpdateOnServerWithForumInfo(server.Id, onForum, server.Message);
                 return RedirectToAction("Index");
 
             }
@@ -74,7 +73,7 @@ namespace DiscordStats.Controllers
                 servers.Where(m => m.Owner == "true").ToList().Select(s => new { Text = $"{s.Name}", Value = s.Id }),
                 "Value", "Text");
                 ViewData["ServerBroadcasting"] = selectList;
-                return View();
+                return RedirectToAction("Forum");
             }
                      
         }
@@ -87,8 +86,7 @@ namespace DiscordStats.Controllers
             {
                 string onForum = "false";
                 server.Message = "null";
-                _serverRepository.UpdateOnForum(server.Id, onForum);
-                _serverRepository.UpdateMessage(server.Id, server.Message);
+                _serverRepository.UpdateOnServerWithForumInfo(server.Id, onForum, server.Message);
                 return RedirectToAction("Index");
             }
             else
@@ -99,7 +97,7 @@ namespace DiscordStats.Controllers
                 servers.Where(m => m.Owner == "true").ToList().Select(s => new { Text = $"{s.Name}", Value = s.Id }),
                 "Value", "Text");
                 ViewData["ServerBroadcasting"] = selectList;
-                return View();
+                return RedirectToAction("Forum");
             }
 
         }

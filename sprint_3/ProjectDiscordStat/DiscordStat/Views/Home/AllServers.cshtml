@@ -15,7 +15,7 @@ Dark mode:
 		<h1><center>Click on the server you want to be a member of!</center></h1> 
 	</div>
     <form asp-controller="Home" asp-action="AddMemberToPickedServer" method="post">
-        <table id="filterTable" class="display" style="color:white">
+        <table id="filterTable" class="display">
             <thead>
             <tr>
                 <th><b>Member #</b></th>
@@ -30,6 +30,7 @@ Dark mode:
                     <tr>
                         <td>@s.Approximate_Member_Count</td>
                         <td>@s.Name</td>
+                        <td><button class="button" name="id" value="@s.Id">Join</button></td>
                     </tr>
                 }
             </tbody>
@@ -37,12 +38,6 @@ Dark mode:
      </form>
 </div>
 
-@*<div class="row">
-        @foreach (var s in Model.AllServerNameAndMemCountContainer())
-        {
-            <button class="button" name="id" value="@s.Id">Server Name: @s.Name <br> Member Count: @s.Approximate_Member_Count</button>
-        }
-</div>*@
 
 
 @section Scripts {

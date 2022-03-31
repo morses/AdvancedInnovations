@@ -2,7 +2,7 @@
 
 
 <div class="mode">
-Dark mode:	
+Dark mode:    
     <span class="change">ON</span>
 </div>
 
@@ -11,6 +11,10 @@ Dark mode:
 <script src="https://kit.fontawesome.com/5b2bd23d5f.js" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <script>
+    function CreateServer() {
+        window.location.href = '/Account/ServerForm/';
+;
+    }
 
     $(document).ready( function () {
         $('#filterTable').DataTable({ 
@@ -24,13 +28,18 @@ Dark mode:
         <a href="https://discord.com/channels/" + @ViewBag.id >@{var link = "https://cdn.discordapp.com/avatars/" + ViewBag.id + "//" + ViewBag.hash + ".png";}
         <img class="discordImage"  src="@link"/></a>
     </div>
-    <div class="col">
+    <div class="col" style="text-align:center">
         <h1>Welcome home @ViewBag.name, this is your account page.</h1>
     </div>
 </div>
-
-<p>Did you know your Discord id is: @ViewBag.id?</p>
-
+<div class="row">
+    <p>Did you know your Discord id is: @ViewBag.id?</p>
+</div>
+<div class="row">
+    <div class="col-3">
+        <button class="btn btn-primary" onclick="CreateServer()">New Server</button>
+    </div>
+</div>
 @if (Model != null)
 {
     <form id="form1" runaat="server">
@@ -38,7 +47,7 @@ Dark mode:
     <thead>
     <tr>
         <th><b>Server Owner</b></th>
-        <th><b>Server Name</b></th>
+        <th><b>Server Name (click to see channels)</b></th>
         <th><b>Server Id</b></th>
         <th></th>
 

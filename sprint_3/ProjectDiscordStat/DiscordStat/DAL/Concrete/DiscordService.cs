@@ -6,7 +6,11 @@ using DiscordStats.ViewModels;
 
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+
+using System.Web.Helpers;
+using DiscordStats.ViewModel;
 using System.Diagnostics;
+
 
 namespace DiscordStats.DAL.Concrete
 {
@@ -20,20 +24,19 @@ namespace DiscordStats.DAL.Concrete
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IServerRepository _serverRepository;
         private readonly IPresenceRepository _presenceRepository;
+        private readonly IChannelRepository _channelRepository;
 
         private DiscordDataDbContext _db = new DiscordDataDbContext();
 
-        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository, IPresenceRepository presenceRepository)
+        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository, IPresenceRepository presenceRepository, IChannelRepository channelRepository)
         {
-            _serverRepository = serverRepository;   
+            _serverRepository = serverRepository;
             _httpClientFactory = httpClientFactory;
             _presenceRepository = presenceRepository;
+            _channelRepository = channelRepository; 
         }
 
 
-        // This method wraps up the minimum functionality needed to make a request
-        // to an external dependency.  It cannot be unit tested, but we do need to fake it in
-        // order to test code that uses it, i.e. GetCurrentUserGuilds below
         public async Task<string> GetJsonStringFromEndpoint(string bearerToken, string uri)
         {
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri)
@@ -89,32 +92,20 @@ namespace DiscordStats.DAL.Concrete
             }
         }
 
-        public async Task<string> PutToDiscordEndPoint(string botToken, string uri, string bearerToken)
+        public async Task<string> GetJsonStringFromEndpointDelete(string botToken, string uri)
         {
-            var bodyAsJSON = $"{{\"access_token\": \"{botToken}\"}}";
-
-            //var requestContent = JsonContent.Create(body);
-            HttpContent body = new StringContent(bodyAsJSON);
-
-            body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-
-            // make the access token in the body, where it could be the bot token
-            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri)
             {
-                // might have 
                 Headers =
-                    {
-                        { HeaderNames.Accept, "application/json" },
-                        { HeaderNames.Authorization, "Bot " + botToken},
-                        { HeaderNames.UserAgent, "DiscordStat" },
-                        { HeaderNames.ContentType, "application/json" }
-                    }
-
+                {
+                    { HeaderNames.Accept, "application/json" },
+                    { HeaderNames.Authorization, "Bot " + botToken},
+                    { HeaderNames.UserAgent, "DiscordStat" }
+                }
             };
             HttpClient httpClient = _httpClientFactory.CreateClient();
             // Note this is the blocking version.  Would be better to use the Async version
-            HttpResponseMessage response = await httpClient.PutAsync(uri, body);
-            //HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
             // This is only a minimal version; make sure to cover all your bases here
             if (response.IsSuccessStatusCode)
             {
@@ -125,6 +116,93 @@ namespace DiscordStats.DAL.Concrete
             else
             {
                 // What to do if failure? Should throw specific exceptions that explain what happened
+                throw new HttpRequestException();
+            }
+        }
+        public async Task<string> PostToDiscordEndPoint(string botToken, string uri)
+        {
+            var bodyAsJSON = $"{{\"name\": \"Thisisatest\"}}";
+            HttpContent body = new StringContent(bodyAsJSON);
+            body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
+            {
+                Headers =
+                {
+                    { HeaderNames.Accept, "application/json" },
+                    { HeaderNames.Authorization, "Bot " + botToken},
+                    { HeaderNames.UserAgent, "DiscordStat" }
+                },
+                Content = body
+
+            };
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
+            if (response.IsSuccessStatusCode)
+            {
+                // same here, this is blocking; use ReadAsStreamAsync instead
+                string responseText = await response.Content.ReadAsStringAsync();
+                return responseText;
+            }
+            else
+            {
+                // What to do if failure? Should throw specific exceptions that explain what happened
+                throw new HttpRequestException();
+            }
+        }
+        public async Task<string> PostToDiscordCreate(string botToken, string uri, CreateServerVM vm)
+        {
+            var bodyAsJSON = $"{{\"name\": \"{vm.name}\", \"region?\": \"{vm.region}\", \"verification_level?\": \"{vm.verification_level}\"}}";
+            HttpContent body = new StringContent(bodyAsJSON);
+            body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri)
+            {
+                Headers =
+                {
+                    { HeaderNames.Accept, "application/json" },
+                    { HeaderNames.Authorization, "Bot " + botToken},
+                    { HeaderNames.UserAgent, "DiscordStat" }
+                },
+                Content = body
+            };
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseText = await response.Content.ReadAsStringAsync();
+                return responseText;
+            }
+            else
+            {
+                throw new HttpRequestException();
+            }
+        }
+        public async Task<string> PatchToDiscordEndPoint(string botToken, string uri, string userId)
+        {
+            var bodyAsJSON = $"{{\"owner_id\": \"{userId}\"}}";
+            HttpContent body = new StringContent(bodyAsJSON);
+            body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri)
+            {
+                Headers =
+                {
+                    { HeaderNames.Accept, "application/json" },
+                    { HeaderNames.Authorization, "Bot " + botToken},
+                    { HeaderNames.UserAgent, "DiscordStat" }
+                },
+                Content = body
+            };
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
+            if (response.IsSuccessStatusCode)
+            {
+                string responseText = await response.Content.ReadAsStringAsync();
+                return responseText;
+            }
+            else
+            {
                 throw new HttpRequestException();
             }
         }
@@ -142,19 +220,11 @@ namespace DiscordStats.DAL.Concrete
                 }
             };
             HttpClient httpClient = _httpClientFactory.CreateClient();
-            // Note this is the blocking version.  Would be better to use the Async version
             HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
-            // This is only a minimal version; make sure to cover all your bases here
             if (response.IsSuccessStatusCode)
-            {
-                // same here, this is blocking; use ReadAsStreamAsync instead
                 return "true";
-            }
             else
-            {
-                // What to do if failure? Should throw specific exceptions that explain what happened
                 return "false";
-            }
         }
 
         public async Task<List<Server>?> GetCurrentUserGuilds(string bearerToken)
@@ -175,35 +245,38 @@ namespace DiscordStats.DAL.Concrete
             DiscordUser? userInfo = JsonConvert.DeserializeObject<DiscordUser>(response);
             return userInfo;
         }
-
+        public async Task<List<GuildUsers>?> GetCurrentGuildUsers(string botToken, string serverId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId + "/members?limit=1000";
+            string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
+            List<GuildUsers>? userInfo = JsonConvert.DeserializeObject<List<GuildUsers>?>(response);
+            return userInfo;
+        }
 
         public async Task<DiscordUser?> GetUserInfoById(string botToken, string UserId)
         {
             string uri = "https://discord.com/api/users/" + UserId;
-            // Remember to handle errors here
             string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
-            // And here
             DiscordUser? userInfo = JsonConvert.DeserializeObject<DiscordUser>(response);
             return userInfo;
         }
 
-        //public async Task<Server?> GetCurrentGuild(string botToken, string serverId)
-        //{
-        //    string uri = "https://discord.com/api/guilds/" + serverId + "/preview";
-        //    // Remember to handle errors here
-        //    string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
-        //    // And here
-        //    Server? server = JsonConvert.DeserializeObject<Server>(response);
-        //    return server;
-        //}
+        public async Task<List<Channel>?> GetGuildChannels(string botToken, string serverId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
+            // Remember to handle errors here
+            string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
+            // And here
+            List<Channel>? channel = JsonConvert.DeserializeObject<List<Channel>>(response);
+            return channel;
+        }
+
 
 
         public async Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId + "?with_counts=true";
-            // Remember to handle errors here
             string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
-            // And here
             ServerOwnerViewModel? server = JsonConvert.DeserializeObject<ServerOwnerViewModel>(response);
             return server;
         }
@@ -211,25 +284,29 @@ namespace DiscordStats.DAL.Concrete
         public async Task<string?> CheckForBot(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId;
-            // Remember to handle errors here
             string response = await GetJsonStringFromEndpointForBot(botToken, uri);
-            // And here
-
-            return response;
-        }   
-
-        public async Task<string?> AddMemberToGuild(string botToken, string serverId, string userId, string bearerToken)
-        {
-            string uri = "https://discord.com/api/guilds/" + serverId + "/members/" + userId;
-            string response = await PutToDiscordEndPoint(botToken, uri, bearerToken);
             return response;
         }
 
-        //need to test
+        public async Task<string?> AddMemberToGuild(string botToken, string channelId)
+        {
+            string uri = "https://discord.com/api/channels/" + channelId + "/invites";
+            string response = await PostToDiscordEndPoint(botToken, uri);
+            return response;
+        }
+
+        public async Task<string?> FindChannels(string botToken, string serverId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
+            string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
+            return response;
+        }
         public void ServerEntryDbCheck(ServerOwnerViewModel server, string hasBot, string serverOwner)
+
         {
             var dbServers = _serverRepository.GetAll();
             var duplicate = false;
+            var serverDuplicate = new Server();
             if (server.Description == null)
             {
                 server.Description = "null";
@@ -256,6 +333,7 @@ namespace DiscordStats.DAL.Concrete
                 if (dbServer.Id == server.Id)
                 {
                     duplicate = true;
+                    serverDuplicate = dbServer;
                 }
             }
             if (!duplicate)
@@ -264,7 +342,13 @@ namespace DiscordStats.DAL.Concrete
                 _serverRepository.AddOrUpdate(new() { Id = server.Id, Name = server.Name, Owner = serverOwner, Icon = server.Icon, HasBot = hasBot, ApproximateMemberCount = servMemberCount, OwnerId = server.Owner_Id, VerificationLevel = server.Verification_Level, Description = server.Description, PremiumTier = server.Premium_Tier, ApproximatePresenceCount = server.Approximate_Presence_Count, Privacy="private", OnForum="false", Message="null" });
 
             }
+            if (duplicate)
+            {
+                serverDuplicate.ApproximateMemberCount = server.Approximate_Member_Count;
+                _serverRepository.AddOrUpdate(serverDuplicate);
+            }
         }
+
 
         public async Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences)
         {
@@ -284,13 +368,8 @@ namespace DiscordStats.DAL.Concrete
 
                     for (int i = 0; i < allPresences.Count(); i++)
                     {
-                        if (presence.ServerId == allPresences[i].ServerId)
+                        if (presence.UserId == allPresences[i].UserId && presence.Name == allPresences[i].Name)
                         {
-                            duplicate = true;
-                        }
-                        if (presence.ServerId == allPresences[i].ServerId && presence.Name != allPresences[i].Name)
-                        {
-                            upDatePresence = true;
                             duplicate = true;
                         }
                     }
@@ -298,16 +377,61 @@ namespace DiscordStats.DAL.Concrete
                     {
                         _presenceRepository.AddOrUpdate(presence);
                     }
-                    if (duplicate == true && upDatePresence == true)
-                    {
-                        _presenceRepository.UpdatePresence(presence.ServerId, presence.Name);
-                    }
                 });
-
             }
-
             return "It Worked";
         }
 
+        public async Task<string?> ChannelEntryAndUpdateDbCheck(Channel[] channels)
+        {
+            foreach (var channel in channels)
+            {
+                var duplicate = false;
+
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var allChannels = _channelRepository.GetAll().ToList();
+                    var duplicateChannel = new Channel();
+                    for (int i = 0; i < allChannels.Count(); i++)
+                    {
+                        if (channel.Id == allChannels[i].Id)
+                        {
+                            duplicate = true;
+                            duplicateChannel = allChannels[i];
+                        }
+                    }
+                    if (!duplicate)
+                    {
+                        _channelRepository.AddOrUpdate(channel);
+                    }
+                    if (duplicate)
+                    {
+
+                        _channelRepository.AddOrUpdate(duplicateChannel);
+                    }
+                });
+            }
+            return "It Worked";
+        }
+
+        public async Task<string?> RemoveUserServer(string botToken, string serverId, string UserId)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId +"/members/" + UserId;
+            string response = await GetJsonStringFromEndpointDelete(botToken, uri);
+            return response;
+        }
+        public async Task<string?> CreateServer(string botToken, CreateServerVM vm)
+        {
+            string uri = "https://discord.com/api/guilds";
+            string response = await PostToDiscordCreate(botToken, uri, vm);
+            return response;
+        }
+        public async Task<string?> UpdateOwner(string botToken, string serverId, string currentUser)
+        {
+            string uri = "https://discord.com/api/guilds/" + serverId;
+            string response = await PatchToDiscordEndPoint(botToken, uri, currentUser);
+            return response;
+        }
     }
 }

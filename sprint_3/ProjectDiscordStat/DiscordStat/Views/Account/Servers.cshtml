@@ -2,12 +2,12 @@
 
 
 <div class="mode">
-Dark mode:	
+Dark mode:    
     <span class="change">ON</span>
 </div>
 
 <script src="https://kit.fontawesome.com/5b2bd23d5f.js" crossorigin="anonymous"></script>
-<h1 style="text-align:center">Here is a list of servers that you own. Please select which one you would like to add a bot to.</h1>
+<h1 style="text-align:center">Here is a list of servers that you own(click on name to see channels). Please select which one you would like to add a bot to.</h1>
 
 @*@{int count = 0;}*@
 @foreach (var s in Model)
@@ -23,9 +23,10 @@ Dark mode:
                 var link = "https://cdn.discordapp.com/icons/" + @s.Id + "//" + @s.Icon + ".png";
                 <img src="@link"/>
             } 
+
         </div>
-        <div class ="col-3" style="font-weight:bold">
-            <h3>@s.Name</h3>
+        <div class ="col-3" style="font-weight:bold">   
+            <h3><a href="@Url.Action("ServerChannels", "Account", new {serverId = s.Id})"> @s.Name</a></h3>
 
             @if(s.HasBot == "false")
             {

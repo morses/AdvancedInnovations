@@ -48,6 +48,9 @@ namespace DiscordStats.DAL.Concrete
 
         public bool UpdatePrivacy(string serverId, string privacy)
         {
+            if (privacy != "private" && privacy != "public")
+                return false;
+
             foreach (Server server in GetAll().ToList())
             {
                 if (server.Id == serverId)
@@ -60,28 +63,18 @@ namespace DiscordStats.DAL.Concrete
             return false;
         }
 
-        public void UpdateOnForum(string serverId, string onForum)
+        public void UpdateOnServerWithForumInfo(string serverId, string onForum, string message)
         {
-            foreach(Server server in GetAll())
+            foreach(Server server in GetAll().ToList())
             {
                 if(server.Id == serverId)
                 {
                     server.OnForum = onForum;
-                    AddOrUpdate(server);
-                }
-            }
-        }
-
-        public void UpdateMessage(string serverId, string message)
-        {
-            foreach (Server server in GetAll())
-            {
-                if (server.Id == serverId)
-                {
                     server.Message = message;
                     AddOrUpdate(server);
                 }
             }
+
         }
     }
 }
