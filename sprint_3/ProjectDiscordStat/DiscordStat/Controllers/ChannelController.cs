@@ -107,6 +107,7 @@ namespace DiscordStats.Controllers
             vm.Id = webhook.Id; 
             vm.Token = webhook.Token;
             vm.guild_id = webhook.guild_id;
+            vm.channel_id = webhook.channel_id;
             return View(vm);
         }
 

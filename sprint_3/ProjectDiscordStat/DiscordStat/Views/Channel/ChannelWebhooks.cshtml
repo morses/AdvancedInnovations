@@ -12,8 +12,8 @@ Dark mode:
 	@foreach(var w in Model)
 	{
 		<ul>
-			<li> <h3><a href="@Url.Action("WebhookMessage", "Channel", new {Name = w.name, Id = w.Id, Token = w.Token, guild_id = w.guild_id})"> @w.name</a></h3>  
-				<input type="button" value="Delete Webhook" onclick="location.href='@Url.Action("DeleteWebhook", "Channel", new {Id = w.Id, channel_id= w.channel_id})'"/>
+			<li> <h3><a href="@Url.Action("WebhookMessage", "Channel", new {Name = w.name, Id = w.Id, Token = w.Token, guild_id = w.guild_id, channel_id = w.channel_id})"> @w.name</a></h3>  
+				<input type="button" class="btn btn-danger" value="Delete Webhook" onclick="location.href='@Url.Action("DeleteWebhook", "Channel", new {Id = w.Id, channel_id= w.channel_id})'"/>
 		</ul>
 
 	}

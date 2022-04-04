@@ -24,11 +24,11 @@ namespace DiscordStats.ViewModel
                 List<ServerOwnerViewModel> serverNameAndCountList = new();
                 foreach (var server in servers)
                 {
-                    serverNameAndCountList.Add(new ServerOwnerViewModel { Id = server.Id, Approximate_Member_Count = server.ApproximateMemberCount });
+                    serverNameAndCountList.Add(new ServerOwnerViewModel { Id = server.Id, Name = server.Name, Approximate_Member_Count = server.ApproximateMemberCount });
 
                 }
                 var guild = serverNameAndCountList.Where(i => i.Id == webhook.guild_id).FirstOrDefault();
-                message = guild.Approximate_Member_Count.ToString();
+                message = "There are " + guild.Approximate_Member_Count.ToString() + " members in this server";
             }
             else
             {
@@ -42,7 +42,7 @@ namespace DiscordStats.ViewModel
                     }
                 }
 
-                message = channel.Count.ToString();
+                message = "The message count in " + channel.Name + " is " + channel.Count.ToString();
             }
 
             return message;

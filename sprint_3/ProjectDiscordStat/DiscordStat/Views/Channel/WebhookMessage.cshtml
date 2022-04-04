@@ -1,17 +1,24 @@
 ﻿@model DiscordStats.ViewModel.WebhookUsageVM
 
+<div class="mode">
+Dark mode:    
+    <span class="change">ON</span>
+</div>
+
 @if(@Model != null)
 {
     <h3>Webhook name: @Model.name</h3>
     <form asp-action="WebhookMessage">
         <div class="row">
             <div class="col">
-                <h3>Check box for members in server.</h3>  
+                <br>
+                <h2>Check box to send members in server.</h2>  
                 @Html.CheckBoxFor(m => m.memberValue)
 @*                <input type="button" value="Member Count" onclick="location.href='@Url.Action("DeleteWebhook", "Channel", new {memberValue = @Model.memberValue})'"/>
 *@            </div>
             <div class="col">
-                <h3>Check box for activity count on channel webhook is on.</h3>  
+                <br>
+                <h2>Check box to send activity count.</h2>  
                 @Html.CheckBoxFor(m => m.activityValue)
 @*                <input type="button" value="Activity Count" onclick="location.href='@Url.Action("DeleteWebhook", "Channel", new {activityValue = @Model.activityValue})'"/>
 *@            </div>
@@ -31,6 +38,10 @@
             <label for="text" asp-for="guild_id" class="control-label">Guild Id:</label>
             @Html.TextBoxFor(m => m.guild_id, new { @readonly="readonly" })
         </div>
+        <div class="row">
+            <label for="text" asp-for="channel_id" class="control-label">Channel Id:</label>
+            @Html.TextBoxFor(m => m.channel_id, new { @readonly="readonly" })
+        </div>
      
         <button value="Submit"  class="btn btn-primary" style="margin-left: 45%; margin-top: 2%">Send Message</button>
     </form>
@@ -38,4 +49,9 @@
 else
 {
     <h3>Message has been sent!</h3>
+}
+
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
 }
