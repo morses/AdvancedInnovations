@@ -308,7 +308,7 @@ async function sendChannels (){
         if (channels.length != 0) {
             console.log("All Channels: ")
             console.log(channels)
-            axios.post('https://localhost:7228/api/postchannels', channels)
+            axios.post('https://localhost:7228/channel/postchannels', channels)
                 .then((result: any) => {
                     console.log(result);
                 })
@@ -449,8 +449,8 @@ function guildIdAndAllUsersId(){
 // }
 
 function updataData() {
-    // sendPresence();
-    // sendUsers();
+    sendPresence();
+    sendUsers();
     //sendServers();
     sendChannels();
 }

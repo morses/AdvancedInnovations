@@ -24,7 +24,7 @@ namespace DiscordStats.DAL.Concrete
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IServerRepository _serverRepository;
         private readonly IPresenceRepository _presenceRepository;
-        //private readonly IChannelRepository _channelRepository;
+        private readonly IChannelRepository _channelRepository;
 
         private DiscordDataDbContext _db = new DiscordDataDbContext();
 
@@ -33,7 +33,7 @@ namespace DiscordStats.DAL.Concrete
             _serverRepository = serverRepository;
             _httpClientFactory = httpClientFactory;
             _presenceRepository = presenceRepository;
-            //_channelRepository = channelRepository; 
+            _channelRepository = channelRepository;
         }
 
 
@@ -261,18 +261,6 @@ namespace DiscordStats.DAL.Concrete
             return userInfo;
         }
 
-        public async Task<List<Channel>?> GetGuildChannels(string botToken, string serverId)
-        {
-            string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
-            // Remember to handle errors here
-            string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
-            // And here
-            List<Channel>? channel = JsonConvert.DeserializeObject<List<Channel>>(response);
-            return channel;
-        }
-
-
-
         public async Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId + "?with_counts=true";
@@ -381,39 +369,6 @@ namespace DiscordStats.DAL.Concrete
             }
             return "It Worked";
         }
-
-        //public async Task<string?> ChannelEntryAndUpdateDbCheck(Channel[] channels)
-        //{
-        //    foreach (var channel in channels)
-        //    {
-        //        var duplicate = false;
-
-        //        Task.Delay(300).Wait();
-        //        await Task.Run(() =>
-        //        {
-        //            var allChannels = _channelRepository.GetAll().ToList();
-        //            var duplicateChannel = new Channel();
-        //            for (int i = 0; i < allChannels.Count(); i++)
-        //            {
-        //                if (channel.Id == allChannels[i].Id)
-        //                {
-        //                    duplicate = true;
-        //                    duplicateChannel = allChannels[i];
-        //                }
-        //            }
-        //            if (!duplicate)
-        //            {
-        //                _channelRepository.AddOrUpdate(channel);
-        //            }
-        //            if (duplicate)
-        //            {
-
-        //                _channelRepository.AddOrUpdate(duplicateChannel);
-        //            }
-        //        });
-        //    }
-        //    return "It Worked";
-        //}
 
         public async Task<string?> RemoveUserServer(string botToken, string serverId, string UserId)
         {

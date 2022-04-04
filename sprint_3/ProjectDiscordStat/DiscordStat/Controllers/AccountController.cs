@@ -91,35 +91,35 @@ namespace DiscordStats.Controllers
             return View(servers.Where(m => m.Owner == "true").ToList());
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
-        public async Task<IActionResult> ServerChannels(string? serverId)
-        {
-            string botToken = _configuration["API:BotToken"];
-            var servers = _serverRepository.GetAll();
-            var selectedServer = servers.Where(m => m.Id == serverId).FirstOrDefault();
+        //[Authorize(AuthenticationSchemes = "Discord")]
+        //public async Task<IActionResult> ServerChannels(string? serverId)
+        //{
+        //    string botToken = _configuration["API:BotToken"];
+        //    var servers = _serverRepository.GetAll();
+        //    var selectedServer = servers.Where(m => m.Id == serverId).FirstOrDefault();
 
-            IList<Channel> channels = new List<Channel>();
-            if (selectedServer != null)
-            {
-                if (selectedServer.HasBot == "true")
-                {
-                    channels = _channelRepository.GetAll().Where(x => x.GuildId == selectedServer.Id).ToList();
+        //    IList<Channel> channels = new List<Channel>();
+        //    if (selectedServer != null)
+        //    {
+        //        if (selectedServer.HasBot == "true")
+        //        {
+        //            channels = _channelRepository.GetAll().Where(x => x.GuildId == selectedServer.Id).ToList();
 
-                    ViewBag.hasBot = "true";
+        //            ViewBag.hasBot = "true";
 
-                }
-                else
-                {
-                    ViewBag.hasBot = "false";
-                }
-            }
-            else
-            {
-                ViewBag.hasBot = "false";
-            }
+        //        }
+        //        else
+        //        {
+        //            ViewBag.hasBot = "false";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        ViewBag.hasBot = "false";
+        //    }
 
-            return View(channels);
-        }
+        //    return View(channels);
+        //}
 
         [HttpPost]
         public IActionResult ChangePrivacy(string privacyString)

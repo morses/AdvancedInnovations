@@ -6,17 +6,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiscordStats.Models
 {
-    [Table("Channel")]
-    public partial class Channel
+    [Table("Webhook")]
+    public partial class Webhook
     {
-        public Channel()
+        public Webhook()
         {
             ChannelWebhookJoins = new HashSet<ChannelWebhookJoin>();
-            ServerChannelJoins = new HashSet<ServerChannelJoin>();
         }
 
         [Key]
-        public int ChannelPk { get; set; }
+        public int WebhookPk { get; set; }
         [Column("ID")]
         [StringLength(256)]
         public string? Id { get; set; }
@@ -24,14 +23,21 @@ namespace DiscordStats.Models
         public string? Type { get; set; }
         [StringLength(256)]
         public string? Name { get; set; }
-        public int? Count { get; set; }
+        [StringLength(256)]
+        public string? Avatar { get; set; }
+        [Column("Channel_id")]
+        [StringLength(256)]
+        public string? ChannelId{ get; set; }
         [Column("Guild_id")]
         [StringLength(256)]
         public string? GuildId { get; set; }
+        [Column("Application_id")]
+        [StringLength(256)]
+        public string? ApplicationId { get; set; }
+        [StringLength(256)]
+        public string? Token { get; set; }
 
-        [InverseProperty(nameof(ChannelWebhookJoin.ChannelPkNavigation))]
+        [InverseProperty(nameof(ChannelWebhookJoin.WebhookPkNavigation))]
         public virtual ICollection<ChannelWebhookJoin> ChannelWebhookJoins { get; set; }
-        [InverseProperty(nameof(ServerChannelJoin.ChannelPkNavigation))]
-        public virtual ICollection<ServerChannelJoin> ServerChannelJoins { get; set; }
     }
 }
