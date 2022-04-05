@@ -12,12 +12,13 @@
     Dark mode:	
         <span class="change">ON</span>
     </div>
-
     <body>
     <div class="col">
         <div class="row">
             <div class="col" >
-                <center><canvas id="usersHourlyAllTimeChart" style="width:100%;max-width:700px"></canvas></center>
+                <div class="chart-container">
+                    <canvas id="usersHourlyAllTimeChart" style="width:100%;max-width:700px"></canvas>
+                </div>
             </div>
 
         </div>
@@ -35,5 +36,5 @@ else
 @section Scripts {
 
      <script type="text/javascript" src="~/js/site.js"></script>
-     <script type="text/javascript" src="~/js~/js/statistics.js"></script>
+     <script type="text/javascript" src="~/js/statistics.js"></script>
 }

@@ -455,7 +455,7 @@ function updataData() {
     sendChannels();
 }
 
-setInterval(updataData, 6000);
+setInterval(updataData, 10000);
 
 
 client.login(process.env.TOKEN);
