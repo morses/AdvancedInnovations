@@ -51,7 +51,8 @@ CREATE TABLE [Presence]
   [LargeImageId] nvarchar(256) NULL,
   [SmallImageId] nvarchar(256) NULL,
   [ServerId] nvarchar(256) NULL,
-  [UserId] NVARCHAR(256) NULL
+  [UserId] NVARCHAR(256) NULL,
+  [Image] NVARCHAR(256) NULL
 );
 
 CREATE TABLE [ServerPresenceJoin] 
@@ -78,6 +79,15 @@ CREATE TABLE [ServerChannelJoin]
   [ChannelPk]   int
 )
 
+CREATE TABLE [VoiceChannels]
+(
+  [VoiceChannelPk] int PRIMARY KEY IDENTITY(1,1),
+  [ID] nvarchar(256) Null,
+  [Name] nvarchar(256) Null,
+  [Count] int Null,
+  [Guild_id] nvarchar(256) Null,
+  [Time] DateTime Null
+)
 
 -- *************** Add foreign key relations ********************
 ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerUserJoinServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;

@@ -16,13 +16,14 @@ namespace DiscordStats.Models
         {
         }
 
-        public virtual DbSet<Channel> Channels { get; set; } = null!;
-        public virtual DbSet<DiscordUser> DiscordUsers { get; set; } = null!;
-        public virtual DbSet<Presence> Presences { get; set; } = null!;
-        public virtual DbSet<Server> Servers { get; set; } = null!;
-        public virtual DbSet<ServerChannelJoin> ServerChannelJoins { get; set; } = null!;
-        public virtual DbSet<ServerPresenceJoin> ServerPresenceJoins { get; set; } = null!;
-        public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; } = null!;
+        public virtual DbSet<Channel> Channels { get; set; }
+        public virtual DbSet<DiscordUser> DiscordUsers { get; set; }
+        public virtual DbSet<Presence> Presences { get; set; }
+        public virtual DbSet<Server> Servers { get; set; }
+        public virtual DbSet<ServerChannelJoin> ServerChannelJoins { get; set; }
+        public virtual DbSet<ServerPresenceJoin> ServerPresenceJoins { get; set; }
+        public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; }
+        public virtual DbSet<VoiceChannel> VoiceChannels { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -37,25 +38,25 @@ namespace DiscordStats.Models
             modelBuilder.Entity<Channel>(entity =>
             {
                 entity.HasKey(e => e.ChannelPk)
-                    .HasName("PK__Channel__38C3B1263AD7BADB");
+                    .HasName("PK__Channel__38C3B1260AE916F7");
             });
 
             modelBuilder.Entity<DiscordUser>(entity =>
             {
                 entity.HasKey(e => e.DiscordUserPk)
-                    .HasName("PK__DiscordU__1F12BE9530CF63C3");
+                    .HasName("PK__DiscordU__1F12BE95418C1CAD");
             });
 
             modelBuilder.Entity<Presence>(entity =>
             {
                 entity.HasKey(e => e.PresencePk)
-                    .HasName("PK__Presence__4981B3D98509F035");
+                    .HasName("PK__Presence__4981B3D922A405AC");
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-                    .HasName("PK__Server__C56B0386020D0A03");
+                    .HasName("PK__Server__C56B0386275191D4");
             });
 
             modelBuilder.Entity<ServerChannelJoin>(entity =>
@@ -95,6 +96,12 @@ namespace DiscordStats.Models
                     .WithMany(p => p.ServerUserJoins)
                     .HasForeignKey(d => d.ServerPk)
                     .HasConstraintName("ServerUserJoinServerPk");
+            });
+
+            modelBuilder.Entity<VoiceChannel>(entity =>
+            {
+                entity.HasKey(e => e.VoiceChannelPk)
+                    .HasName("PK__VoiceCha__004F00F9DAED8DE0");
             });
 
             OnModelCreatingPartial(modelBuilder);
