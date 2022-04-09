@@ -13,7 +13,7 @@
 
         public string Token { get; set; }
 
-        //public string message { get; set; }
+        public string message { get; set; }
 
         public bool memberValue { get; set; }
 

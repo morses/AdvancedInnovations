@@ -30,7 +30,7 @@ namespace DiscordStats.ViewModel
                 var guild = serverNameAndCountList.Where(i => i.Id == webhook.guild_id).FirstOrDefault();
                 message = "There are " + guild.Approximate_Member_Count.ToString() + " members in this server";
             }
-            else
+            if (webhook.activityValue == true)
             {
                 var channels = _channelRepository.GetAll();
                 Channel channel = new();
@@ -41,8 +41,15 @@ namespace DiscordStats.ViewModel
                         channel = c;
                     }
                 }
+                if (channel.Count != null)
+                {
+                    message = "The message count in " + channel.Name + " is " + channel.Count.ToString();
+                }
+                else
+                {
+                    message = "The message count in " + channel.Name + " is 0";
 
-                message = "The message count in " + channel.Name + " is " + channel.Count.ToString();
+                }
             }
 
             return message;

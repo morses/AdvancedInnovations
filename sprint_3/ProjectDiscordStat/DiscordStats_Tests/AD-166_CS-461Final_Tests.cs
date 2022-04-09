@@ -1,6 +1,7 @@
 ﻿using DiscordStats.DAL.Abstract;
 using DiscordStats.DAL.Concrete;
 using DiscordStats.Models;
+using DiscordStats.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -14,6 +15,12 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
+
+using Microsoft.Extensions.Configuration;
+using DiscordStats.ViewModels;
+using DiscordStats.Controllers;
+using Newtonsoft.Json;
+
 namespace DiscordStats_Tests
 {
     public class AD_166_CS_461Final_Tests
@@ -24,12 +31,24 @@ namespace DiscordStats_Tests
 
         private Mock<DbSet<Server>> _mockServerDbSet;
         private Mock<DbSet<Channel>> _mockChannelDbSet;
-        private Mock<DbSet<WebHook>> _mockWebHookDbSet;
+        //private Mock<DbSet<WebHook>> _mockWebHookDbSet;
         //private List<Server> _servers = FakeData.Servers;
 
         private IServerRepository _serverRepository;
         private IChannelRepository _channelRepository;
-        private IWebHookRepository _webHookRepository;
+        private IDiscordServicesForChannels _discordServicesForChannels;
+        //private IWebHookRepository _webHookRepository;
+
+        private Mock<DbSet<T>> GetMockDbSet<T>(IQueryable<T> entities) where T : class
+        {
+            var mockSet = new Mock<DbSet<T>>();
+            mockSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(entities.Provider);
+            mockSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(entities.Expression);
+            mockSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(entities.ElementType);
+            //mockSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(entities.GetEnumerator());
+            mockSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(() => entities.GetEnumerator());
+            return mockSet;
+        }
 
         [SetUp]
         public void Setup()
@@ -49,15 +68,15 @@ namespace DiscordStats_Tests
 
             var cha = new List<Channel>
              {
-                new Channel{Id = "12351251452135", Type = "Guild_Text", Name = "Text Channels", Count = 400, GuildId= "789317480325316640"},
-                new Channel{Id = "12351251452136", Type = "Guild_Voice", Name = "Voice Channels", Count = 220, GuildId= "789317480325316641"}
+                new Channel{Id = "789317480803074075", Type = "Guild_Text", Name = "Text Channels", Count = 400, GuildId= "789317480325316646"},
+                new Channel{Id = "12351251452136", Type = "Guild_Voice", Name = "Voice Channels", Count = 220, GuildId= "789317480325316646"}
             };
 
-            var webH = new List<WebHook>
-             {
-                new WebHook{Type = 1, Id = "933605549457682442", Type = "Guild_Text", Name = "Captain Hook", channel_id = "789317480803074075", GuildId= "789317480325316640", Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk"},
-                new WebHook{Type = 2, Id = "933605549457682443", Type = "Guild_Text", Name = "tester hook", channel_id = "789317480803074076", GuildId= "789317480325316640", Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGl"},
-            };
+            //var webH = new List<WebHook>
+            // {
+            //    new WebHook{Type = 1, Id = "933605549457682442", Type = "Guild_Text", Name = "Captain Hook", channel_id = "789317480803074075", GuildId= "789317480325316640", Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk"},
+            //    new WebHook{Type = 2, Id = "933605549457682443", Type = "Guild_Text", Name = "tester hook", channel_id = "789317480803074076", GuildId= "789317480325316640", Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGl"},
+            //};
 
             _mockServerDbSet = GetMockDbSet<Server>(ser.AsQueryable<Server>());
             _mockContext = new Mock<DiscordDataDbContext>();
@@ -81,29 +100,18 @@ namespace DiscordStats_Tests
             _mockContext2.Setup(ctx => ctx.SaveChanges())
                         .Returns(0);
 
-            _mockWebHookDbSet = GetMockDbSet<WebHook>(cha.AsQueryable<WebHook>());
-            _mockContext3 = new Mock<DiscordDataDbContext>();
-            _mockContext3.Setup(ctx => ctx.WebHooks).Returns(_mockWebHookDbSet.Object);
-            _mockContext3.Setup(ctx => ctx.Set<WebHook>()).Returns(_mockWebHookDbSet.Object);
-            _mockContext3.Setup(ctx => ctx.Update(It.IsAny<WebHook>()))
-                        .Callback((Channel c) => { webH.Append(c); })
-                        .Returns((Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<WebHook>)null);
-            // do not rely on the return value from Update since it's just null
-            _mockContext3.Setup(ctx => ctx.SaveChanges())
-                        .Returns(0);
+            //_mockWebHookDbSet = GetMockDbSet<WebHook>(cha.AsQueryable<WebHook>());
+            //_mockContext3 = new Mock<DiscordDataDbContext>();
+            //_mockContext3.Setup(ctx => ctx.WebHooks).Returns(_mockWebHookDbSet.Object);
+            //_mockContext3.Setup(ctx => ctx.Set<WebHook>()).Returns(_mockWebHookDbSet.Object);
+            //_mockContext3.Setup(ctx => ctx.Update(It.IsAny<WebHook>()))
+            //            .Callback((Channel c) => { webH.Append(c); })
+            //            .Returns((Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<WebHook>)null);
+            //// do not rely on the return value from Update since it's just null
+            //_mockContext3.Setup(ctx => ctx.SaveChanges())
+            //            .Returns(0);
 
 
-        }
-
-        private Mock<DbSet<T>> GetMockDbSet<T>(IQueryable<T> entities) where T : class
-        {
-            var mockSet = new Mock<DbSet<T>>();
-            mockSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(entities.Provider);
-            mockSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(entities.Expression);
-            mockSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(entities.ElementType);
-            //mockSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(entities.GetEnumerator());
-            mockSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(() => entities.GetEnumerator());
-            return mockSet;
         }
 
         [Test]
@@ -115,17 +123,17 @@ namespace DiscordStats_Tests
             handler.SetupAnyRequest()
                     .ReturnsResponse(HttpStatusCode.NotFound);
 
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, _channelRepository);
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
 
             // Act
-            Task<List<Channel>?> Act() => discord.GetWebHooks("fakeBotToken", "FakeChannelId");
+            Task<List<WebhookUsageVM>?> Act() => discord.GetChannelWebHooks("fakeBotToken", "FakeChannelId");
             // Assert
             Assert.That(Act, Throws.TypeOf<HttpRequestException>());
 
         }
 
         [Test]
-        public async Task PosttWebHookToCreate_404Response_ShouldThrowException()
+        public async Task PostWebHookToCreate_404Response_ShouldThrowException()
         {
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
@@ -133,16 +141,17 @@ namespace DiscordStats_Tests
             handler.SetupAnyRequest()
                     .ReturnsResponse(HttpStatusCode.NotFound);
 
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, _channelRepository);
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
 
             // Act
-            Task<List<Channel>?> Act() => discord.PosttWebHookToCreate("fakeBotToken", "FakeChannelId", "FakeWebHookName");
+            Task<string?> Act() => discord.CreateWebhook("fakeBotToken", "FakeChannelId", "FakeWebHookName");
             // Assert
             Assert.That(Act, Throws.TypeOf<HttpRequestException>());
 
         }
+
         [Test]
-        public async Task PosttWebHookToSendMessage_404Response_ShouldThrowException()
+        public async Task PostWebHookToSendMessage_404Response_ShouldThrowException()
         {
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
@@ -150,19 +159,41 @@ namespace DiscordStats_Tests
             handler.SetupAnyRequest()
                     .ReturnsResponse(HttpStatusCode.NotFound);
 
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, _channelRepository);
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
 
             // Act
-            Task<List<Channel>?> Act() => discord.PosttWebHookToSendMessage("fakeBotToken", "fakeChannelToken", "FakeWebHooklId", "FakeMessage");
+            Task<string?> Act() => discord.SendMessageThroughWebhook("fakeBotToken", "FakeWebHooklId", "fakeWebHookToken", "FakeMessage");
             // Assert
             Assert.That(Act, Throws.TypeOf<HttpRequestException>());
 
         }
+
+        [Test]
+        public async Task WebHookToDelete_404Response_ShouldThrowException()
+        {
+            // Arrange
+            var handler = new Mock<HttpMessageHandler>();
+
+            handler.SetupAnyRequest()
+                    .ReturnsResponse(HttpStatusCode.NotFound);
+
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
+
+            // Act
+            Task<string?> Act() => discord.DeleteWebhook("fakeBotToken", "webhookId");
+            // Assert
+            Assert.That(Act, Throws.TypeOf<HttpRequestException>());
+
+        }
+
         [Test]
         public async Task GetWebHooks_ShouldParseOk()
         {
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
+            _channelRepository = new ChannelRepository(_mockContext2.Object);
+            var whatetever = _channelRepository.GetAll().ToList();
+
 
             string jsonFromDiscordAPI = @"[{
             ""type"": 1,
@@ -174,12 +205,13 @@ namespace DiscordStats_Tests
             ""application_id"": null,
             ""token"": ""V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk"",
             ""user"": {
-                    ""id"": ""697317543555235840"",
+                ""id"": ""697317543555235840"",
                 ""username"": ""Abraham"",
                 ""avatar"": ""0753a332ab63d2f91971ad57e25123d3"",
                 ""discriminator"": ""7167"",
                 ""public_flags"": 0
                 },
+            },
             {
             ""type"": 1,
             ""id"": ""933799816499187743"",
@@ -204,142 +236,153 @@ namespace DiscordStats_Tests
             };
             handler.SetupAnyRequest()
                     .ReturnsAsync(response);
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, _channelRepository);
+
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
+            List<WebhookUsageVM>? webhookUsageVm = new();
 
             // Act
-            List<Channel>? channels = discord.GetWebHooks("fakeBotToken", "FakeChannelId");
+            webhookUsageVm = await discord.GetChannelWebHooks("fakeBotToken","fakeChannelID");
+           
+
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.That(channels!.Count, Is.EqualTo(2));
-                Assert.That(channels[0].channel_id == "789317480803074075");
-                Assert.That(channels[0].Name == "Captain Hook");
-                Assert.That(channels[0].GuildId == "789317480325316640");
-            }
+                Assert.That(webhookUsageVm!.Count, Is.EqualTo(2));
+                Assert.That(webhookUsageVm[0].channel_id == "789317480803074075");
+                Assert.That(webhookUsageVm[0].name == "Captain Hook");
+                Assert.That(webhookUsageVm[0].guild_id == "789317480325316640");
+            });
 
         }
 
         [Test]
-        public async Task PosttWebHookToCreate_ReturnsSuccessMessage()
+        public async Task PostWebHookToCreate_ReturnsSuccessMessage()
         {
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
 
+            string jsonFromDiscordAPI = @"[{
+                ""type"": 1, 
+                    ""id"": ""961320916732756009"", 
+                    ""name"": ""a"", 
+                    ""avatar"": null, 
+                    ""channel_id"": ""952963443336564766"", 
+                    ""guild_id"": ""789317480325316640"", 
+                    ""application_id"": ""938808510932746350"", 
+                    ""token"": ""oVK2tmq-DjHEl6w15Zf-N4ndWqDJdRchFtKcfV8aFx4vBy125rkLu_fFxvt5zYIqK3w-"",
+                    ""user"": 
+                    {
+                    ""id"": ""938808510932746350"", 
+                       ""username"": ""Stat Tracker"", 
+                        ""avatar"": null, 
+                        ""discriminator"": ""7079"", 
+                        ""public_flags"": 0, 
+                        ""bot"": true
+                    }
+            }]";
+
+            var response = new HttpResponseMessage()
+            {
+                Content = new StringContent(jsonFromDiscordAPI)
+            };
             handler.SetupAnyRequest()
-                    .ReturnsResponse(HttpStatusCode.NotFound);
+                    .ReturnsAsync(response);
 
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, _channelRepository);
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
 
             // Act
-            string success = discord.PosttWebHookToCreate("fakeBotToken", "FakeChannelId", "FakeWebHookName");
-            string compareString = "WebHook was created.";
-            
+            string? webhook = await discord.CreateWebhook("fakeBotToken", "fakeChannelId", "fakeWebHookName");
+
             // Assert
-            Assert.AreEqual(success, compareString);
+            Assert.Multiple(() =>
+            {
+                Assert.That(webhook.Contains("961320916732756009"));
+                Assert.That(webhook.Contains("a")); 
+            });
 
         }
+
         [Test]
-        public async Task PosttWebHookToSendMessage_ReturnsSuccessMessage()
+        public async Task PostWebHookToSendMessage_ReturnsSuccessMessage()
         {
-            // Arrange
             var handler = new Mock<HttpMessageHandler>();
 
+            string jsonFromDiscordAPI = @"[{
+                ""type"": 1, 
+                    ""id"": ""961320916732756009"", 
+                    ""name"": ""a"", 
+                    ""avatar"": null, 
+                    ""channel_id"": ""952963443336564766"", 
+                    ""guild_id"": ""789317480325316640"", 
+                    ""application_id"": ""938808510932746350"", 
+                    ""token"": ""oVK2tmq-DjHEl6w15Zf-N4ndWqDJdRchFtKcfV8aFx4vBy125rkLu_fFxvt5zYIqK3w-"",
+                    ""user"": 
+                    {
+                    ""id"": ""938808510932746350"", 
+                       ""username"": ""Stat Tracker"", 
+                        ""avatar"": null, 
+                        ""discriminator"": ""7079"", 
+                        ""public_flags"": 0, 
+                        ""bot"": true
+                    }
+            }]";
+
+            var response = new HttpResponseMessage()
+            {
+                Content = new StringContent(jsonFromDiscordAPI)
+            };
             handler.SetupAnyRequest()
-                    .ReturnsResponse(HttpStatusCode.NotFound);
+                    .ReturnsAsync(response);
 
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, _channelRepository);
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
 
             // Act
-            string success = discord.PosttWebHookToSendMessage("fakeBotToken", "fakeChannelToken", "FakeWebHooklId", "FakeMessage");
-            string compareString = "Message was sent.";
+            string? webhook = await discord.SendMessageThroughWebhook("fakeBotToken", "fakewebhookId", "fakewebhookToken", "FakeMessage");
+
 
             // Assert
-            Assert.AreEqual(success, compareString);
+            Assert.Multiple(() =>
+            {
+                Assert.That(webhook.Contains("961320916732756009"));
+                Assert.That(webhook.Contains("a"));
+            });
 
         }
 
         [Test]
-        public async Task PostChannels_ShouldReturnItWorked()
+        public async Task WebHookToDelete_ReturnsEmptyMessage()
         {
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
-            _channelRepository = new ChannelRepository(_mockContext.Object);
 
-            ChannelController controller = new ChannelController(null, null, null, _serverRepository, _channelRepository);
-            controller.ControllerContext = new ControllerContext();
+            string jsonFromDiscordAPI = @"";
+
+            var response = new HttpResponseMessage()
+            {
+                Content = new StringContent(jsonFromDiscordAPI)
+            };
+            handler.SetupAnyRequest()
+                    .ReturnsAsync(response);
+
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
 
             // Act
-            JsonResult result = (JsonResult)await controller.ServerChannels(_channelRepository.GetAll());
-            var resultCompare = "It Worked";
+            string? returnValue = await discord.DeleteWebhook("fakeBotToken", "fakewebhookId");
 
-            // Arrange
-            Assert.AreEqual(result, resultCompare);
+            // Assert
+            Assert.AreEqual("", returnValue);
+
         }
 
         [Test]
-        public async Task ServerTextChannels_ShouldReturnListOfTextChannels()
+        public async Task ChannelWebHooks_ShouldReturnListOfWebhooks()
         {
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
-            _channelRepository = new ChannelRepository(_mockContext.Object);
-            _serverRepository = new ServerRepository(_mockContext.Object);
-            var selectedServer = _serverRepository.GetAll().Where(m => m.Id == "789317480325316640").FirstOrDefault();
-
-            ChannelController controller = new ChannelController(null, null, null, _serverRepository, _channelRepository);
-            controller.ControllerContext = new ControllerContext();
-
-            // Act
-            ViewResult result = (ViewResult)await controller.ServerTextChannels(selectedServer.Id);
-            ChannelListPageVM vm = (ChannelListPageVM)result.Model;
-
-            string resultCompare = @"[{
-                    ""id"": ""789317480803074073"",
-                    ""type"": 4,
-                    ""name"": ""Text Channels"",
-                    ""position"": 0,
-                    ""parent_id"": null,
-                    ""guild_id"": ""789317480325316640"",
-                    ""permission_overwrites"": []
-                },
-
-                {
-                    ""id"": ""952963443336564766"",
-                    ""last_message_id"": ""953521469462290503"",
-                    ""type"": 0,
-                    ""name"": ""testchannel"",
-                    ""position"": 1,
-                    ""parent_id"": ""789317480803074073"",
-                    ""topic"": null,
-                    ""guild_id"": ""789317480325316640"",
-                    ""permission_overwrites"": [],
-                    ""rate_limit_per_user"": 0,
-                    ""nsfw"": false
-                }
-            ]";
-
-            // Assert
-            Assert.AreEqual(vm.ListOfTextChannels, resultCompare);
-        }
-
-        public async Task WebHooks_ShouldReturnListOfWebhooks()
-        {
-            // Arrange
-            var handler = new Mock<HttpMessageHandler>();
-            _channelRepository = new ChannelRepository(_mockContext.Object);
-            _serverRepository = new ServerRepository(_mockContext.Object);
-            var selectedChannel = _channelRepository.GetAll().Where(m => m.Id == "789317480325316640").FirstOrDefault();
-
-            ChannelController controller = new ChannelController(null, null, null, _serverRepository, _channelRepository);
-            controller.ControllerContext = new ControllerContext();
-
-            // Act
-            ViewResult result = (ViewResult)await controller.ChannelWebHooks(selectedChannel.Id);
-            WebHooklListPageVM vm = (WebHooklListPageVM)result.Model;
-
-            string resultCompare = @"[{
+            string jsonFromDiscordAPI = @"[{
             ""type"": 1,
             ""id"": ""933605549457682442"",
-            ""name"": ""Captain Hook"",
+            ""name"": ""Captain hook"",
             ""avatar"": null,
             ""channel_id"": ""789317480803074075"",
             ""guild_id"": ""789317480325316640"",
@@ -352,6 +395,7 @@ namespace DiscordStats_Tests
                 ""discriminator"": ""7167"",
                 ""public_flags"": 0
                 },
+            },   
             {
             ""type"": 1,
             ""id"": ""933799816499187743"",
@@ -369,50 +413,356 @@ namespace DiscordStats_Tests
                 ""public_flags"": 0
                 }
             }]";
+            var response = new HttpResponseMessage()
+            {
+                Content = new StringContent(jsonFromDiscordAPI)
+            };
+            handler.SetupAnyRequest()
+                    .ReturnsAsync(response);
+
+            _channelRepository = new ChannelRepository(_mockContext2.Object);
+            var selectedChannel = _channelRepository.GetAll().Where(m => m.Id == "789317480803074075").FirstOrDefault();
+            var configForSmsApi = new Dictionary<string, string>
+            {
+                {"API:BotToken", "fakeBotToken"},
+            };
+
+            var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(configForSmsApi)
+            .Build();
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
+
+            ChannelController controller = new ChannelController(null, configuration, _channelRepository, discord, _serverRepository);
+            controller.ControllerContext = new ControllerContext();
+
+            // Act
+            ViewResult result = (ViewResult)await controller.ChannelWebhooks(selectedChannel);
+            var vmCompare = new List<WebhookUsageVM>()
+            {
+                new WebhookUsageVM
+                {
+                    channelId = null,
+                    channel_id = "789317480803074075",
+                    guild_id = "789317480325316640",
+                    name = "Captain hook",
+                    Id = "933605549457682442",
+                    Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk",
+                    message = null,
+                    memberValue = false,
+                    activityValue = false,
+                },
+                new WebhookUsageVM
+                {
+                    channelId = null,
+                    channel_id = "789317480803074075",
+                    guild_id = "789317480325316640",
+                    name = "githubConnectTest",
+                    Id = "933799816499187743",
+                    Token = "hYAg9k6mFxVsUTR66EVqO_837ngFTT_98pDDHuYqqRdzlMdVcTyUS6s3f8HJfz1aNjU7",
+                    message = null,
+                    memberValue = false,
+                    activityValue = false,
+                },
+
+            };
+
+            var expectedJson = System.Text.Json.JsonSerializer.Serialize(result.Model);
+            var actualJson = System.Text.Json.JsonSerializer.Serialize(vmCompare);
 
             // Assert
-            Assert.AreEqual(vm.ListOfWebHooks, resultCompare);
+            Assert.AreEqual(actualJson, expectedJson);
         }
 
         [Test]
-        public async Task SelectedWebHookController_ToSendMessage_ShouldReturnSuccess()
+        public async Task WebHookForm_ShouldReturnDataCountOfOneToPassToTheViewPage()
+        {
+            // Arrange
+            var handler = new Mock<HttpMessageHandler>();
+            _channelRepository = new ChannelRepository(_mockContext2.Object);
+            var selectedChannel = _channelRepository.GetAll().Where(m => m.Id == "789317480803074075").FirstOrDefault();
+            var configForSmsApi = new Dictionary<string, string>
+            {
+                {"API:BotToken", "fakeBotToken"},
+            };
+
+            var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(configForSmsApi)
+            .Build();
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
+
+            ChannelController controller = new ChannelController(null, configuration, _channelRepository, discord, _serverRepository);
+            controller.ControllerContext = new ControllerContext();
+
+            // Act
+            ViewResult result = (ViewResult)await controller.WebhookForm(selectedChannel.Id);
+            var dataToReturnToViewHasCount = result.ViewData.Count();         
+
+            // Assert
+            Assert.AreEqual(1, dataToReturnToViewHasCount);
+        }
+
+        [Test]
+        public async Task WebhookFormToCreateAWebhook_ShouldRedirectToWebhookMessageActionResultWithObjectNameOnly()
+        {
+            // Arrange
+            var handler = new Mock<HttpMessageHandler>();
+            string jsonFromDiscordAPI = @"{
+            ""id"": ""933605549457682442"",
+            ""type"": ""1"",
+            ""name"": ""Captain hook"",
+            ""avatar"": null,
+            ""channel_id"": ""789317480803074075"",
+            ""guild_id"": ""789317480325316640"",
+            ""application_id"": null,
+            ""token"": ""V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk"",
+            }";
+            var response = new HttpResponseMessage()
+            {
+                Content = new StringContent(jsonFromDiscordAPI)
+            };
+            handler.SetupAnyRequest()
+                    .ReturnsAsync(response);
+
+            _channelRepository = new ChannelRepository(_mockContext2.Object);
+            var selectedChannel = _channelRepository.GetAll().Where(m => m.Id == "789317480803074075").FirstOrDefault();
+            var configForSmsApi = new Dictionary<string, string>
+            {
+                {"API:BotToken", "fakeBotToken"},
+            };
+
+            var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(configForSmsApi)
+            .Build();
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
+
+            ChannelController controller = new ChannelController(null, configuration, _channelRepository, discord, _serverRepository);
+            controller.ControllerContext = new ControllerContext();
+
+            // Act
+            WebhookUsageVM vm = new WebhookUsageVM();
+
+            vm.channelId = null;
+            vm.channel_id = "789317480803074075";
+            vm.guild_id = "789317480325316640";
+            vm.name = "Captain hook";
+            vm.Id = "933605549457682442";
+            vm.Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk";
+            vm.message = null;
+            vm.memberValue = false;
+            vm.activityValue = false;
+
+            RedirectToActionResult result = (RedirectToActionResult)await controller.WebhookForm(vm);
+            string actionName = result.ActionName;
+            var routeValueObjectName = result.RouteValues.Values.ToArray()[3];
+           
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual("WebhookMessage", actionName);
+                Assert.AreEqual("Captain hook", routeValueObjectName);
+            });
+        }
+
+        [Test]
+        public async Task WebhookMessageToShowWhichWebhookInUse_ShouldReturnWebHookUsageVM()
         {
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
 
-            _webHookRepository = new IWebHookRepository(_mockContext3.Object);
-            var selectedWebhook = _webHookRepository.GetAll().Where(m => m.Id == "933605549457682442").FirstOrDefault();
-
-            ChannelController controller = new ChannelController(null, null, null, _serverRepository, _channelRepository, _webHookRepository);
+            ChannelController controller = new ChannelController(null, null, null, _discordServicesForChannels, _serverRepository);
             controller.ControllerContext = new ControllerContext();
+            WebhookUsageVM vm = new WebhookUsageVM();
+            vm.Id = "933605549457682442";
+            vm.name = "Captain Hook";
+            vm.Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk";
+            vm.channel_id = "789317480803074075";
+            vm.guild_id = "789317480325316640";
+
 
             // Act
-            ViewResult result = (ViewResult)await controller.SelectedWebHook(selectedWebhook.Id, selectedWebhook.Token, "fakeMessageToSend");
+            ViewResult result = (ViewResult)await controller.WebhookMessage(vm);
 
-            var resultCompare = "Message was sent.";
+            var expectedJson = System.Text.Json.JsonSerializer.Serialize(result.Model);
+            var actualJson = System.Text.Json.JsonSerializer.Serialize(vm);
 
             // Arrange
-            Assert.AreEqual(result, resultCompare);
+            Assert.AreEqual(expectedJson, actualJson);
         }
 
         [Test]
-        public async Task CreatingWebHookController_ShouldReturnWebHookObject()
+        public async Task WebhookMessageAfterUserChoosesDataToSend_ShouldReturnWebhookMessageViewPageWithModelNull()
         {
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
-            _channelRepository = new ChannelRepository(_mockContext.Object);
-            var selectedChannel = _channelRepository.GetAll().Where(m => m.Id == "789317480325316640").FirstOrDefault();
+            string jsonFromDiscordAPI = @"{
+            ""id"": ""933605549457682442"",
+            ""type"": ""1"",
+            ""name"": ""Captain hook"",
+            ""avatar"": null,
+            ""channel_id"": ""789317480803074075"",
+            ""guild_id"": ""789317480325316640"",
+            ""application_id"": null,
+            ""token"": ""V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk"",
+            }";
+            var response = new HttpResponseMessage()
+            {
+                Content = new StringContent(jsonFromDiscordAPI)
+            };
+            handler.SetupAnyRequest()
+                    .ReturnsAsync(response);
 
-            ChannelController controller = new ChannelController(null, null, null, _serverRepository, _channelRepository, _webHookRepository);
+            _serverRepository = new ServerRepository(_mockContext.Object);
+            _channelRepository = new ChannelRepository(_mockContext2.Object);
+            var configForSmsApi = new Dictionary<string, string>
+            {
+                {"API:BotToken", "fakeBotToken"},
+            };
+
+            var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(configForSmsApi)
+            .Build();
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
+
+            ChannelController controller = new ChannelController(null, configuration, _channelRepository, discord, _serverRepository);
             controller.ControllerContext = new ControllerContext();
 
             // Act
-            ViewResult result = (ViewResult)await controller.CreateWebHook(selectedChannel.Id);
+            WebhookUsageVM vm = new WebhookUsageVM();
 
-            var resultCompare = "WebHook was created.";
+            vm.channelId = null;
+            vm.channel_id = "789317480803074075";
+            vm.guild_id = "789317480325316640";
+            vm.name = "Captain hook";
+            vm.Id = "933605549457682442";
+            vm.Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk";
+            vm.message = null;
+            vm.memberValue = false;
+            vm.activityValue = false;
 
+            ViewResult result = (ViewResult)await controller.WebhookMessage(vm, "");
+
+            // Assert
+            Assert.AreEqual(null, result.Model);
+        }
+
+        [Test]
+        public async Task DeleteWebhook_ShouldRedirectToChannelWebhooksActionResultWithChannelObjectId()
+        {
             // Arrange
-            Assert.AreEqual(result, resultCompare);
+            var handler = new Mock<HttpMessageHandler>();
+            string jsonFromDiscordAPI = @"{
+            ""id"": ""933605549457682442"",
+            ""type"": ""1"",
+            ""name"": ""Captain hook"",
+            ""avatar"": null,
+            ""channel_id"": ""789317480803074075"",
+            ""guild_id"": ""789317480325316640"",
+            ""application_id"": null,
+            ""token"": ""V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk"",
+            }";
+            var response = new HttpResponseMessage()
+            {
+                Content = new StringContent(jsonFromDiscordAPI)
+            };
+            handler.SetupAnyRequest()
+                    .ReturnsAsync(response);
+
+            _channelRepository = new ChannelRepository(_mockContext2.Object);
+            var configForSmsApi = new Dictionary<string, string>
+            {
+                {"API:BotToken", "fakeBotToken"},
+            };
+
+            var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(configForSmsApi)
+            .Build();
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
+
+            ChannelController controller = new ChannelController(null, configuration, _channelRepository, discord, _serverRepository);
+            controller.ControllerContext = new ControllerContext();
+
+            // Act
+            WebhookUsageVM vm = new WebhookUsageVM();
+
+            vm.channelId = null;
+            vm.channel_id = "789317480803074075";
+            vm.guild_id = "789317480325316640";
+            vm.name = "Captain hook";
+            vm.Id = "933605549457682442";
+            vm.Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk";
+            vm.message = null;
+            vm.memberValue = false;
+            vm.activityValue = false;
+
+            RedirectToActionResult result = (RedirectToActionResult)await controller.DeleteWebhook(vm);
+            string actionName = result.ActionName;
+            var routeValueObjectName = result.RouteValues.Values.ToArray()[1];
+
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual("ChannelWebhooks", actionName);
+                Assert.AreEqual("789317480803074075", routeValueObjectName);
+            });
+        }
+
+        [Test]
+        public async Task WebhookDataVm_ShouldReturnMemberValue()
+        {
+            // Arange
+            _serverRepository = new ServerRepository(_mockContext.Object);
+            _channelRepository = new ChannelRepository(_mockContext2.Object);
+
+            WebhookDataVm webhookDataVm = new(_serverRepository, _channelRepository);
+
+            // Act 
+            WebhookUsageVM vm = new WebhookUsageVM();
+
+            vm.channelId = null;
+            vm.channel_id = "789317480803074075";
+            vm.guild_id = "789317480325316640";
+            vm.name = "Captain hook";
+            vm.Id = "933605549457682442";
+            vm.Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk";
+            vm.message = null;
+            vm.memberValue = true;
+            vm.activityValue = false;
+
+            var memberValue = webhookDataVm.DataBeingSentBackForWebhook(vm);
+
+            // Assert
+            Assert.AreEqual("There are 500 members in this server", memberValue);
+        }
+
+        [Test]
+        public async Task WebhookDataVm_ShouldReturnActivityValue()
+        {
+            // Arange
+            _serverRepository = new ServerRepository(_mockContext.Object);
+            _channelRepository = new ChannelRepository(_mockContext2.Object);
+
+            WebhookDataVm webhookDataVm = new(_serverRepository, _channelRepository);
+
+            // Act 
+            WebhookUsageVM vm = new WebhookUsageVM();
+
+            vm.channelId = null;
+            vm.channel_id = "789317480803074075";
+            vm.guild_id = "789317480325316640";
+            vm.name = "Captain hook";
+            vm.Id = "933605549457682442";
+            vm.Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk";
+            vm.message = null;
+            vm.memberValue = false;
+            vm.activityValue = true;
+
+            var activityValue = webhookDataVm.DataBeingSentBackForWebhook(vm);
+
+            // Assert
+            Assert.AreEqual("The message count in Text Channels is 400", activityValue);
+
         }
     }
 }

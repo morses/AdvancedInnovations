@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace DiscordStats.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Discord")]
     public class ChannelController : Controller
     {
         private readonly ILogger<ChannelController> _logger;
@@ -15,7 +16,6 @@ namespace DiscordStats.Controllers
         private readonly IChannelRepository _channelRepository;
         private readonly IDiscordServicesForChannels _discordServicesForChannels;
         private readonly IServerRepository _serverRepository;
-
 
         public ChannelController(ILogger<ChannelController> logger, IConfiguration configuration, IChannelRepository channelRepository, IDiscordServicesForChannels discordServicesForChannels, IServerRepository serverRepository)
         {
@@ -33,6 +33,7 @@ namespace DiscordStats.Controllers
 
         [HttpPost]
         [Route("channel/[action]")]
+        [AllowAnonymous]
         public async Task<IActionResult> PostChannels(Channel[] channels)
         {
             var itWorked = await _discordServicesForChannels.ChannelEntryAndUpdateDbCheck(channels);
@@ -40,7 +41,6 @@ namespace DiscordStats.Controllers
             return Json(itWorked);
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> ServerChannels(string? serverId)
         {
             string botToken = _configuration["API:BotToken"];
@@ -70,7 +70,6 @@ namespace DiscordStats.Controllers
             return View(channels);
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> ChannelWebhooks(Channel channel)
         {
             string botToken = _configuration["API:BotToken"];
@@ -80,8 +79,6 @@ namespace DiscordStats.Controllers
             return View(webhooks);
         }
 
-
-        [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> WebhookForm(string channelId)
         {
             ViewBag.channelId = channelId;
@@ -89,17 +86,14 @@ namespace DiscordStats.Controllers
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> WebhookForm(WebhookUsageVM vm)
         {
             string botToken = _configuration["API:BotToken"];
             var webhook = await _discordServicesForChannels.CreateWebhook(botToken, vm.channelId, vm.name);
             Webhook webhookObject = JsonConvert.DeserializeObject<Webhook>(webhook);
             return RedirectToAction("WebhookMessage", webhookObject);
-
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> WebhookMessage(WebhookUsageVM webhook)
         {
             WebhookUsageVM vm = new WebhookUsageVM();
@@ -112,7 +106,6 @@ namespace DiscordStats.Controllers
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> WebhookMessage(WebhookUsageVM webhook, string whatever)
         {
             string botToken = _configuration["API:BotToken"];
@@ -122,8 +115,6 @@ namespace DiscordStats.Controllers
             return View();
         }
 
-
-        [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> DeleteWebhook(WebhookUsageVM webhook)
         {
             string botToken = _configuration["API:BotToken"];
