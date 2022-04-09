@@ -72,12 +72,6 @@ namespace DiscordStats_Tests
                 new Channel{Id = "12351251452136", Type = "Guild_Voice", Name = "Voice Channels", Count = 220, GuildId= "789317480325316646"}
             };
 
-            //var webH = new List<WebHook>
-            // {
-            //    new WebHook{Type = 1, Id = "933605549457682442", Type = "Guild_Text", Name = "Captain Hook", channel_id = "789317480803074075", GuildId= "789317480325316640", Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGk"},
-            //    new WebHook{Type = 2, Id = "933605549457682443", Type = "Guild_Text", Name = "tester hook", channel_id = "789317480803074076", GuildId= "789317480325316640", Token = "V42jNvQvkQQjum7BUuuD5p8y0EPHROacQJwtx8gOTemg4kcROO5Gq5J8cjj-irG_dTGl"},
-            //};
-
             _mockServerDbSet = GetMockDbSet<Server>(ser.AsQueryable<Server>());
             _mockContext = new Mock<DiscordDataDbContext>();
             _mockContext.Setup(ctx => ctx.Servers).Returns(_mockServerDbSet.Object);
@@ -99,18 +93,6 @@ namespace DiscordStats_Tests
             // do not rely on the return value from Update since it's just null
             _mockContext2.Setup(ctx => ctx.SaveChanges())
                         .Returns(0);
-
-            //_mockWebHookDbSet = GetMockDbSet<WebHook>(cha.AsQueryable<WebHook>());
-            //_mockContext3 = new Mock<DiscordDataDbContext>();
-            //_mockContext3.Setup(ctx => ctx.WebHooks).Returns(_mockWebHookDbSet.Object);
-            //_mockContext3.Setup(ctx => ctx.Set<WebHook>()).Returns(_mockWebHookDbSet.Object);
-            //_mockContext3.Setup(ctx => ctx.Update(It.IsAny<WebHook>()))
-            //            .Callback((Channel c) => { webH.Append(c); })
-            //            .Returns((Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<WebHook>)null);
-            //// do not rely on the return value from Update since it's just null
-            //_mockContext3.Setup(ctx => ctx.SaveChanges())
-            //            .Returns(0);
-
 
         }
 

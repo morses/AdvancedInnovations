@@ -230,35 +230,35 @@ namespace DiscordStats_Tests
             });
         }
 
-        //[Test]
-        //public void ChannelsEntryFromBotToDbCheck_TryingToAddAlreadyExistingChannel_ShouNotAddDuplicate()
-        //{
-        //    // Arrange
-        //    var handler = new Mock<HttpMessageHandler>();
-        //    _channelRepository = new ChannelRepository(_mockContext2.Object);
-        //    DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, _presenceRepository, null);
+        [Test]
+        public void ChannelsEntryFromBotToDbCheck_TryingToAddAlreadyExistingChannel_ShouNotAddDuplicate()
+        {
+            // Arrange
+            var handler = new Mock<HttpMessageHandler>();
+            _channelRepository = new ChannelRepository(_mockContext2.Object);
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
 
-        //    var channelGetAll = _channelRepository.GetAll();
-        //    int initialCount = channelGetAll.Count();
-        //    var channel = new Channel[]
-        //    {
-        //        new Channel{Id = "12351251452135", Type = "Guild_Text", Name = "Text Channels", Count = 400, GuildId= "789317480325316640"},
-        //    };
+            var channelGetAll = _channelRepository.GetAll();
+            int initialCount = channelGetAll.Count();
+            var channel = new Channel[]
+            {
+                new Channel{Id = "12351251452135", Type = "Guild_Text", Name = "Text Channels", Count = 400, GuildId= "789317480325316640"},
+            };
 
-        //    // Act
-        //    discord.ChannelEntryAndUpdateDbCheck(channel);
-        //    var channelGetAll2 = _channelRepository.GetAll();
-        //    int count = channelGetAll.Count();
+            // Act
+            discord.ChannelEntryAndUpdateDbCheck(channel);
+            var channelGetAll2 = _channelRepository.GetAll();
+            int count = channelGetAll.Count();
 
 
-        //    // Assert
-        //    Assert.AreEqual(count, initialCount);
-        //}
+            // Assert
+            Assert.AreEqual(count, initialCount);
+        }
 
         //[Test]
         //public async Task GetGuildChannelsWithApi_ShouldReturnCountOfChannelsAndInfoOfChannelOne()
         //{
-        //     var handler = new Mock<HttpMessageHandler>();
+        //    var handler = new Mock<HttpMessageHandler>();
 
         //    string jsonFromDiscordAPI = @"[{
         //    ""id"": ""1035111022"",
