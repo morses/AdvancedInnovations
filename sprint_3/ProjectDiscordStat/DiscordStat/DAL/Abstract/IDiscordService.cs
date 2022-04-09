@@ -22,10 +22,7 @@ namespace DiscordStats.DAL.Abstract
 
         Task<DiscordUser?> GetCurrentUserInfo(string bearerToken);
 
-        Task<List<Channel>?> GetGuildChannels(string botToken, string serverId);
-
         Task<DiscordUser?> GetUserInfoById(string bearerToken, string UserId);
-
 
         Task<string?> CheckForBot(string botToken, string serverId);
 
@@ -33,9 +30,7 @@ namespace DiscordStats.DAL.Abstract
 
         Task<string?> FindChannels(string botToken, string serverId);
 
-
         Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId);
-
 
         Task<List<GuildUsers>?> GetCurrentGuildUsers(string botToken, string serverId);
         Task<string?> RemoveUserServer(string botToken, string serverId, string userId);
@@ -44,10 +39,7 @@ namespace DiscordStats.DAL.Abstract
 
         void ServerEntryDbCheck(ServerOwnerViewModel server, string hasBot, string serverOwner);
 
-
         Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences);
-        Task<string?> ChannelEntryAndUpdateDbCheck(Channel[] channel);
-
 
     }
 }

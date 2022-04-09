@@ -1,0 +1,20 @@
+﻿@model DiscordStats.ViewModel.WebhookUsageVM
+
+<div class="row" style="text-align: center">
+    <h1>What do you want to call your webhook</h1>
+</div>
+
+<form asp-action="WebhookForm">
+    <div class="row">
+        <label for="text" asp-for="name" class="control-label">Webhook Name:</label>
+        <input type="text" asp-for="name" class="form-control" required="required" maxlength="32">
+        <span asp-validation-for="name" class="text-danger"></span>
+    </div>
+    <div class="row">
+        <label for="text" asp-for="channelId" class="control-label">Channel Id:</label>
+        @Html.TextBoxFor(m => m.channelId, new { @readonly="readonly" })
+    </div>
+     
+    <button value="Submit"  class="btn btn-primary" style="margin-left: 45%; margin-top: 2%">Create Webhook</button>
+</form>
+

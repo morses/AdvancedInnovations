@@ -33,7 +33,7 @@ namespace DiscordStats_Tests
         private IPresenceRepository _presenceRepository;
         private IChannelRepository _channelRepository;
 
-        private Mock<DbSet<ServerPartial>> _mockPartialServerDbSet;
+        //private Mock<DbSet<ServerPartial>> _mockPartialServerDbSet;
         //private List<ServerPartial> _serverPartial = FakeData.ServersfromPartial;
 
         private Mock<DbSet<T>> GetMockDbSet<T>(IQueryable<T> entities) where T : class
@@ -236,7 +236,7 @@ namespace DiscordStats_Tests
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
             _channelRepository = new ChannelRepository(_mockContext2.Object);
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, _presenceRepository, null);
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
 
             var channelGetAll = _channelRepository.GetAll();
             int initialCount = channelGetAll.Count();
@@ -255,53 +255,53 @@ namespace DiscordStats_Tests
             Assert.AreEqual(count, initialCount);
         }
 
-        [Test]
-        public async Task GetGuildChannelsWithApi_ShouldReturnCountOfChannelsAndInfoOfChannelOne()
-        {
-             var handler = new Mock<HttpMessageHandler>();
+        //[Test]
+        //public async Task GetGuildChannelsWithApi_ShouldReturnCountOfChannelsAndInfoOfChannelOne()
+        //{
+        //    var handler = new Mock<HttpMessageHandler>();
 
-            string jsonFromDiscordAPI = @"[{
-            ""id"": ""1035111022"",
-            ""type"": 4,
-            ""name"": ""Text Channels"",
-            ""position"": 0,
-            ""parent_id"": null,
-            ""guild_id"": ""213514616"",
-            ""permission_overwrites"": [],
-            ""nsfw"": false },
-            {
-            ""id"": ""435342515"",
-            ""type"": 4,
-            ""name"": ""Voice Channels"",
-            ""position"": 0,
-            ""parent_id"": null,
-            ""guild_id"": ""213514616"",
-            ""permission_overwrites"": [],
-            ""nsfw"": false 
-            }
-            ]";
+        //    string jsonFromDiscordAPI = @"[{
+        //    ""id"": ""1035111022"",
+        //    ""type"": 4,
+        //    ""name"": ""Text Channels"",
+        //    ""position"": 0,
+        //    ""parent_id"": null,
+        //    ""guild_id"": ""213514616"",
+        //    ""permission_overwrites"": [],
+        //    ""nsfw"": false },
+        //    {
+        //    ""id"": ""435342515"",
+        //    ""type"": 4,
+        //    ""name"": ""Voice Channels"",
+        //    ""position"": 0,
+        //    ""parent_id"": null,
+        //    ""guild_id"": ""213514616"",
+        //    ""permission_overwrites"": [],
+        //    ""nsfw"": false 
+        //    }
+        //    ]";
 
-            var response = new HttpResponseMessage()
-            {
-                Content = new StringContent(jsonFromDiscordAPI)
-            };
-            handler.SetupAnyRequest()
-                    .ReturnsAsync(response);
+        //    var response = new HttpResponseMessage()
+        //    {
+        //        Content = new StringContent(jsonFromDiscordAPI)
+        //    };
+        //    handler.SetupAnyRequest()
+        //            .ReturnsAsync(response);
 
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), null, null, null);
+        //    DiscordService discord = new DiscordService(handler.CreateClientFactory(), null, null, null);
 
-            // Act
-            List<Channel>? channels = await discord.GetGuildChannels("fakeBotToken", "fakeServerId");
+        //    // Act
+        //    List<Channel>? channels = await discord.GetGuildChannels("fakeBotToken", "fakeServerId");
 
-            // Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(channels!.Count, Is.EqualTo(2));
-                Assert.That(channels[0].Id == "1035111022");
-                Assert.That(channels[0].Name == "Text Channels");
-            }
-            );
-        }
+        //    // Assert
+        //    Assert.Multiple(() =>
+        //    {
+        //        Assert.That(channels!.Count, Is.EqualTo(2));
+        //        Assert.That(channels[0].Id == "1035111022");
+        //        Assert.That(channels[0].Name == "Text Channels");
+        //    }
+        //    );
+        //}
 
         //[Test]
         //public async Task ServerChannels_ShouldReturnListOfChannels()
