@@ -19,14 +19,15 @@ namespace DiscordStats.Controllers
         private readonly IConfiguration _configuration;
         private readonly IServerRepository _serverRepository;
         private readonly IChannelRepository _channelRepository;
-
-        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository, IChannelRepository channelRepository)
+        private readonly IVoiceChannelRepository _voiceChannelRepository;
+        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository, IChannelRepository channelRepository, IVoiceChannelRepository voiceChannelRepository)
         {
             _logger = logger;
             _discord = discord;
             _configuration = config;
             _serverRepository = serverRepository;
             _channelRepository = channelRepository;
+            _voiceChannelRepository = voiceChannelRepository;
         }
 
         [Authorize (AuthenticationSchemes = "Discord")]
@@ -172,7 +173,6 @@ namespace DiscordStats.Controllers
 
           
             return View(vm);
-
         }
         [Authorize(AuthenticationSchemes = "Discord")]
         public void LeaveServer(string ServerId)
@@ -262,7 +262,6 @@ namespace DiscordStats.Controllers
                         duplicate = true;
                     }
                 }
-                if (duplicate == false)
                     {
                         GamesVM newGame = new GamesVM();
                         newGame.ServerId = ServerId;
@@ -284,10 +283,63 @@ namespace DiscordStats.Controllers
         [Authorize(AuthenticationSchemes = "Discord")]
         public async Task<IActionResult> GameDetails(string gameName, string serverId)
         {
-            
-            return View();
-        }
+            var voiceChannels = _voiceChannelRepository.GetAll().Where(v => v.GuildId == serverId).ToList();
+            var distinctTimes = voiceChannels.DistinctBy(p => p.Time.Value.Hour).ToList();
+            var graphData = new List<VoiceChannelGraph>();
+           foreach (var dt in distinctTimes)
+            {
+                VoiceChannelGraph voiceChannelGraph = new VoiceChannelGraph();
+                voiceChannelGraph.hour = dt.Time.Value.Hour;
+                voiceChannelGraph.TotalmemberCount = 0;
+                voiceChannelGraph.divider = 0;
+                graphData.Add(voiceChannelGraph);
+                foreach (var vc in voiceChannels)
+                {
+                    if(vc.Time.Value.Hour == dt.Time.Value.Hour)
+                    {
+                        graphData.Where(g => g.hour == vc.Time.Value.Hour).First().TotalmemberCount += vc.Count;
+                        graphData.Where(g => g.hour == vc.Time.Value.Hour).First().divider++;
+                            
 
+                    }
+                }
+            }
+           foreach(var data in graphData)
+            {
+                data.avgMemberCount = (double)data.TotalmemberCount / data.divider;
+            }
+                return View();
+        }
+        [HttpGet]
+        public IActionResult GetVoiceChannelInfoFromDatabase(string ServerId)
+        {
+            var voiceChannels = _voiceChannelRepository.GetAll().Where(v => v.GuildId == ServerId).ToList();
+            var distinctTimes = voiceChannels.DistinctBy(p => p.Time.Value.Hour).ToList();
+            var graphData = new List<VoiceChannelGraph>();
+            foreach (var dt in distinctTimes)
+            {
+                VoiceChannelGraph voiceChannelGraph = new VoiceChannelGraph();
+                voiceChannelGraph.hour = dt.Time.Value.Hour;
+                voiceChannelGraph.TotalmemberCount = 0;
+                voiceChannelGraph.divider = 0;
+                graphData.Add(voiceChannelGraph);
+                foreach (var vc in voiceChannels)
+                {
+                    if (vc.Time.Value.Hour == dt.Time.Value.Hour)
+                    {
+                        graphData.Where(g => g.hour == vc.Time.Value.Hour).First().TotalmemberCount += vc.Count;
+                        graphData.Where(g => g.hour == vc.Time.Value.Hour).First().divider++;
+
+
+                    }
+                }
+            }
+            foreach (var data in graphData)
+            {
+                data.avgMemberCount = (double)data.TotalmemberCount / data.divider;
+            }
+            return Json(graphData);
+        }
     }
 }
 
