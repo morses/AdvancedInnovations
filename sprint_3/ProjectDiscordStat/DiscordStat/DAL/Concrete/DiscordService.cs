@@ -355,20 +355,20 @@ namespace DiscordStats.DAL.Concrete
             foreach (var presence in presences)
             {
                 Debug.Write(presence.Name);
-
+                presence.CreatedAt = presence.CreatedAt?.ToLocalTime();
 
                 Task.Delay(300).Wait();
                 await Task.Run(() =>
                 {
                     var duplicate = false;
-                    var upDatePresence = false;
+                    var updatePresence = false;
 
 
                     var allPresences = _presenceRepository.GetAll().ToList();
 
                     for (int i = 0; i < allPresences.Count(); i++)
                     {
-                        if (presence.UserId == allPresences[i].UserId && presence.Name == allPresences[i].Name)
+                        if (presence.ServerId == allPresences[i].ServerId && presence.UserId == allPresences[i].UserId && presence.CreatedAt?.Hour == allPresences[i].CreatedAt?.Hour && presence.CreatedAt?.Date == allPresences[i].CreatedAt?.Date)
                         {
                             duplicate = true;
                         }
@@ -406,11 +406,6 @@ namespace DiscordStats.DAL.Concrete
                     {
                         _channelRepository.AddOrUpdate(channel);
                     }
-                    //if (duplicate)
-                    //{
-
-                    //    _channelRepository.AddOrUpdate(duplicateChannel);
-                    //}
                 });
             }
             return "It Worked";
@@ -433,6 +428,39 @@ namespace DiscordStats.DAL.Concrete
             string uri = "https://discord.com/api/guilds/" + serverId;
             string response = await PatchToDiscordEndPoint(botToken, uri, currentUser);
             return response;
+        }
+
+        public async Task<List<Presence>?> GetPresencesForServer(string serverId)
+        {
+            var presences = _presenceRepository.GetPresences(serverId);
+            return presences;
+        }
+
+        public async Task<GamesVM> GetJsonStringFromEndpointGames(string gameName)
+        {
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://discord.com/api/applications/detectable")
+            {
+                Headers =
+                {
+                    { HeaderNames.Accept, "application/json" }
+                }
+            };
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            // Note this is the blocking version.  Would be better to use the Async version
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
+            // This is only a minimal version; make sure to cover all your bases here
+            if (response.IsSuccessStatusCode)
+            {
+                // same here, this is blocking; use ReadAsStreamAsync instead
+                string responseText = await response.Content.ReadAsStringAsync();
+                var converted = JsonConvert.DeserializeObject<List<GamesVM>>(responseText);
+                return converted.Where(x => x.name.ToUpper() == gameName.ToUpper()).FirstOrDefault();
+            }
+            else
+            {
+                // What to do if failure? Should throw specific exceptions that explain what happened
+                throw new HttpRequestException();
+            }
         }
     }
 }

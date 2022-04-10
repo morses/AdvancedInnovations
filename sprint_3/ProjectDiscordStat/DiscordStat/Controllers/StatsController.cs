@@ -62,5 +62,11 @@ namespace DiscordStats.Controllers
         {
             return Json(_messageInfoRepository.GetAll().Where(s => s.ServerId == ServerId));
         }
+
+        [HttpGet]
+        public IActionResult GetPresencesFromDatabase(string ServerId, string GameName)
+        {
+            return Json(_presenceRepository.GetAll().Where(s => s.ServerId == ServerId && s.Name == GameName));
+        }
     }
 }

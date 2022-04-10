@@ -36,5 +36,12 @@ namespace DiscordStats.DAL.Concrete
             }
         }
 
+        public List<Presence> GetPresences(string serverId)
+        {
+
+            List<Presence> presences = _dbSet.Where(p => p.ServerId == serverId).ToList();
+            return presences;
+        }
+
     }
 }

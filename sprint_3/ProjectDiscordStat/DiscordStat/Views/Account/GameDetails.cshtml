@@ -1,0 +1,26 @@
+﻿@model DiscordStats.ViewModel.ServerIdAndGameNameVM
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</head>
+
+<div class="mode">
+Dark mode:	
+    <span class="change">ON</span>
+</div>
+
+
+@if (Model != null)
+{
+    <div id="ServerId" value="@Model.ServerId"></div>
+    <div id="GameName" value="@Model.GameName"></div>
+
+    <canvas id="presencesHourlyAllTimeChart" style="width:100%;max-width:1000px"></canvas>
+
+}
+
+@section scripts {
+    <script type="text/javascript" src="~/js/site.js"></script>
+    <script type="text/javascript" src="~/js/gamestats.js"></script>
+}

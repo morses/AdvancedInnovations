@@ -51,6 +51,9 @@ Dark mode:
                 <P>Verification Level: @Model.Verification_Level</P>
                 <P>Boost Level: @Model.Premium_Tier</P>
                 <p>Description: @Model.Description</p>
+                <div class="row" style="margin-top:2%; max-width:45%">
+                <button type="button" class="btn btn-info" onclick="location.href='@Url.Action("Games", "Account", new { ServerId = @Model.Id })'" >View Games</button>
+                </div>
                 <button type="button" class="btn btn-danger" data-toggle="modal" onclick="OpenModal()" data-target="#exampleModal">Leave Server</button>
                 
                 

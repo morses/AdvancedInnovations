@@ -47,7 +47,7 @@ namespace DiscordStats.DAL.Abstract
 
         Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences);
         Task<string?> ChannelEntryAndUpdateDbCheck(Channel[] channel);
-
-
+        Task<List<Presence>?> GetPresencesForServer(string serverId);
+        Task<GamesVM> GetJsonStringFromEndpointGames(string gameName);
     }
 }

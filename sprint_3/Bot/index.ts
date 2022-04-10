@@ -269,8 +269,8 @@ async function sendServers (){
     })
     setTimeout(() => {
         if (servers.length != 0) {
-            console.log("All Servers: ")
-            console.log(servers)
+            // console.log("All Servers: ")
+            // console.log(servers)
             axios.post('https://localhost:7228/api/postservers', servers)
                 .then((result: any) => {
                     console.log(result);
@@ -354,9 +354,10 @@ async function sendPresence (){
                     "ApplicationId": member.presence?.activities[0].applicationId,
                     "Name": member.presence?.activities[0].name,
                     "Details": details,
-                    "CreatedAt": member.presence?.activities[0].createdAt.toString(),
+                    "CreatedAt": member.presence?.activities[0].createdAt,
                     "LargeImageId": member.presence?.activities[0].assets?.largeImage,
                     "SmallImageId": member.presence?.activities[0].assets?.smallImage,
+                    "Image": member.presence?.activities[0].assets?.largeImageURL(),
                     "ServerId": guild.id,
                     "UserId": member.id
                 };
@@ -450,12 +451,12 @@ function guildIdAndAllUsersId(){
 
 function updataData() {
     sendPresence();
-    sendUsers();
-    sendServers();
-    sendChannels();
+    // sendUsers();
+    // sendServers();
+    // sendChannels();
 }
 
-setInterval(updataData, 10000);
+setInterval(updataData, 3000);
 
 
 client.login(process.env.TOKEN);

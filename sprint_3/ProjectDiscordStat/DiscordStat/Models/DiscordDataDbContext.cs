@@ -38,31 +38,31 @@ namespace DiscordStats.Models
             modelBuilder.Entity<Channel>(entity =>
             {
                 entity.HasKey(e => e.ChannelPk)
-                    .HasName("PK__Channel__38C3B1268629306B");
+                    .HasName("PK__Channel__38C3B12646809D79");
             });
 
             modelBuilder.Entity<DiscordUser>(entity =>
             {
                 entity.HasKey(e => e.DiscordUserPk)
-                    .HasName("PK__DiscordU__1F12BE9519BE2DAB");
+                    .HasName("PK__DiscordU__1F12BE95A32A836E");
             });
 
             modelBuilder.Entity<MessageInfo>(entity =>
             {
                 entity.HasKey(e => e.MessageDataPk)
-                    .HasName("PK__MessageI__2389D5B5685B569E");
+                    .HasName("PK__MessageI__2389D5B54268332F");
             });
 
             modelBuilder.Entity<Presence>(entity =>
             {
                 entity.HasKey(e => e.PresencePk)
-                    .HasName("PK__Presence__4981B3D9566B114C");
+                    .HasName("PK__Presence__4981B3D95F0C054C");
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-                    .HasName("PK__Server__C56B03861486B351");
+                    .HasName("PK__Server__C56B0386DD42BAB3");
             });
 
             modelBuilder.Entity<ServerChannelJoin>(entity =>

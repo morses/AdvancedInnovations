@@ -57,11 +57,12 @@ CREATE TABLE [Presence]
   [applicationID] nvarchar(256) Null,
   [Name]    nvarchar(256)  NULL,
   [Details] nvarchar(256) NULL,
-  [CreatedAt] nvarchar(256) NULL,
+  [CreatedAt] DATETIME NULL,
   [LargeImageId] nvarchar(256) NULL,
   [SmallImageId] nvarchar(256) NULL,
   [ServerId] nvarchar(256) NULL,
-  [UserId] NVARCHAR(256) NULL
+  [UserId] NVARCHAR(256) NULL,
+  [Image] NVARCHAR(256) NULL
 );
 
 CREATE TABLE [ServerPresenceJoin] 

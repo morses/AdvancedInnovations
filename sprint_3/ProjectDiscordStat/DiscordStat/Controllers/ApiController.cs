@@ -27,7 +27,6 @@ namespace DiscordStats.Controllers
 {
     [Route("api/[action]")]
     [ApiController]
-
     public class ApiController : Controller
     {
         private static readonly string[] Summaries = new[]
