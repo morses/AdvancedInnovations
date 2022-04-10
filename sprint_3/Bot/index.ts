@@ -451,7 +451,7 @@ function guildIdAndAllUsersId(){
 function updataData() {
     sendPresence();
     sendUsers();
-    //sendServers();
+    sendServers();
     sendChannels();
 }
 
