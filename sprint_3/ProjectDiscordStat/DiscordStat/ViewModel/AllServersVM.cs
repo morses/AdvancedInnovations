@@ -10,6 +10,7 @@ namespace DiscordStats.ViewModel
         private readonly IServerRepository _serverRepository;
         private readonly IPresenceRepository _presenceRepository;
         List<ServerOwnerViewModel> serverNameCountAndPresenceList = new();
+        string mostUsed = "";
 
         public AllServersVM(IServerRepository serverRepository, IPresenceRepository presenceRepository)
         {
@@ -34,8 +35,14 @@ namespace DiscordStats.ViewModel
                        
                     }
                 }
-
-                var mostUsed = (from i in presensesInServer group i by i.Name into g orderby g.Count() descending select g.Key).First(); 
+                if (!presensesInServer.Count().Equals(0))
+                {
+                    mostUsed = (from i in presensesInServer group i by i.Name into g orderby g.Count() descending select g.Key).First();
+                }
+                else
+                {
+                    mostUsed = "";
+                }
                 Presence presenceFromDb = _presenceRepository.FindPresence(mostUsed);
                 serverNameCountAndPresenceList.Add(new ServerOwnerViewModel { Id = server.Id, Name = server.Name, Approximate_Member_Count = server.ApproximateMemberCount, presence = presenceFromDb });
             }

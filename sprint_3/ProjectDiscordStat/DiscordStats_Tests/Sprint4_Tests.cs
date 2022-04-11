@@ -23,11 +23,12 @@ using Newtonsoft.Json;
 
 namespace DiscordStats_Tests
 {
-    public class AD_166_CS_461Final_Tests
+    public class Sprint4_Tests
     {
         private Mock<DiscordDataDbContext> _mockContext;
         private Mock<DiscordDataDbContext> _mockContext2;
         private Mock<DiscordDataDbContext> _mockContext3;
+        private Mock<DiscordDataDbContext> _mockContextEmpty;
 
         private Mock<DbSet<Server>> _mockServerDbSet;
         private Mock<DbSet<Channel>> _mockChannelDbSet;
@@ -79,6 +80,9 @@ namespace DiscordStats_Tests
                 new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = "Tue Mar 18 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
                 new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = "Tue Mar 19 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
             };
+            var preEmpty = new List<Presence>
+            {
+            };
 
             _mockServerDbSet = GetMockDbSet<Server>(ser.AsQueryable<Server>());
             _mockContext = new Mock<DiscordDataDbContext>();
@@ -113,6 +117,17 @@ namespace DiscordStats_Tests
             _mockContext3.Setup(ctx => ctx.SaveChanges())
                         .Returns(0);
 
+            _mockPresenceDbSet = GetMockDbSet<Presence>(preEmpty.AsQueryable<Presence>());
+            _mockContextEmpty = new Mock<DiscordDataDbContext>();
+            _mockContextEmpty.Setup(ctx => ctx.Presences).Returns(_mockPresenceDbSet.Object);
+            _mockContextEmpty.Setup(ctx => ctx.Set<Presence>()).Returns(_mockPresenceDbSet.Object);
+            _mockContextEmpty.Setup(ctx => ctx.Update(It.IsAny<Presence>()))
+                        .Callback((Presence p) => { preEmpty.Append(p); })
+                        .Returns((Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Presence>)null);
+            // do not rely on the return value from Update since it's just null
+            _mockContextEmpty.Setup(ctx => ctx.SaveChanges())
+                        .Returns(0);
+
         }
 
         [Test]
@@ -122,6 +137,7 @@ namespace DiscordStats_Tests
             var handler = new Mock<HttpMessageHandler>();
             _serverRepository = new ServerRepository(_mockContext.Object);
             _presenceRepository = new PresenceRepository(_mockContext3.Object);
+
 
             HomeController controller = new HomeController(null, _serverRepository, _presenceRepository, null, null);
             controller.ControllerContext = new ControllerContext();
@@ -136,11 +152,26 @@ namespace DiscordStats_Tests
         }
 
         [Test]
-        public void AllServersVM_ShouldReturnServerOwnerViewModelCountOfFive()
+        public void AllServersVM_WithPresenceInServer_ShouldReturnServerOwnerViewModelCountOfFive()
         {
             // Arrange
             _serverRepository = new ServerRepository(_mockContext.Object);
             _presenceRepository = new PresenceRepository(_mockContext3.Object);
+            AllServersVM allServersVM = new(_serverRepository, _presenceRepository);
+
+            // Act
+            IList<ServerOwnerViewModel> listOfServerOwnerViewModel = allServersVM.AllServerNameAndMemCountContainer();
+            int VMCount = listOfServerOwnerViewModel.Count();
+            // Assert
+            Assert.AreEqual(5, VMCount);
+        }
+
+        [Test]
+        public void AllServersVM_WithNoPresenceInServer_ShouldReturnServerOwnerViewModelCountOfFive()
+        {
+            // Arrange
+            _serverRepository = new ServerRepository(_mockContext.Object);
+            _presenceRepository = new PresenceRepository(_mockContextEmpty.Object);
             AllServersVM allServersVM = new(_serverRepository, _presenceRepository);
 
             // Act

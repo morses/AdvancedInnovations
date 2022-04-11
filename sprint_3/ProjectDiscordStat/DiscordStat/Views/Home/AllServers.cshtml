@@ -33,10 +33,18 @@ Dark mode:
                         <td>@s.Approximate_Member_Count</td>
                         <td>@s.Name</td>            
                         <td>
-                            <a class="myDiv">info</a>
-                            <div class="hide">Presence Name: @s.presence.Name <br />Presence Id: @s.presence.Id</div>
-                           @* @s.presence*@
-                        </td>
+                            @if (s.presence != null)
+                            {
+                                <p class="myDiv">info</p>
+                                    <div class="hide">Presence Name: @s.presence.Name <br />Presence Id: @s.presence.Id</div>
+                            }
+                            else
+                            {
+                                <p class="myDiv">info</p>
+                                <div class="hide">Presence Info: None Available</div>
+                            }
+                                
+                            </td>
                         <td><button class="button" name="id" value="@s.Id">Join</button></td>
                     </tr>
                 }
