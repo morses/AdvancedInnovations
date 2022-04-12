@@ -502,6 +502,7 @@ async function sendVoiceChannels (){
 function updataData() {
     sendPresence();
     sendUsers();
+
 }
 function UpdateVoiceChannel() {
     sendVoiceChannels();

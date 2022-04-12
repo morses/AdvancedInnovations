@@ -30,7 +30,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 //for local discordDatadb use
 var ConnectionString2 =
     builder.Configuration.GetConnectionString("DiscordDataConnection");
-builder.Services.AddDbContext<DiscordDataDbContext>(options => options.UseSqlServer(ConnectionString2));
+builder.Services.AddDbContext<DiscordDataDbContext>(options => options.UseSqlServer(ConnectionString2).UseLazyLoadingProxies());
 
 // for azure use
 //var connectionString = builder.Configuration.GetConnectionString("DiscordDataConnection");

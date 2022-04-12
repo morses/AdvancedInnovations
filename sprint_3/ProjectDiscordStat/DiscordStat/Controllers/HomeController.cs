@@ -28,13 +28,15 @@ namespace DiscordStats.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IServerRepository _serverRepository;
+        private readonly IPresenceRepository _presenceRepository;
         private readonly IDiscordService _discord;
         private readonly IConfiguration _config;
 
-        public HomeController(ILogger<HomeController> logger, IServerRepository serverRepository, IDiscordService discord, IConfiguration config)
+        public HomeController(ILogger<HomeController> logger, IServerRepository serverRepository, IPresenceRepository presenceRepository, IDiscordService discord, IConfiguration config)
         {
             _logger = logger;
             _serverRepository = serverRepository;
+            _presenceRepository = presenceRepository;
             _discord = discord;
             _config = config;    
         }
@@ -62,8 +64,9 @@ namespace DiscordStats.Controllers
         [Authorize]
         public async Task<IActionResult> AllServers()
         {
-            AllServersVM allServersNameAndMemCountVM = new (_serverRepository);
-            return View(allServersNameAndMemCountVM);
+            AllServersVM allServersNameMemCountAndPresenceInfoVM = new (_serverRepository, _presenceRepository);
+            IList<ServerOwnerViewModel> listOfServerOwnerViewModel = allServersNameMemCountAndPresenceInfoVM.AllServerNameAndMemCountContainer();
+            return View(listOfServerOwnerViewModel);
         }
 
         [Authorize]
