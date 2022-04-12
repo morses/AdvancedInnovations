@@ -60,9 +60,8 @@ function barGraphHourlyPresenceActivity(data) {
             legend: { display: false },
             title: {
                 display: true,
-                text: "Activity Frequency",
-
-            },
+                text: "Activity Frequency"
+            }
 
 
         }

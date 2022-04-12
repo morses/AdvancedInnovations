@@ -4,22 +4,29 @@
     <meta name="viewport" content="width=device-width" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
-
-<div class="mode">
-Dark mode:	
-    <span class="change">ON</span>
-</div>
+<body
+  class="bg-image"
+  style="
+    background-image: url('https://static.wixstatic.com/media/f64113_599fc108e7bd4be6beb94829ff078aac~mv2.gif');
+  min-height : 100%;
+  min-width : 100%;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  overflow-y: hidden;
+  overflow-x: hidden;
+">
 
 
 @if (Model != null)
 {
     <div id="ServerId" value="@Model.ServerId"></div>
     <div id="GameName" value="@Model.GameName"></div>
+    <center><h1>@Model.GameName</h1></center>
 
-    <canvas id="presencesHourlyAllTimeChart" style="width:100%;max-width:1000px"></canvas>
+    <br><center><canvas id="presencesHourlyAllTimeChart" style="color: white width:100%;max-width:1000px"></canvas></center>
 
 }
-
+</body>
 @section scripts {
     <script type="text/javascript" src="~/js/site.js"></script>
     <script type="text/javascript" src="~/js/gamestats.js"></script>
