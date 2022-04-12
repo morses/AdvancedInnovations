@@ -42,9 +42,9 @@ namespace DiscordStats.Controllers
         private readonly IDiscordService _discord;
         private readonly IServerRepository _serverRepository;
         private readonly IChannelRepository _channelRepository;
+        private readonly IVoiceChannelRepository _voiceChannelRepository;
 
-
-        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord, IServerRepository serverRepository, IChannelRepository channelRepository)
+        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord, IServerRepository serverRepository, IChannelRepository channelRepository, IVoiceChannelRepository voiceChannelRepository)
         {
             _logger = logger;
             _discordUserRepository = discordUserRepo;
@@ -52,6 +52,7 @@ namespace DiscordStats.Controllers
             _discord = discord;
             _serverRepository = serverRepository;
             _channelRepository = channelRepository;
+            _voiceChannelRepository = voiceChannelRepository;
         }
 
 
@@ -84,19 +85,34 @@ namespace DiscordStats.Controllers
             return Json("It worked");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> PostVoiceChannels(VoiceChannel[] voiceChannels)
+        {
+            foreach (var channel in voiceChannels)
+            {
+                channel.Time = DateTime.Now;
+            }
+            var itWorked = await _discord.VoiceChannelEntryAndUpdateDbCheck(voiceChannels);
 
+            return Json("It Worked");
+        }
         [HttpPost]
         public async Task<IActionResult> PostPresence(Presence[] presences)
         {
-            
-            var itWorked = await _discord.PresenceEntryAndUpdateDbCheck(presences);
 
-            return Json(itWorked);
+            foreach (var presence in presences)
+            {
+
+                    var itWorked = await _discord.PresenceEntryAndUpdateDbCheck(presences);
+                    return Json(itWorked);
+                
+            }
+            return Json("fail");
         }
 
         public IActionResult GetPresenceDataFromDb()
         {
-            _logger.LogInformation("GetPresenceDataFromDb");
+            _logger.LogInformation("GetPresenceDataFromDb");            
             List<Presence> presences = _presenceRepository.GetAll().ToList(); // .Where(a => a. Privacy == "public").OrderByDescending(m => m.ApproximateMemberCount).Take(5);
             PresenceChartDataVM presenceChartDataVM = new();
             var presencesNameAndCount = presenceChartDataVM.AllPresenceNameListAndCount(presences);
@@ -159,6 +175,7 @@ namespace DiscordStats.Controllers
 
         //    return Json(itWorked);
         //}
+
 
         [HttpPost]
         public async Task<IActionResult> PostMessageData(MessageData message)

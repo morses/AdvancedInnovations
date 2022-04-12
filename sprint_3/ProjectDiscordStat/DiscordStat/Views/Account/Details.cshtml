@@ -4,6 +4,11 @@
 Dark mode:	
     <span class="change">ON</span>
 </div>
+<head>
+    <meta name="viewport" content="width=device-width" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</head>
+
 
 <div class="row">
     <div class="col-2">
@@ -24,7 +29,7 @@ Dark mode:
         <p>Id: @Model.Id</p>
     </div>
 </div>
-
+<div id="ServerId" value="@Model.Id"></div>
 
 <div class="row">
 
@@ -42,10 +47,16 @@ Dark mode:
                 <P>Verification Level: @Model.Verification_Level</P>
                 <P>Boost Level: @Model.Premium_Tier</P>
                 <p>Description: @Model.Description</p>
+                <div class="row" style="max-width:45%">
                 <button type="button" class="btn btn-danger" data-toggle="modal" onclick="OpenModal()" data-target="#exampleModal">Leave Server</button>
+                </div>
+                <div class="row" style="margin-top:2%; max-width:45%">
+                <button type="button" class="btn btn-info" onclick="location.href='@Url.Action("Games", "Account", new { ServerId = @Model.Id })'" >View Games</button>
+                </div>
             </div>
+
             <div class="col-8">
-                <h3>Users</h3>
+                            <h3>Users</h3>
                 <table id="filterTable" class="display">
                     <thead>
                     <tr>
@@ -81,6 +92,16 @@ Dark mode:
                     }
                     </tbody>
                 </table>
+                
+  
+            </div>
+             <div class="col-12 justify-content-center">
+                <div class="row justify-content-center">
+                    <canvas id="usersVoiceHourlyAllTimeChart" style="width:100%;max-width:1000px"></canvas>
+                </div>
+                <div class="row">
+                    <canvas id="usersHourlyAllTimeChart" style="width:100%;max-width:1000px"></canvas>
+                </div>
             </div>
         }
 
@@ -169,7 +190,7 @@ Dark mode:
                 }
             </div>
 <script>
-
+    
     function OpenModal() {
         $('#myModal').modal('show');
     }
@@ -212,7 +233,9 @@ Dark mode:
             });
         }
     </script>
-    <script type="text/javascript" src="~/js/site.js"></script>
-
+    
+     <script type="text/javascript" src="~/js/site.js"></script>
+    <script type="text/javascript" src="~/js/statistics.js"></script>
+    <script type="text/javascript" src="~/js/VoiceChannelStats.js"></script>
 }
 

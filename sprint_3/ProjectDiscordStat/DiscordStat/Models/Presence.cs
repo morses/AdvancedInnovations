@@ -36,6 +36,8 @@ namespace DiscordStats.Models
         public string? ServerId { get; set; }
         [StringLength(256)]
         public string? UserId { get; set; }
+        [StringLength(256)]
+        public string? Image { get; set; }
 
         [InverseProperty(nameof(ServerPresenceJoin.PresencePkNavigation))]
         public virtual ICollection<ServerPresenceJoin> ServerPresenceJoins { get; set; }
