@@ -13,6 +13,7 @@ namespace DiscordStats.ViewModel
         public string ServerId { get; set; }
         public string icon { get; set; }
         public string id { get; set; }
+        public string smallImageId { get; set; }
 
     }
 }

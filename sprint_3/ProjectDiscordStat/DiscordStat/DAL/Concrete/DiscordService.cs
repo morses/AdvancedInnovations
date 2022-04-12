@@ -358,9 +358,9 @@ namespace DiscordStats.DAL.Concrete
 
                     var allPresences = _presenceRepository.GetAll().ToList();
 
-                    for (int i = 0; i < allPresences.Count(); i++)
+                    foreach (var p in allPresences)
                     {
-                        if (presence.ServerId == allPresences[i].ServerId && presence.UserId == allPresences[i].UserId && presence.CreatedAt?.Hour == allPresences[i].CreatedAt?.Hour && presence.CreatedAt?.Date == allPresences[i].CreatedAt?.Date)
+                        if (presence.ServerId == p.ServerId && presence.Name == p.Name && presence.UserId == p.UserId && presence.CreatedAt?.Hour == p.CreatedAt?.Hour && presence.CreatedAt?.Date == p.CreatedAt?.Date)
                         {
                             duplicate = true;
                         }

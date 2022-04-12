@@ -464,7 +464,6 @@ async function sendVoiceChannels (){
 function updataData() {
     sendPresence();
     sendUsers();
-
 }
 function UpdateVoiceChannel() {
     sendVoiceChannels();
@@ -473,7 +472,6 @@ function UpdateVoiceChannel() {
 }
   
 setInterval(updataData, 12000);
-// setInterval(UpdateVoiceChannel, 1800000);
-setInterval(UpdateVoiceChannel, 6000);
+setInterval(UpdateVoiceChannel, 1800000);
 
 client.login(process.env.TOKEN);

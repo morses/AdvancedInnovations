@@ -39,7 +39,7 @@ namespace DiscordStats_Tests
 
         DateTime now = DateTime.Now;
 
-      
+
         //private Mock<DbSet<ServerPartial>> _mockPartialServerDbSet;
         //private List<ServerPartial> _serverPartial = FakeData.ServersfromPartial;
 
@@ -212,6 +212,7 @@ namespace DiscordStats_Tests
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
             _presenceRepository = new PresenceRepository(_mockContext1.Object);
+
             DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, _presenceRepository, null, null);
 
             var presenceGetAll = _presenceRepository.GetAll();
