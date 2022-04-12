@@ -40,7 +40,6 @@ namespace DiscordStats.DAL.Abstract
         void ServerEntryDbCheck(ServerOwnerViewModel server, string hasBot, string serverOwner);
 
         Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences);
-        Task<string?> ChannelEntryAndUpdateDbCheck(Channel[] channel);
         Task<List<Presence>?> GetPresencesForServer(string serverId);
         Task<GamesVM> GetJsonStringFromEndpointGames(string gameName);
         Task<string?> VoiceChannelEntryAndUpdateDbCheck(VoiceChannel[] voiceChannel);

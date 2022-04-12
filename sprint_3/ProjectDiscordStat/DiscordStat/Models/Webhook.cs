@@ -27,7 +27,7 @@ namespace DiscordStats.Models
         public string? Avatar { get; set; }
         [Column("Channel_id")]
         [StringLength(256)]
-        public string? ChannelId{ get; set; }
+        public string? ChannelId { get; set; }
         [Column("Guild_id")]
         [StringLength(256)]
         public string? GuildId { get; set; }

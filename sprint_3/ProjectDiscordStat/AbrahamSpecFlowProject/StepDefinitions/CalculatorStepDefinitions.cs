@@ -7,7 +7,7 @@ namespace AbrahamSpecFlowProject.StepDefinitions
     {
         // For additional details on SpecFlow step definitions see https://go.specflow.org/doc-stepdef
 
-        private readonly Calculator _calculator = new Calculator();
+        //private readonly Calculator _calculator = new Calculator();
         private int _result;
 
         [Given("the first number is (.*)")]
