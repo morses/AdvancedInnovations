@@ -408,9 +408,9 @@ function guildIdAndAllUsersId(){
 
 function updataData() {
     sendPresence();
-    sendUsers();
-    sendServers();
-    sendChannels();
+    // sendUsers();
+    // sendServers();
+    // sendChannels();
 }
 
 setInterval(updataData, 3000);

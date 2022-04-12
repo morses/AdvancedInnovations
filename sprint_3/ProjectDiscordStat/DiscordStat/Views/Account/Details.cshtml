@@ -44,7 +44,7 @@ Dark mode:
         }
         else
         {
-            <div class="col-2">
+            <div class="col-4">
                 <p>Owner: @Model.Owner</p>
                 <P>Total members: @Model.Approximate_Member_Count</P>
                 <P>Online members: @Model.Approximate_Presence_Count</P>
@@ -53,14 +53,15 @@ Dark mode:
                 <p>Description: @Model.Description</p>
                 <div class="row" style="margin-top:2%; max-width:45%">
                 <button type="button" class="btn btn-info" onclick="location.href='@Url.Action("Games", "Account", new { ServerId = @Model.Id })'" >View Games</button>
-                </div>
                 <button type="button" class="btn btn-danger" data-toggle="modal" onclick="OpenModal()" data-target="#exampleModal">Leave Server</button>
+
+                </div>
                 
                 
             
                 
             </div>
-            <div class="col-10">
+            <div class="col-8">
                 <canvas id="usersHourlyAllTimeChart" style="width:100%;max-width:1000px"></canvas>
 
                 <h3>Users</h3>

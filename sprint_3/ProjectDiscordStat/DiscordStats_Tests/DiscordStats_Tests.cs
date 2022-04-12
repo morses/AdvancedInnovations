@@ -15,6 +15,7 @@ using DiscordStats.ViewModel;
 using DiscordStats.ViewModels;
 using DiscordStats.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace DiscordStats_Tests
 {
@@ -32,6 +33,9 @@ namespace DiscordStats_Tests
         private IServerRepository _serverRepository;
         private IPresenceRepository _presenceRepository;
         private IChannelRepository _channelRepository;
+
+        DateTime now = DateTime.Now;
+
 
         private Mock<DbSet<ServerPartial>> _mockPartialServerDbSet;
         //private List<ServerPartial> _serverPartial = FakeData.ServersfromPartial;
@@ -65,11 +69,11 @@ namespace DiscordStats_Tests
 
             var pre = new List<Presence>
             {
-                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 15 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
-                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 16 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
-                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "COD", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 17 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
-                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 18 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
-                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 19 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
+                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
+                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
+                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "COD", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
+                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
+                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
             };
 
             var cha = new List<Channel>
@@ -151,16 +155,15 @@ namespace DiscordStats_Tests
             var handler = new Mock<HttpMessageHandler>();
             _presenceRepository = new PresenceRepository(_mockContext1.Object);
             DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, _presenceRepository, null);
-
             var presenceGetAll = _presenceRepository.GetAll();
             int initialCount = presenceGetAll.Count();
             var presence = new Presence[]
             {
-                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 15 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
-                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 16 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
-                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "COD", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 17 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
-                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 18 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
-                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 19 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
+                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
+                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
+                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "COD", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
+                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
+                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
             };
 
             // Act
@@ -180,11 +183,11 @@ namespace DiscordStats_Tests
             PresenceChartDataVM presenceChartDataVM = new();
             var presence = new List<Presence>
             {
-                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 15 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
-                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 16 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
-                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 17 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
-                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 18 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
-                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = System.DateTime.Parse("Tue Mar 19 2022 08:23:40 GMT-0700(Pacific Daylight Time)"), LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
+                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
+                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
+                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
+                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
+                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
             };
 
             Dictionary<string, int> orderShouldBe = new Dictionary<string, int>();

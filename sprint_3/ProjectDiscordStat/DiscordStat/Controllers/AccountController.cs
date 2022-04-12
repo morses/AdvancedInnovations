@@ -271,13 +271,31 @@ namespace DiscordStats.Controllers
                     newGame.ServerId = ServerId;
                     newGame.name = presence.Name;
                     newGame.UserCount = 1;
-                    newGame.GameImage = presence.Image;
-
+                    if (presence.Image == null)
+                        newGame.GameImage = "https://e7.pngegg.com/pngimages/672/63/png-clipart-discord-computer-icons-online-chat-cool-discord-icon-logo-smiley.png";
+                    else
+                        newGame.GameImage = presence.Image;
+                    newGame.smallImageId = presence.SmallImageId;
+                    if (newGame.smallImageId != null)
+                        if (newGame.smallImageId.Contains("playstation"))
+                            newGame.GameImage = "https://blog.playstation.com/tachyon/2021/03/Playstation-logo.jpg";
                     if (newGame.GameImage == null)
                     {
                         var game = await _discord.GetJsonStringFromEndpointGames(newGame.name);
-                        newGame.icon = game.icon;
-                        newGame.id = game.id;
+                        if (game == null)
+                        {
+                            newGame.icon = "https://e7.pngegg.com/pngimages/672/63/png-clipart-discord-computer-icons-online-chat-cool-discord-icon-logo-smiley.png";
+                            newGame.id = "1";
+                        }
+                        else
+                        {
+                            if (game.icon == null)
+                                newGame.icon = "https://e7.pngegg.com/pngimages/672/63/png-clipart-discord-computer-icons-online-chat-cool-discord-icon-logo-smiley.png";
+                            else
+                                newGame.icon = game.icon;
+                            newGame.id = game.id;
+                        }
+
                     }
                     games.Add(newGame);
                 }
