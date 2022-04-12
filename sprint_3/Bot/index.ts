@@ -6,7 +6,8 @@ dotenv.config()
 import { replies } from './replies'
 
 
-
+// const url = 'https://discordstats.azurewebsites.net'
+const url = 'https://localhost:7228'
 
 
 // const express = require('express');
@@ -51,28 +52,20 @@ client.on('messageCreate', async(message) => {
 
     if (message.author.bot) return;
 
-    let MessageData = {
+    let MessageInfo = {
         serverId : serverID,
         channelId : channelID,
-        userId : message.author.id
+        userId : message.author.id,
+        createdAt : message.createdAt
     }
-
     setTimeout(() => {
-        axios.post('https://localhost:7228/api/PostMessageData', MessageData)
+        axios.post(url + '/api/PostMessageData', MessageInfo)
             .then((result: any) => {
                 console.log(result);
             })
             .catch((error: any) => {
                 console.log(error);
             });
-
-        // axios.post('https://discordstats.azurewebsites.net/api/PostMessageData', MessageData)
-        // .then((result: any) => {
-        //     console.log(result);
-        // })
-        // .catch((error: any) => {
-        //     console.log(error);
-        // });
     }, 5000);
 
 
@@ -116,7 +109,7 @@ client.on('messageCreate', async(message) => {
 
     else if (command === "getweather") {
 
-        axios.get('https://localhost:7228/api/guilds')
+        axios.get(url + '/api/guilds')
             .then((result: any) => {
                 console.log(result)
                 message.reply(result.data.toString());
@@ -127,7 +120,7 @@ client.on('messageCreate', async(message) => {
     }
 
     else if (command === "senduser") {
-        axios.post('https://localhost:7228/api/guilds')
+        axios.post(url + '/api/guilds')
             .then((result: any) => {
                 console.log(result)
                 message.reply(result.data.toString());
@@ -152,7 +145,8 @@ client.on('messageCreate', async(message) => {
             }
         })
         console.log(users)
-        axios.post('https://localhost:7228/api/postusers', users)
+        axios.post(url + '/api/postusers', users)
+
             .then((result: any) => {
                 console.log(result)
                 message.reply(result.data.toString());
@@ -160,15 +154,6 @@ client.on('messageCreate', async(message) => {
             .catch((error: any) => {
                 console.log(error);
             });
-        //axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
-        //    .then((result: any) => {
-        //        console.log(result)
-        //        message.reply(result.data.toString());
-        //    })
-        //    .catch((error: any) => {
-        //        console.log(error);
-        //    });
-
     }
 
     else if(command === "guilds") {
@@ -219,21 +204,14 @@ async function sendUsers (){
     setTimeout(() => {
         console.log("The users of all servers: ")
         console.log(users)
-        axios.post('https://localhost:7228/api/postusers', users)
+        axios.post(url + '/api/postusers', users)
+
             .then((result: any) => {
                 console.log(result);
             })
             .catch((error: any) => {
                 console.log(error);
             });
-
-        // axios.post('https://discordstats.azurewebsites.net/api/postusers', users)
-        //     .then((result: any) => {
-        //         console.log(result);
-        //     })
-        //     .catch((error: any) => {
-        //         console.log(error);
-        //     });
     }, 5000);
 }
 
@@ -273,22 +251,13 @@ async function sendServers (){
     })
     setTimeout(() => {
         if (servers.length != 0) {
-            console.log("All Servers: ")
-            console.log(servers)
-            axios.post('https://localhost:7228/api/postservers', servers)
+            axios.post(url + '/api/postservers', servers)
                 .then((result: any) => {
                     console.log(result);
                 })
                 .catch((error: any) => {
                     console.log(error);
                 });
-            //axios.post('https://discordstats.azurewebsites.net/api/postservers', servers)
-            //    .then((result: any) => {
-            //        console.log(result);
-            //    })
-            //    .catch((error: any) => {
-            //        console.log(error);
-            //    });
         }
     }, 5000);
 }
@@ -312,7 +281,7 @@ async function sendChannels (){
         if (channels.length != 0) {
             console.log("All Channels: ")
             console.log(channels)
-            axios.post('https://localhost:7228/channel/postchannels', channels)
+            axios.post(url + '/api/postchannels', channels)
 
                 .then((result: any) => {
                     console.log(result);
@@ -360,7 +329,7 @@ async function sendPresence (){
                     "ApplicationId": member.presence?.activities[0].applicationId,
                     "Name": member.presence?.activities[0].name,
                     "Details": details,
-                    "CreatedAt": member.presence?.activities[0].createdAt.toString(),
+                    "CreatedAt": member.presence?.activities[0].createdAt,
                     "LargeImageId": member.presence?.activities[0].assets?.largeImage,
                     "SmallImageId": member.presence?.activities[0].assets?.smallImage,
                     "Image": member.presence?.activities[0].assets?.largeImageURL(),
@@ -378,21 +347,14 @@ async function sendPresence (){
         if (presences.length > 0) {
             console.log("The presence of all users: ")
             console.log(presences)
-            axios.post('https://localhost:7228/api/postpresence', presences)
+            axios.post(url + '/api/postpresence', presences)
+
             .then((result: any) => {
                 console.log(result);
             })
             .catch((error: any) => {
                 console.log(error);
             });
-            //axios.post('https://discordstats.azurewebsites.net/api/postpresence', presences)
-            //.then((result: any) => {
-            //    console.log(result);
-            //})
-            //.catch((error: any) => {
-            //    console.log(error);
-            //});
-
         }
     }, 5000);
 };

@@ -7,7 +7,7 @@ namespace DiscordStats.ViewModel
 {
     public class GamesVM
     {
-       public int UserCount { get; set; }
+        public int UserCount { get; set; }
         public string name { get; set; }
         public string GameImage { get; set; }
         public string ServerId { get; set; }

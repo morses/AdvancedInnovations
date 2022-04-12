@@ -347,20 +347,20 @@ namespace DiscordStats.DAL.Concrete
             foreach (var presence in presences)
             {
                 Debug.Write(presence.Name);
-
+                presence.CreatedAt = presence.CreatedAt?.ToLocalTime();
 
                 Task.Delay(300).Wait();
                 await Task.Run(() =>
                 {
                     var duplicate = false;
-                    var upDatePresence = false;
+                    var updatePresence = false;
 
 
                     var allPresences = _presenceRepository.GetAll().ToList();
 
                     for (int i = 0; i < allPresences.Count(); i++)
                     {
-                        if (presence.ServerId == allPresences[i].ServerId && presence.Name == allPresences[i].Name)
+                        if (presence.ServerId == allPresences[i].ServerId && presence.UserId == allPresences[i].UserId && presence.CreatedAt?.Hour == allPresences[i].CreatedAt?.Hour && presence.CreatedAt?.Date == allPresences[i].CreatedAt?.Date)
                         {
                             duplicate = true;
                         }
