@@ -30,7 +30,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 //for local discordDatadb use
 var ConnectionString2 =
     builder.Configuration.GetConnectionString("DiscordDataConnection");
-builder.Services.AddDbContext<DiscordDataDbContext>(options => options.UseSqlServer(ConnectionString2));
+builder.Services.AddDbContext<DiscordDataDbContext>(options => options.UseSqlServer(ConnectionString2).UseLazyLoadingProxies());
 
 // for azure use
 //var connectionString = builder.Configuration.GetConnectionString("DiscordDataConnection");
@@ -53,10 +53,11 @@ builder.Services.AddScoped<IServerRepository, ServerRepository>();
 builder.Services.AddScoped<ServerOwnerViewModel, ServerOwnerViewModel>();
 builder.Services.AddScoped<IServerUserJoinRepository, ServerUserJoinRepository>();
 builder.Services.AddScoped<IDiscordUserRepository, DiscordUserRepository>();
+builder.Services.AddScoped<IDiscordServicesForChannels, DiscordServicesForChannels>();  
 builder.Services.AddScoped<IPresenceRepository, PresenceRepository>();
 builder.Services.AddScoped<IChannelRepository, ChannelRepository>();
 builder.Services.AddScoped<IMessageInfoRepository, MessageInfoRepository>();
-
+builder.Services.AddScoped<IVoiceChannelRepository, VoiceChannelRepository>();
 
 
 // Add services to the container.

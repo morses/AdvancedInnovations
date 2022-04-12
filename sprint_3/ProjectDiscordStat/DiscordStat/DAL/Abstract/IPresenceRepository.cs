@@ -11,5 +11,9 @@ namespace DiscordStats.DAL.Abstract
 
         void UpdatePresence(string presenceId, string presenceName);
 
+
+        Presence FindPresence(string presenceName);
+
+
     }
 }

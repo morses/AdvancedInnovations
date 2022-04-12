@@ -1,0 +1,54 @@
+﻿@model IEnumerable<DiscordStats.Models.Channel>
+
+
+<div class="mode">
+Dark mode:	
+    <span class="change">ON</span>
+</div>
+
+
+@if(@ViewBag.hasBot == "true")
+{
+<h1 style="text-align:center">Click on acceptable channels for webhook features.</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th><b>Channel Name</b></th>
+        <th><b>Channel Id</b></th>
+        <th><b>Message Count</b></th>
+        <th></th>
+    </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var c in Model.OrderByDescending(c => c.Count))
+        {
+                @if (!c.Type.Equals("GUILD_CATEGORY"))
+                {
+                    <tr>
+                        @if (!c.Type.Equals("GUILD_VOICE") && !c.Name.Equals("Voice Channels"))
+                        {
+                            <td><h3><a href="@Url.Action("ChannelWebhooks", "Channel", new {Id = c.Id})"> @c.Name</a></h3></td>
+                        }
+                        else
+                        {
+                            <td>@c.Name</td>
+                        }
+                        <td>@c.Id</td>
+                        <td>@c.Count</td>
+                    </tr>
+                }
+            }
+    </tbody>
+</table>
+}
+else
+{
+    <h1 style="text-align:center">We are unable to list channels. Please add the bot to see channels.</h1>
+}
+
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+}
