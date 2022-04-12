@@ -1,11 +1,5 @@
 @model DiscordStats.ViewModels.ServerOwnerViewModel
-﻿@using System.Security.Claims
-
-<head>
-    <meta name="viewport" content="width=device-width" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-</head>
-
+@using System.Security.Claims
 <div class="mode">
 Dark mode:	
     <span class="change">ON</span>
@@ -14,10 +8,6 @@ Dark mode:
     <meta name="viewport" content="width=device-width" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
-
-
-<div id="ServerId" value="@Model.Id"></div>
-
 
 <div class="row">
     <div class="col-2">
@@ -35,7 +25,7 @@ Dark mode:
     </div>
     <div class="col-6" style="text-align:left">
         <h1>@Model.Name</h1>
-        @*<p>Id: @Model.Id</p>*@
+        <p>Id: @Model.Id</p>
     </div>
 </div>
 <div id="ServerId" value="@Model.Id"></div>
@@ -56,15 +46,12 @@ Dark mode:
                 <P>Verification Level: @Model.Verification_Level</P>
                 <P>Boost Level: @Model.Premium_Tier</P>
                 <p>Description: @Model.Description</p>
-                <div class="row" style="margin-top:2%; max-width:45%">
-                <button type="button" class="btn btn-info" onclick="location.href='@Url.Action("Games", "Account", new { ServerId = @Model.Id })'" >View Games</button>
                 <div class="row" style="max-width:45%">
                 <button type="button" class="btn btn-danger" data-toggle="modal" onclick="OpenModal()" data-target="#exampleModal">Leave Server</button>
                 </div>
-            </div>
-            <div class="col-8">
-                <canvas id="usersHourlyAllTimeChart" style="width:100%;max-width:1000px"></canvas>
-
+                <div class="row" style="margin-top:2%; max-width:45%">
+                <button type="button" class="btn btn-info" onclick="location.href='@Url.Action("Games", "Account", new { ServerId = @Model.Id })'" >View Games</button>
+                </div>
             </div>
 
             <div class="col-8">
@@ -111,7 +98,7 @@ Dark mode:
                 <div class="row justify-content-center">
                     <canvas id="usersVoiceHourlyAllTimeChart" style="width:100%;max-width:1000px"></canvas>
                 </div>
-                <div class="row">
+                <div class="row justify-content-center">
                     <canvas id="usersHourlyAllTimeChart" style="width:100%;max-width:1000px"></canvas>
                 </div>
             </div>
@@ -244,9 +231,9 @@ Dark mode:
                 }
             });
         }
-    </script> 
+    </script>
+    
      <script type="text/javascript" src="~/js/site.js"></script>
     <script type="text/javascript" src="~/js/statistics.js"></script>
     <script type="text/javascript" src="~/js/VoiceChannelStats.js"></script>
 }
-
