@@ -100,7 +100,7 @@ namespace DiscordStats_Tests
         public void AllServerVMOnlyShowsPublicServers()
         {
             _serverRepository = new ServerRepository(_mockContext.Object);
-            var allServersVm = new AllServersVM(_serverRepository);
+            var allServersVm = new AllServersVM(_serverRepository, null);
             var list = allServersVm.AllServerNameAndMemCountContainer();
             var testServer = new Server() { Id = "928010025958510632", ServerPk = 2, Name = "Advanced Innovations", Owner = "false", Icon = "d8f49d144185733c210456853906b631", HasBot = "true", ApproximateMemberCount = 5, OwnerId = "786safd67sdfg657sf6", VerificationLevel = "2", Description = null, PremiumTier = "NONE", ApproximatePresenceCount = 1, Privacy = "public", OnForum = "no", Message = "this is the message" };
 

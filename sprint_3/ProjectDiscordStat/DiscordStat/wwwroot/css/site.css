@@ -74,3 +74,13 @@ table {
     text-align: left;
     padding: 8px;
 }
+
+/* for hover over in AllServers page */
+.hide {
+    display: none;
+}
+
+.myDiv:hover + .hide {
+    display: block;
+    color: green;
+}

@@ -90,6 +90,38 @@ CREATE TABLE [ServerChannelJoin]
 )
 
 
+CREATE TABLE [Webhook]
+(
+  [WebhookPk] int PRIMARY KEY IDENTITY(1,1),
+  [ID] nvarchar(256) Null,
+  [Type] nvarchar(256) Null,
+  [Name] nvarchar(256) Null,
+  [Avatar]  nvarchar(256) Null,
+  [Channel_id] nvarchar(256) Null,
+  [Guild_id] nvarchar(256) Null,
+  [Application_id] nvarchar(256) Null,
+  [Token] nvarchar(256) Null,
+)
+
+CREATE TABLE [ChannelWebhookJoin]
+(
+  [ID] int PRIMARY KEY IDENTITY(1,1),
+  [ChannelPk] int,
+  [WebhookPk]   int
+)
+
+
+CREATE TABLE [VoiceChannels]
+(
+  [VoiceChannelPk] int PRIMARY KEY IDENTITY(1,1),
+  [ID] nvarchar(256) Null,
+  [Name] nvarchar(256) Null,
+  [Count] int Null,
+  [Guild_id] nvarchar(256) Null,
+  [Time] DateTime Null
+)
+
+
 -- *************** Add foreign key relations ********************
 ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerUserJoinServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE [ServerUserJoin] ADD CONSTRAINT [ServerUserJoinDiscordUserPk]   FOREIGN KEY ([DiscordUserPk])   REFERENCES [DiscordUser]   ([DiscordUserPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -97,3 +129,5 @@ ALTER TABLE [ServerPresenceJoin] ADD CONSTRAINT [ServerPresenceJoinServerPk]    
 ALTER TABLE [ServerPresenceJoin] ADD CONSTRAINT [ServerPresenceJoinPresencePk]   FOREIGN KEY ([PresencePk])   REFERENCES [Presence]   ([PresencePk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE [ServerChannelJoin] ADD CONSTRAINT [ServerChannelJoinServerPk]        FOREIGN KEY ([ServerPk])        REFERENCES [Server]        ([ServerPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE [ServerChannelJoin] ADD CONSTRAINT [ServerChannelJoinChannelPk]   FOREIGN KEY ([ChannelPk])   REFERENCES [Channel]   ([ChannelPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE [ChannelWebhookJoin] ADD CONSTRAINT [ChannelWebhookJoinChannelPk]        FOREIGN KEY ([ChannelPk])        REFERENCES [Channel]        ([ChannelPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE [ChannelWebhookJoin] ADD CONSTRAINT [ChannelWebhookJoinWebhookPk]   FOREIGN KEY ([WebhookPk])   REFERENCES [Webhook]   ([WebhookPk]) ON DELETE NO ACTION ON UPDATE NO ACTION;

@@ -30,7 +30,8 @@ const client = new DiscordJS.Client({
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_PRESENCES
+        Intents.FLAGS.GUILD_PRESENCES,
+        Intents.FLAGS.GUILD_VOICE_STATES
     ]
 })
 
@@ -145,6 +146,7 @@ client.on('messageCreate', async(message) => {
         })
         console.log(users)
         axios.post(url + '/api/postusers', users)
+
             .then((result: any) => {
                 console.log(result)
                 message.reply(result.data.toString());
@@ -203,6 +205,7 @@ async function sendUsers (){
         console.log("The users of all servers: ")
         console.log(users)
         axios.post(url + '/api/postusers', users)
+
             .then((result: any) => {
                 console.log(result);
             })
@@ -248,8 +251,6 @@ async function sendServers (){
     })
     setTimeout(() => {
         if (servers.length != 0) {
-            // console.log("All Servers: ")
-            // console.log(servers)
             axios.post(url + '/api/postservers', servers)
                 .then((result: any) => {
                     console.log(result);
@@ -281,12 +282,21 @@ async function sendChannels (){
             console.log("All Channels: ")
             console.log(channels)
             axios.post(url + '/api/postchannels', channels)
+
                 .then((result: any) => {
                     console.log(result);
                 })
                 .catch((error: any) => {
                     console.log(error);
                 });
+
+            //axios.post('https://discordstats.azurewebsites.net/channel/postchannels', channels)
+            //    .then((result: any) => {
+            //        console.log(result);
+            //    })
+            //    .catch((error: any) => {
+            //        console.log(error);
+            //    });
         }
     }, 5000);
 }
@@ -338,6 +348,7 @@ async function sendPresence (){
             console.log("The presence of all users: ")
             console.log(presences)
             axios.post(url + '/api/postpresence', presences)
+
             .then((result: any) => {
                 console.log(result);
             })
@@ -389,6 +400,50 @@ function guildIdAndAllUsersId(){
         })
     })
 };
+async function sendVoiceChannels (){
+    let channels: any = []
+
+     client.guilds.cache.each(async (guild) => {
+        guild.channels.cache.each(async (channel) => {               
+            
+            if(channel.type == 'GUILD_VOICE' && channel.members.size != 0)
+            {
+            let newChannel = {
+                Id: channel.id, 
+                Name: channel.name, 
+                Count: channel.members.size, 
+                GuildId: guild.id
+            }           
+            channels.push(newChannel);
+            }
+        }) 
+       })
+
+    setTimeout(() => {
+        if (channels.length != 0) {
+            console.log("All Channels: ")
+            console.log(channels)
+        
+            axios.post('https://localhost:7228/api/PostVoiceChannels', channels)
+                .then((result: any) => {
+                    console.log(result);
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+        }
+    }, 100000);
+}
+
+            // axios.post('https://discordstats.azurewebsites.net/api/postchannels', channels)
+            //     .then((result: any) => {
+            //         console.log(result);
+            //     })
+            //     .catch((error: any) => {
+            //         console.log(error);
+            //     });
+
+
 // async function userMessages(guildID, userID){
 //     client.guilds.cache.get(guildID).channels.cache.forEach(ch => {
 //         if (ch.type === 'text'){
@@ -409,11 +464,16 @@ function guildIdAndAllUsersId(){
 function updataData() {
     sendPresence();
     sendUsers();
+
+}
+function UpdateVoiceChannel() {
+    sendVoiceChannels();
     sendServers();
     sendChannels();
 }
-
-setInterval(updataData, 3000);
+  
+setInterval(updataData, 12000);
+setInterval(UpdateVoiceChannel, 1800000);
 
 
 client.login(process.env.TOKEN);
