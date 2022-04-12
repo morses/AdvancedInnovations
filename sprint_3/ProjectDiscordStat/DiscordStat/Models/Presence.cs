@@ -26,8 +26,8 @@ namespace DiscordStats.Models
         public string? Name { get; set; }
         [StringLength(256)]
         public string? Details { get; set; }
-        [StringLength(256)]
-        public string? CreatedAt { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? CreatedAt { get; set; }
         [StringLength(256)]
         public string? LargeImageId { get; set; }
         [StringLength(256)]

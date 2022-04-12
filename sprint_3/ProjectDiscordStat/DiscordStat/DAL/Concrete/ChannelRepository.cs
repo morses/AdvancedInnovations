@@ -11,5 +11,34 @@ namespace DiscordStats.DAL.Concrete
         public ChannelRepository(DiscordDataDbContext ctx) : base(ctx)
         {
         }
+
+        public async Task<bool> UpdateMessageCount(MessageInfo message)
+        {
+            Task.Delay(300).Wait();
+            await Task.Run(() =>
+            {
+                var channelTruth = false;
+                var tempChannel = new Channel();
+                foreach (Channel channel in GetAll().ToList())
+                {
+                    if (channel.Id == message.ChannelId)
+                    {
+                        channelTruth = true;
+                        tempChannel = channel;
+                    }
+                }
+                if (channelTruth)
+                {
+                    if (tempChannel.Count == null)
+                    {
+                        tempChannel.Count = 0;
+                    }
+                    tempChannel.Count += 1;
+                    AddOrUpdate(tempChannel);
+                }
+
+            });
+            return true;
+        }
     }
 }

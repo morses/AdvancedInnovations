@@ -37,7 +37,10 @@ namespace DiscordStats_Tests
         private IChannelRepository _channelRepository;
         private IVoiceChannelRepository _voiceChannelRepository;
 
-        private Mock<DbSet<ServerPartial>> _mockPartialServerDbSet;
+        DateTime now = DateTime.Now;
+
+
+        //private Mock<DbSet<ServerPartial>> _mockPartialServerDbSet;
         //private List<ServerPartial> _serverPartial = FakeData.ServersfromPartial;
 
         private Mock<DbSet<T>> GetMockDbSet<T>(IQueryable<T> entities) where T : class
@@ -75,12 +78,11 @@ namespace DiscordStats_Tests
 
             var pre = new List<Presence>()
             {
-                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = "Tue Mar 15 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
-                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = "Tue Mar 16 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
-                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "COD", Details = null, CreatedAt = "Tue Mar 17 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
-                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = "Tue Mar 18 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
-                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = "Tue Mar 19 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
-                new Presence{Id = "4e3662ca4d7f89ab",  ApplicationId= "643897785271189524", Name = "Red Dead Redemption 2", Details = null, CreatedAt = "Mon Apr 04 2022 21:45:44 GMT-0700 (Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="928010025958510632", UserId="156209528969494528", Image=null},
+                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
+                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
+                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "COD", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
+                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
+                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
             };
 
             var cha = new List<Channel>
@@ -210,17 +212,18 @@ namespace DiscordStats_Tests
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
             _presenceRepository = new PresenceRepository(_mockContext1.Object);
+
             DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, _presenceRepository, null, null);
 
             var presenceGetAll = _presenceRepository.GetAll();
             int initialCount = presenceGetAll.Count();
             var presence = new Presence[]
             {
-                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = "Tue Mar 15 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
-                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = "Tue Mar 16 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
-                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "COD", Details = null, CreatedAt = "Tue Mar 17 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
-                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = "Tue Mar 18 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
-                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = "Tue Mar 19 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
+                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
+                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
+                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "COD", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
+                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
+                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
             };
 
             // Act
@@ -240,11 +243,11 @@ namespace DiscordStats_Tests
             PresenceChartDataVM presenceChartDataVM = new();
             var presence = new List<Presence>
             {
-                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = "Tue Mar 15 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
-                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = "Tue Mar 16 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
-                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = "Tue Mar 17 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
-                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = "Tue Mar 18 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
-                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = "Tue Mar 19 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
+                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125125", UserId="41351461513541"},
+                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125126", UserId="41351461513542"},
+                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125127", UserId="41351461513543"},
+                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
+                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Azure Data Studio", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
             };
 
             Dictionary<string, int> orderShouldBe = new Dictionary<string, int>();
@@ -296,7 +299,9 @@ namespace DiscordStats_Tests
             // Arrange
             var handler = new Mock<HttpMessageHandler>();
             _channelRepository = new ChannelRepository(_mockContext2.Object);
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, _presenceRepository, null,null);
+
+            DiscordServicesForChannels discord = new DiscordServicesForChannels(handler.CreateClientFactory(), _channelRepository);
+
 
             var channelGetAll = _channelRepository.GetAll();
             int initialCount = channelGetAll.Count();
@@ -315,53 +320,87 @@ namespace DiscordStats_Tests
             Assert.AreEqual(count, initialCount);
         }
 
-        [Test]
-        public async Task GetGuildChannelsWithApi_ShouldReturnCountOfChannelsAndInfoOfChannelOne()
-        {
-            var handler = new Mock<HttpMessageHandler>();
 
-            string jsonFromDiscordAPI = @"[{
-            ""id"": ""1035111022"",
-            ""type"": 4,
-            ""name"": ""Text Channels"",
-            ""position"": 0,
-            ""parent_id"": null,
-            ""guild_id"": ""213514616"",
-            ""permission_overwrites"": [],
-            ""nsfw"": false },
-            {
-            ""id"": ""435342515"",
-            ""type"": 4,
-            ""name"": ""Voice Channels"",
-            ""position"": 0,
-            ""parent_id"": null,
-            ""guild_id"": ""213514616"",
-            ""permission_overwrites"": [],
-            ""nsfw"": false 
-            }
-            ]";
+        //[Test]
+        //public async Task GetGuildChannelsWithApi_ShouldReturnCountOfChannelsAndInfoOfChannelOne()
+        //{
+        //    var handler = new Mock<HttpMessageHandler>();
 
-            var response = new HttpResponseMessage()
-            {
-                Content = new StringContent(jsonFromDiscordAPI)
-            };
-            handler.SetupAnyRequest()
-                    .ReturnsAsync(response);
+        //    string jsonFromDiscordAPI = @"[{
+        //    ""id"": ""1035111022"",
+        //    ""type"": 4,
+        //    ""name"": ""Text Channels"",
+        //    ""position"": 0,
+        //    ""parent_id"": null,
+        //    ""guild_id"": ""213514616"",
+        //    ""permission_overwrites"": [],
+        //    ""nsfw"": false },
+        //    {
+        //    ""id"": ""435342515"",
+        //    ""type"": 4,
+        //    ""name"": ""Voice Channels"",
+        //    ""position"": 0,
+        //    ""parent_id"": null,
+        //    ""guild_id"": ""213514616"",
+        //    ""permission_overwrites"": [],
+        //    ""nsfw"": false 
+        //    }
+        //    ]";
 
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), null, null, null,null);
+        //    var response = new HttpResponseMessage()
+        //    {
+        //        Content = new StringContent(jsonFromDiscordAPI)
+        //    };
+        //    handler.SetupAnyRequest()
+        //            .ReturnsAsync(response);
 
-            // Act
-            List<Channel>? channels = await discord.GetGuildChannels("fakeBotToken", "fakeServerId");
+        //    DiscordService discord = new DiscordService(handler.CreateClientFactory(), null, null, null,null);
 
-            // Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(channels!.Count, Is.EqualTo(2));
-                Assert.That(channels[0].Id == "1035111022");
-                Assert.That(channels[0].Name == "Text Channels");
-            }
-            );
-        }
+
+        //    string jsonFromDiscordAPI = @"[{
+        //    ""id"": ""1035111022"",
+        //    ""type"": 4,
+        //    ""name"": ""Text Channels"",
+        //    ""position"": 0,
+        //    ""parent_id"": null,
+        //    ""guild_id"": ""213514616"",
+        //    ""permission_overwrites"": [],
+        //    ""nsfw"": false },
+        //    {
+        //    ""id"": ""435342515"",
+        //    ""type"": 4,
+        //    ""name"": ""Voice Channels"",
+        //    ""position"": 0,
+        //    ""parent_id"": null,
+        //    ""guild_id"": ""213514616"",
+        //    ""permission_overwrites"": [],
+        //    ""nsfw"": false 
+        //    }
+        //    ]";
+
+        //    var response = new HttpResponseMessage()
+        //    {
+        //        Content = new StringContent(jsonFromDiscordAPI)
+        //    };
+        //    handler.SetupAnyRequest()
+        //            .ReturnsAsync(response);
+
+        //    DiscordService discord = new DiscordService(handler.CreateClientFactory(), null, null, null);
+
+        //    // Act
+        //    List<Channel>? channels = await discord.GetGuildChannels("fakeBotToken", "fakeServerId");
+
+        //    // Assert
+        //    Assert.Multiple(() =>
+        //    {
+        //        Assert.That(channels!.Count, Is.EqualTo(2));
+        //        Assert.That(channels[0].Id == "1035111022");
+        //        Assert.That(channels[0].Name == "Text Channels");
+        //    }
+        //    );
+        //}
+
+
         //[Test]
         //public async Task ServerChannels_ShouldReturnListOfChannels()
         //{
@@ -726,7 +765,7 @@ namespace DiscordStats_Tests
             int initialCount = presenceGetAll.Count();
             var presence = new Presence[]
             {
-                new Presence{Id = "38f6fcf02ade715a",  ApplicationId= "409416265891971072", Name = "RuneLite", Details = null, CreatedAt = "Mon Apr 04 2022 19:02:46 GMT-0700 (Pacific Daylight Time)", LargeImageId="409453539270590464", SmallImageId=null, ServerId="836770827591876628", UserId="156209528969494528", Image="https://cdn.discordapp.com/app-assets/409416265891971072/409453539270590464.webp"},
+                new Presence{Id = "38f6fcf02ade715a",  ApplicationId= "409416265891971072", Name = "RuneLite", Details = null, CreatedAt = now, LargeImageId="409453539270590464", SmallImageId=null, ServerId="836770827591876628", UserId="156209528969494528", Image="https://cdn.discordapp.com/app-assets/409416265891971072/409453539270590464.webp"},
             };
 
             // Act
@@ -750,7 +789,7 @@ namespace DiscordStats_Tests
             int initialCount = presenceGetAll.Count();
             var presence = new Presence[]
             {
-                new Presence{Id = "38f6fcf02ade715a",  ApplicationId= "643897785271189524", Name = "Red Dead Redemption 2", Details = null, CreatedAt = "Mon Apr 04 2022 19:02:46 GMT-0700 (Pacific Daylight Time)", LargeImageId="409453539270590464", SmallImageId=null, ServerId="416485574631751690", UserId="156209528969494528", Image="https://cdn.discordapp.com/app-assets/409416265891971072/409453539270590464.webp"},
+                new Presence{Id = "38f6fcf02ade715a",  ApplicationId= "643897785271189524", Name = "Red Dead Redemption 2", Details = null, CreatedAt = now, LargeImageId="409453539270590464", SmallImageId=null, ServerId="416485574631751690", UserId="156209528969494528", Image="https://cdn.discordapp.com/app-assets/409416265891971072/409453539270590464.webp"},
             };
 
             // Act
@@ -774,7 +813,7 @@ namespace DiscordStats_Tests
             int initialCount = presenceGetAll.Count();
             var presence = new Presence[]
             {
-                new Presence{Id = "84c1af280d1fb445",  ApplicationId= "451545729253638144", Name = "Fallout 3", Details = null, CreatedAt = "Mon Apr 04 2022 19:02:46 GMT-0700 (Pacific Daylight Time)", LargeImageId="409453539270590464", SmallImageId=null, ServerId="416485574631751690", UserId="156209528969494528", Image="https://cdn.discordapp.com/app-assets/409416265891971072/409453539270590464.webp"},
+                new Presence{Id = "84c1af280d1fb445",  ApplicationId= "451545729253638144", Name = "Fallout 3", Details = null, CreatedAt = now, LargeImageId="409453539270590464", SmallImageId=null, ServerId="416485574631751690", UserId="156209528969494528", Image="https://cdn.discordapp.com/app-assets/409416265891971072/409453539270590464.webp"},
             };
 
             // Act
@@ -798,7 +837,7 @@ namespace DiscordStats_Tests
             int initialCount = presenceGetAll.Count();
             var presence = new Presence[]
             {
-                new Presence{Id = "4e3662ca4d7f89ab",  ApplicationId= "643897785271189524", Name = "Red Dead Redemption 2", Details = null, CreatedAt = "Mon Apr 04 2022 21:45:44 GMT-0700 (Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="928010025958510632", UserId="156209528969494528", Image=null},
+                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
             };
 
             // Act

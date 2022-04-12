@@ -16,14 +16,17 @@ namespace DiscordStats.Models
         {
         }
 
-        public virtual DbSet<Channel> Channels { get; set; }
-        public virtual DbSet<DiscordUser> DiscordUsers { get; set; }
-        public virtual DbSet<Presence> Presences { get; set; }
-        public virtual DbSet<Server> Servers { get; set; }
-        public virtual DbSet<ServerChannelJoin> ServerChannelJoins { get; set; }
-        public virtual DbSet<ServerPresenceJoin> ServerPresenceJoins { get; set; }
-        public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; }
-        public virtual DbSet<VoiceChannel> VoiceChannels { get; set; }
+        public virtual DbSet<Channel> Channels { get; set; } = null!;
+        public virtual DbSet<ChannelWebhookJoin> ChannelWebhookJoins { get; set; } = null!;
+        public virtual DbSet<DiscordUser> DiscordUsers { get; set; } = null!;
+        public virtual DbSet<MessageInfo> MessageInfos { get; set; } = null!;
+        public virtual DbSet<Presence> Presences { get; set; } = null!;
+        public virtual DbSet<Server> Servers { get; set; } = null!;
+        public virtual DbSet<ServerChannelJoin> ServerChannelJoins { get; set; } = null!;
+        public virtual DbSet<ServerPresenceJoin> ServerPresenceJoins { get; set; } = null!;
+        public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; } = null!;
+        public virtual DbSet<VoiceChannel> VoiceChannels { get; set; } = null!;
+        public virtual DbSet<Webhook> Webhooks { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,25 +41,44 @@ namespace DiscordStats.Models
             modelBuilder.Entity<Channel>(entity =>
             {
                 entity.HasKey(e => e.ChannelPk)
-                    .HasName("PK__Channel__38C3B1260AE916F7");
+                    .HasName("PK__Channel__38C3B1265DDAF2D6");
+            });
+
+            modelBuilder.Entity<ChannelWebhookJoin>(entity =>
+            {
+                entity.HasOne(d => d.ChannelPkNavigation)
+                    .WithMany(p => p.ChannelWebhookJoins)
+                    .HasForeignKey(d => d.ChannelPk)
+                    .HasConstraintName("ChannelWebhookJoinChannelPk");
+
+                entity.HasOne(d => d.WebhookPkNavigation)
+                    .WithMany(p => p.ChannelWebhookJoins)
+                    .HasForeignKey(d => d.WebhookPk)
+                    .HasConstraintName("ChannelWebhookJoinWebhookPk");
             });
 
             modelBuilder.Entity<DiscordUser>(entity =>
             {
                 entity.HasKey(e => e.DiscordUserPk)
-                    .HasName("PK__DiscordU__1F12BE95418C1CAD");
+                    .HasName("PK__DiscordU__1F12BE95452C9C99");
+            });
+
+            modelBuilder.Entity<MessageInfo>(entity =>
+            {
+                entity.HasKey(e => e.MessageDataPk)
+                    .HasName("PK__MessageI__2389D5B5D913E2DF");
             });
 
             modelBuilder.Entity<Presence>(entity =>
             {
                 entity.HasKey(e => e.PresencePk)
-                    .HasName("PK__Presence__4981B3D922A405AC");
+                    .HasName("PK__Presence__4981B3D9DF1D387E");
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
-                    .HasName("PK__Server__C56B0386275191D4");
+                    .HasName("PK__Server__C56B0386DACC6517");
             });
 
             modelBuilder.Entity<ServerChannelJoin>(entity =>
@@ -101,7 +123,13 @@ namespace DiscordStats.Models
             modelBuilder.Entity<VoiceChannel>(entity =>
             {
                 entity.HasKey(e => e.VoiceChannelPk)
-                    .HasName("PK__VoiceCha__004F00F9DAED8DE0");
+                    .HasName("PK__VoiceCha__004F00F911515B03");
+            });
+
+            modelBuilder.Entity<Webhook>(entity =>
+            {
+                entity.HasKey(e => e.WebhookPk)
+                    .HasName("PK__Webhook__238C26FD5154B15F");
             });
 
             OnModelCreatingPartial(modelBuilder);

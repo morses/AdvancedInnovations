@@ -1,10 +1,11 @@
-﻿@model DiscordStats.ViewModel.AllServersVM;
+﻿@model IEnumerable<DiscordStats.ViewModels.ServerOwnerViewModel>;
 @*@using DiscordStats.DAL.Concrete. check this from class example repo*@
 <head>
     <meta name="viewport" content="width=device-width" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-
+<body>
 <div class="mode">
 Dark mode:	
     <span class="change">ON</span>
@@ -20,16 +21,30 @@ Dark mode:
             <tr>
                 <th><b>Member #</b></th>
                 <th><b>Server Name</b></th>
+                <th class="w-25"><b>Most Used Presence<br /> Hover over "info" for presence info</b></th>
                 <th></th>
             </tr>
 
             </thead>
             <tbody>
-                @foreach (var s in Model.AllServerNameAndMemCountContainer())
+                @foreach (var s in Model)
                 {
                     <tr>
                         <td>@s.Approximate_Member_Count</td>
-                        <td>@s.Name</td>
+                        <td>@s.Name</td>            
+                        <td>
+                            @if (s.presence != null)
+                            {
+                                <p class="myDiv">info</p>
+                                    <div class="hide">Presence Name: @s.presence.Name <br />Presence Id: @s.presence.Id</div>
+                            }
+                            else
+                            {
+                                <p class="myDiv">info</p>
+                                <div class="hide">Presence Info: None Available</div>
+                            }
+                                
+                            </td>
                         <td><button class="button" name="id" value="@s.Id">Join</button></td>
                     </tr>
                 }
@@ -38,8 +53,7 @@ Dark mode:
      </form>
 </div>
 
-
-
+</body>
 @section Scripts {
 
      <script type="text/javascript" src="~/js/site.js"></script>

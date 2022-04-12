@@ -1,7 +1,40 @@
-﻿<h1>Server Statistics</h1>
+﻿@model string
+@if (Model != null)
+{
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    </head>
+    <div id="ServerId" value="@Model"></div>
+    <div class="mode">
+    Dark mode:	
+        <span class="change">ON</span>
+    </div>
+    <body>
+    <div class="col">
+        <div class="row">
+            <div class="col" >
+                <div class="chart-container">
+                    <canvas id="usersHourlyAllTimeChart" style="width:100%;max-width:700px"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    </body>
+    </html>
+}
+else
+{
+    <h1 style="text-align:center">We are unable to list server statistics</h1>
+}
 
 
-<div>
-    <h3>Guilds</h3>
-    <div id="guilds"></div>
-</div>
+@section Scripts {
+
+     <script type="text/javascript" src="~/js/site.js"></script>
+     <script type="text/javascript" src="~/js/statistics.js"></script>
+}

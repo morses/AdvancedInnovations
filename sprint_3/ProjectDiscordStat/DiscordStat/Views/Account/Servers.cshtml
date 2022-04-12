@@ -7,7 +7,7 @@ Dark mode:
 </div>
 
 <script src="https://kit.fontawesome.com/5b2bd23d5f.js" crossorigin="anonymous"></script>
-<h1 style="text-align:center">Here is a list of servers that you own(click on name to see channels). Please select which one you would like to add a bot to.</h1>
+<h1 style="text-align:center">Here is a list of servers that you own(click on server name to see channels). Please select which one you would like to add a bot to.</h1>
 
 @*@{int count = 0;}*@
 @foreach (var s in Model)
@@ -26,7 +26,7 @@ Dark mode:
 
         </div>
         <div class ="col-3" style="font-weight:bold">   
-            <h3><a href="@Url.Action("ServerChannels", "Account", new {serverId = s.Id})"> @s.Name</a></h3>
+            <h3><a href="@Url.Action("ServerChannels", "Channel", new {serverId = s.Id})"> @s.Name</a></h3>
 
             @if(s.HasBot == "false")
             {

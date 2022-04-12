@@ -19,14 +19,16 @@ namespace DiscordStats.Controllers
         private readonly IConfiguration _configuration;
         private readonly IServerRepository _serverRepository;
         private readonly IChannelRepository _channelRepository;
+        private readonly IPresenceRepository _presenceRepository;
         private readonly IVoiceChannelRepository _voiceChannelRepository;
-        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository, IChannelRepository channelRepository, IVoiceChannelRepository voiceChannelRepository)
+        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository, IChannelRepository channelRepository, IPresenceRepository presenceRepository, IVoiceChannelRepository voiceChannelRepository)
         {
             _logger = logger;
             _discord = discord;
             _configuration = config;
             _serverRepository = serverRepository;
             _channelRepository = channelRepository;
+            _presenceRepository = presenceRepository;
             _voiceChannelRepository = voiceChannelRepository;
         }
 
@@ -92,35 +94,35 @@ namespace DiscordStats.Controllers
             return View(servers.Where(m => m.Owner == "true").ToList());
         }
 
-        [Authorize(AuthenticationSchemes = "Discord")]
-        public async Task<IActionResult> ServerChannels(string? serverId)
-        {
-            string botToken = _configuration["API:BotToken"];
-            var servers = _serverRepository.GetAll();
-            var selectedServer = servers.Where(m => m.Id == serverId).FirstOrDefault();
+        //[Authorize(AuthenticationSchemes = "Discord")]
+        //public async Task<IActionResult> ServerChannels(string? serverId)
+        //{
+        //    string botToken = _configuration["API:BotToken"];
+        //    var servers = _serverRepository.GetAll();
+        //    var selectedServer = servers.Where(m => m.Id == serverId).FirstOrDefault();
 
-            IList<Channel> channels = new List<Channel>();
-            if (selectedServer != null)
-            {
-                if (selectedServer.HasBot == "true")
-                {
-                    channels = _channelRepository.GetAll().Where(x => x.GuildId == selectedServer.Id).ToList();
+        //    IList<Channel> channels = new List<Channel>();
+        //    if (selectedServer != null)
+        //    {
+        //        if (selectedServer.HasBot == "true")
+        //        {
+        //            channels = _channelRepository.GetAll().Where(x => x.GuildId == selectedServer.Id).ToList();
 
-                    ViewBag.hasBot = "true";
+        //            ViewBag.hasBot = "true";
 
-                }
-                else
-                {
-                    ViewBag.hasBot = "false";
-                }
-            }
-            else
-            {
-                ViewBag.hasBot = "false";
-            }
+        //        }
+        //        else
+        //        {
+        //            ViewBag.hasBot = "false";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        ViewBag.hasBot = "false";
+        //    }
 
-            return View(channels);
-        }
+        //    return View(channels);
+        //}
 
         [HttpPost]
         public IActionResult ChangePrivacy(string privacyString)
@@ -251,7 +253,9 @@ namespace DiscordStats.Controllers
         {
             List<GamesVM> games = new List<GamesVM>();
             var presence_list = _discord.GetPresencesForServer(ServerId).Result;
-            foreach(var presence in presence_list)
+
+            foreach (var presence in presence_list)
+
             {
                 var duplicate = false;
                 foreach (var game in games)
@@ -262,53 +266,54 @@ namespace DiscordStats.Controllers
                         duplicate = true;
                     }
                 }
-                    {
-                        GamesVM newGame = new GamesVM();
-                        newGame.ServerId = ServerId;
-                        newGame.name= presence.Name;
-                        newGame.UserCount = 1;
-                        newGame.GameImage = presence.Image;
+                if (duplicate == false)
+                {
+                    GamesVM newGame = new GamesVM();
+                    newGame.ServerId = ServerId;
+                    newGame.name = presence.Name;
+                    newGame.UserCount = 1;
 
-                    if(newGame.GameImage == null)
+                    if (presence.Image == null)
+                        newGame.GameImage = "https://e7.pngegg.com/pngimages/672/63/png-clipart-discord-computer-icons-online-chat-cool-discord-icon-logo-smiley.png";
+                    else
+                        newGame.GameImage = presence.Image;
+                    newGame.smallImageId = presence.SmallImageId;
+                    if (newGame.smallImageId != null)
+                        if (newGame.smallImageId.Contains("playstation"))
+                            newGame.GameImage = "https://blog.playstation.com/tachyon/2021/03/Playstation-logo.jpg";
+                    if (newGame.GameImage == null)
+
                     {
                         var game = await _discord.GetJsonStringFromEndpointGames(newGame.name);
-                        newGame.icon = game.icon;
-                        newGame.id = game.id;
+                        if (game == null)
+                        {
+                            newGame.icon = "https://e7.pngegg.com/pngimages/672/63/png-clipart-discord-computer-icons-online-chat-cool-discord-icon-logo-smiley.png";
+                            newGame.id = "1";
+                        }
+                        else
+                        {
+                            if (game.icon == null)
+                                newGame.icon = "https://e7.pngegg.com/pngimages/672/63/png-clipart-discord-computer-icons-online-chat-cool-discord-icon-logo-smiley.png";
+                            else
+                                newGame.icon = game.icon;
+                            newGame.id = game.id;
+                        }
+
                     }
-                        games.Add(newGame);
-                    }               
+                    games.Add(newGame);
+                }
             }
             return View(games);
         }
         [Authorize(AuthenticationSchemes = "Discord")]
-        public async Task<IActionResult> GameDetails(string gameName, string serverId)
+        public async Task<IActionResult> GameDetails(string gameName, string ServerId )
         {
-            var voiceChannels = _voiceChannelRepository.GetAll().Where(v => v.GuildId == serverId).ToList();
-            var distinctTimes = voiceChannels.DistinctBy(p => p.Time.Value.Hour).ToList();
-            var graphData = new List<VoiceChannelGraph>();
-           foreach (var dt in distinctTimes)
+            var ps = new ServerIdAndGameNameVM()
             {
-                VoiceChannelGraph voiceChannelGraph = new VoiceChannelGraph();
-                voiceChannelGraph.hour = dt.Time.Value.Hour;
-                voiceChannelGraph.TotalmemberCount = 0;
-                voiceChannelGraph.divider = 0;
-                graphData.Add(voiceChannelGraph);
-                foreach (var vc in voiceChannels)
-                {
-                    if(vc.Time.Value.Hour == dt.Time.Value.Hour)
-                    {
-                        graphData.Where(g => g.hour == vc.Time.Value.Hour).First().TotalmemberCount += vc.Count;
-                        graphData.Where(g => g.hour == vc.Time.Value.Hour).First().divider++;
-                            
-
-                    }
-                }
-            }
-           foreach(var data in graphData)
-            {
-                data.avgMemberCount = (double)data.TotalmemberCount / data.divider;
-            }
-                return View();
+                ServerId = ServerId,
+                GameName = gameName
+            };
+            return View(ps);
         }
         [HttpGet]
         public IActionResult GetVoiceChannelInfoFromDatabase(string ServerId)

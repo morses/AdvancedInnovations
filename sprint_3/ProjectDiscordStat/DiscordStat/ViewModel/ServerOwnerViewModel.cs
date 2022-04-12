@@ -1,4 +1,5 @@
-﻿using DiscordStats.ViewModel;
+﻿using DiscordStats.Models;
+using DiscordStats.ViewModel;
 
 namespace DiscordStats.ViewModels
 {
@@ -28,5 +29,7 @@ namespace DiscordStats.ViewModels
 
         public int? Approximate_Presence_Count { get; set; }
         public List<GuildUsers> users { get; set; }
+
+        public Presence presence { get; set; }
     }
 }

@@ -27,7 +27,6 @@ namespace DiscordStats.Controllers
 {
     [Route("api/[action]")]
     [ApiController]
-
     public class ApiController : Controller
     {
         private static readonly string[] Summaries = new[]
@@ -40,18 +39,22 @@ namespace DiscordStats.Controllers
         private readonly IPresenceRepository _presenceRepository;
         private readonly ILogger<ApiController> _logger;
         private readonly IDiscordService _discord;
+        private readonly IDiscordServicesForChannels _discordServicesForChannels;
         private readonly IServerRepository _serverRepository;
         private readonly IChannelRepository _channelRepository;
+        private readonly IMessageInfoRepository _messageInfoRepository;
         private readonly IVoiceChannelRepository _voiceChannelRepository;
-
-        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord, IServerRepository serverRepository, IChannelRepository channelRepository, IVoiceChannelRepository voiceChannelRepository)
+       
+        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord, IDiscordServicesForChannels discordServicesForChannels, IServerRepository serverRepository, IChannelRepository channelRepository, IVoiceChannelRepository voiceChannelRepository, IMessageInfoRepository messageInfoRepository)
         {
             _logger = logger;
             _discordUserRepository = discordUserRepo;
             _presenceRepository = presenceRepository;
             _discord = discord;
+            _discordServicesForChannels = discordServicesForChannels;
             _serverRepository = serverRepository;
             _channelRepository = channelRepository;
+            _messageInfoRepository = messageInfoRepository;
             _voiceChannelRepository = voiceChannelRepository;
         }
 
@@ -171,40 +174,17 @@ namespace DiscordStats.Controllers
         [HttpPost]
         public async Task<IActionResult> PostChannels(Channel[] channels)
         {
-            var itWorked = await _discord.ChannelEntryAndUpdateDbCheck(channels);
+            var itWorked = await _discordServicesForChannels.ChannelEntryAndUpdateDbCheck(channels);
 
             return Json(itWorked);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> PostMessageData(MessageData message)
+        public async Task<IActionResult> PostMessageData(MessageInfo message)
         {
-                Task.Delay(300).Wait();
-                await Task.Run(() =>
-                {
-                    var channelTruth = false;
-                    var tempChannel = new Channel();
-                    foreach (Channel channel in _channelRepository.GetAll().ToList())
-                    {
-                        if (channel.Id == message.ChannelId)
-                        {
-                            channelTruth = true;
-                            tempChannel = channel;
-                        }
-                    }
-                    if (channelTruth)
-                    {
-                        if (tempChannel.Count == null)
-                        {
-                            tempChannel.Count = 0;
-                        }
-                        tempChannel.Count += 1;
-                        _channelRepository.AddOrUpdate(tempChannel);
-                    }
-
-                });
-
+            _messageInfoRepository.AddOrUpdate(message);
+            await _channelRepository.UpdateMessageCount(message);
             return Json("It worked");
         }
     }
