@@ -4,24 +4,24 @@
     $.ajax({
         type: 'GET',
         url: '../Account/GetVoiceChannelInfoFromDatabase?serverid=' + serverId,
-        success: retrieveMessageInfoForServer,
+        success: retrieveVoiceInfoForServer,
         error: handleError
     });
 
 })
 
-const timezone = -3
+
 
 function handleError(xhr, ajaxOptions, thrownError) {
     console.log('ajax error: ' + xhr.status);
 }
 
-function retrieveMessageInfoForServer(data) {
+function retrieveVoiceInfoForServer(data) {
 
-    barGraphHourlyMessageActivity(data);
+    barGraphHourlyVoiceActivity(data);
 };
 
-function barGraphHourlyMessageActivity(data) {
+function barGraphHourlyVoiceActivity(data) {
     $("#usersVoiceHourlyAllTimeChart").empty();
 
     var count = 0;
