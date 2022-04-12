@@ -14,7 +14,6 @@ namespace DiscordStats.DAL.Abstract
 
         Presence FindPresence(string presenceName);
 
-        List<Presence> GetPresences(string serverId);
 
     }
 }

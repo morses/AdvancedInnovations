@@ -473,7 +473,7 @@ function UpdateVoiceChannel() {
 }
   
 setInterval(updataData, 12000);
-setInterval(UpdateVoiceChannel, 1800000);
-
+// setInterval(UpdateVoiceChannel, 1800000);
+setInterval(UpdateVoiceChannel, 6000);
 
 client.login(process.env.TOKEN);

@@ -39,17 +39,19 @@ namespace DiscordStats.Controllers
         private readonly IPresenceRepository _presenceRepository;
         private readonly ILogger<ApiController> _logger;
         private readonly IDiscordService _discord;
+        private readonly IDiscordServicesForChannels _discordServicesForChannels;
         private readonly IServerRepository _serverRepository;
         private readonly IChannelRepository _channelRepository;
         private readonly IMessageInfoRepository _messageInfoRepository;
         private readonly IVoiceChannelRepository _voiceChannelRepository;
        
-        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord, IServerRepository serverRepository, IChannelRepository channelRepository, IVoiceChannelRepository voiceChannelRepository, IMessageInfoRepository messageInfoRepository)
+        public ApiController(ILogger<ApiController> logger, IDiscordUserRepository discordUserRepo, IPresenceRepository presenceRepository, IDiscordService discord, IDiscordServicesForChannels discordServicesForChannels, IServerRepository serverRepository, IChannelRepository channelRepository, IVoiceChannelRepository voiceChannelRepository, IMessageInfoRepository messageInfoRepository)
         {
             _logger = logger;
             _discordUserRepository = discordUserRepo;
             _presenceRepository = presenceRepository;
             _discord = discord;
+            _discordServicesForChannels = discordServicesForChannels;
             _serverRepository = serverRepository;
             _channelRepository = channelRepository;
             _messageInfoRepository = messageInfoRepository;
@@ -169,13 +171,13 @@ namespace DiscordStats.Controllers
         }
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> PostChannels(Channel[] channels)
-        //{
-        //    var itWorked = await _discord.ChannelEntryAndUpdateDbCheck(channels);
+        [HttpPost]
+        public async Task<IActionResult> PostChannels(Channel[] channels)
+        {
+            var itWorked = await _discordServicesForChannels.ChannelEntryAndUpdateDbCheck(channels);
 
-        //    return Json(itWorked);
-        //}
+            return Json(itWorked);
+        }
 
 
         [HttpPost]

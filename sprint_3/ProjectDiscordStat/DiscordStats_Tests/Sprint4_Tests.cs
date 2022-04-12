@@ -39,6 +39,8 @@ namespace DiscordStats_Tests
         private IPresenceRepository _presenceRepository;
         private IDiscordServicesForChannels _discordServicesForChannels;
 
+        DateTime now = DateTime.Now;
+
         private Mock<DbSet<T>> GetMockDbSet<T>(IQueryable<T> entities) where T : class
         {
             var mockSet = new Mock<DbSet<T>>();
@@ -74,11 +76,11 @@ namespace DiscordStats_Tests
 
             var pre = new List<Presence>
             {
-                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = "Tue Mar 15 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="789317480325316640", UserId="41351461513541"},
-                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = "Tue Mar 16 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="789317480325316640", UserId="41351461513542"},
-                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "COD", Details = null, CreatedAt = "Tue Mar 17 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="789317480325316640", UserId="41351461513543"},
-                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = "Tue Mar 18 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
-                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = "Tue Mar 19 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
+                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="789317480325316640", UserId="41351461513541"},
+                new Presence{Id = "789317480325316641",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="789317480325316640", UserId="41351461513542"},
+                new Presence{Id = "789317480325316642",  ApplicationId= null, Name = "COD", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="789317480325316640", UserId="41351461513543"},
+                new Presence{Id = "789317480325316643",  ApplicationId= null, Name = "Microsoft Edge", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125128", UserId="41351461513544"},
+                new Presence{Id = "789317480325316644",  ApplicationId= null, Name = "Calculator", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="151515125129", UserId="41351461513545"},
             };
             var preEmpty = new List<Presence>
             {
@@ -188,7 +190,7 @@ namespace DiscordStats_Tests
             _presenceRepository = new PresenceRepository(_mockContext3.Object);
             var pre = new List<Presence>
             {
-                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = "Tue Mar 15 2022 08:23:40 GMT-0700(Pacific Daylight Time)", LargeImageId=null, SmallImageId=null, ServerId="789317480325316640", UserId="41351461513541"},
+                new Presence{Id = "789317480325316640",  ApplicationId= null, Name = "Microsoft Visual Studion", Details = null, CreatedAt = now, LargeImageId=null, SmallImageId=null, ServerId="789317480325316640", UserId="41351461513541"},
             };
 
             // Act

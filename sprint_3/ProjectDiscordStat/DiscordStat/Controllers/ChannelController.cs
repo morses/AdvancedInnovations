@@ -31,15 +31,15 @@ namespace DiscordStats.Controllers
             return View();
         }
 
-        [HttpPost]
-        [Route("channel/[action]")]
-        [AllowAnonymous]
-        public async Task<IActionResult> PostChannels(Channel[] channels)
-        {
-            var itWorked = await _discordServicesForChannels.ChannelEntryAndUpdateDbCheck(channels);
+        //[HttpPost]
+        //[Route("channel/[action]")]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> PostChannels(Channel[] channels)
+        //{
+        //    var itWorked = await _discordServicesForChannels.ChannelEntryAndUpdateDbCheck(channels);
 
-            return Json(itWorked);
-        }
+        //    return Json(itWorked);
+        //}
 
         public async Task<IActionResult> ServerChannels(string? serverId)
         {
