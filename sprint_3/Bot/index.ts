@@ -436,16 +436,15 @@ function guildIdAndAllUsersId(){
 async function sendVoiceChannels (){
     let channels: any = []
 
-    client.guilds.cache.each(async (guild) => {
-            guild.voiceStates.cache.each(async (voiceChannel) => {
-                
+     client.guilds.cache.each(async (guild) => {
+        guild.channels.cache.each(async (channel) => {               
             
-            if(voiceChannel.channel?.type == 'GUILD_VOICE' && voiceChannel.channel.members.size != 0)
+            if(channel.type == 'GUILD_VOICE' && channel.members.size != 0)
             {
             let newChannel = {
-                Id: voiceChannel.channel.id, 
-                Name: voiceChannel.channel.name, 
-                Count: voiceChannel.channel.members.size, 
+                Id: channel.id, 
+                Name: channel.name, 
+                Count: channel.members.size, 
                 GuildId: guild.id
             }           
             channels.push(newChannel);
@@ -496,14 +495,16 @@ async function sendVoiceChannels (){
 // }
 
 function updataData() {
-    sendVoiceChannels();
     //  sendPresence();
     //  sendUsers();
-    // sendServers();
-    // /  sendChannels();
 }
-
+function UpdateVoiceChannel() {
+    sendVoiceChannels();
+    sendServers();
+    sendChannels();
+}
 setInterval(updataData, 12000);
+setInterval(UpdateVoiceChannel, 1800000);
 
 
 client.login(process.env.TOKEN);
