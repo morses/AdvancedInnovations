@@ -65,7 +65,7 @@ namespace DiscordStats_Tests
             handler.SetupAnyRequest()
                         .ReturnsResponse(HttpStatusCode.NotFound);
 
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, null);
+            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, null,null);
             Task<string?> Act() => discord.RemoveUserServer("FakeBot", "11111", "thisUser");
             Assert.That(Act, Throws.TypeOf<HttpRequestException>());
         }
@@ -78,7 +78,7 @@ namespace DiscordStats_Tests
             handler.SetupAnyRequest()
                         .ReturnsResponse(HttpStatusCode.OK);
 
-            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, null);
+            DiscordService discord = new DiscordService(handler.CreateClientFactory(), _serverRepository, null, null,null);
             var result = discord.CheckForBot("FakeBotToken", "FakeServerId").Result;
             Assert.AreEqual(result, "true");
         }

@@ -41,5 +41,11 @@ namespace DiscordStats.DAL.Abstract
 
         Task<string?> PresenceEntryAndUpdateDbCheck(Presence[] presences);
 
+       
+        Task<string?> VoiceChannelEntryAndUpdateDbCheck(VoiceChannel[] voiceChannel);
+
+        Task<List<Presence>?> GetPresencesForServer(string serverId);
+        Task<GamesVM> GetJsonStringFromEndpointGames(string gameName);
+
     }
 }

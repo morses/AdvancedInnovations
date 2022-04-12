@@ -19,14 +19,15 @@ namespace DiscordStats.Controllers
         private readonly IConfiguration _configuration;
         private readonly IServerRepository _serverRepository;
         private readonly IChannelRepository _channelRepository;
-
-        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository, IChannelRepository channelRepository)
+        private readonly IVoiceChannelRepository _voiceChannelRepository;
+        public AccountController(ILogger<HomeController> logger, IDiscordService discord, IConfiguration config, IServerRepository serverRepository, IChannelRepository channelRepository, IVoiceChannelRepository voiceChannelRepository)
         {
             _logger = logger;
             _discord = discord;
             _configuration = config;
             _serverRepository = serverRepository;
             _channelRepository = channelRepository;
+            _voiceChannelRepository = voiceChannelRepository;
         }
 
         [Authorize (AuthenticationSchemes = "Discord")]
@@ -172,7 +173,6 @@ namespace DiscordStats.Controllers
 
           
             return View(vm);
-
         }
         [Authorize(AuthenticationSchemes = "Discord")]
         public void LeaveServer(string ServerId)
@@ -199,6 +199,7 @@ namespace DiscordStats.Controllers
 
         public async Task<IActionResult> ServerForm()
         {
+
             return View();
         }
 
@@ -244,6 +245,100 @@ namespace DiscordStats.Controllers
             codeValue = codeValue.Remove(0, 2);
             codeValue = codeValue.Remove(codeValue.Length - 1, 1);
             return codeValue;
+        }
+        [Authorize(AuthenticationSchemes = "Discord")]
+        public async Task<IActionResult> Games(string ServerId)
+        {
+            List<GamesVM> games = new List<GamesVM>();
+            var presence_list = _discord.GetPresencesForServer(ServerId).Result;
+            foreach(var presence in presence_list)
+            {
+                var duplicate = false;
+                foreach (var game in games)
+                {
+                    if (game.name == presence.Name)
+                    {
+                        game.UserCount++;
+                        duplicate = true;
+                    }
+                }
+                    {
+                        GamesVM newGame = new GamesVM();
+                        newGame.ServerId = ServerId;
+                        newGame.name= presence.Name;
+                        newGame.UserCount = 1;
+                        newGame.GameImage = presence.Image;
+
+                    if(newGame.GameImage == null)
+                    {
+                        var game = await _discord.GetJsonStringFromEndpointGames(newGame.name);
+                        newGame.icon = game.icon;
+                        newGame.id = game.id;
+                    }
+                        games.Add(newGame);
+                    }               
+            }
+            return View(games);
+        }
+        [Authorize(AuthenticationSchemes = "Discord")]
+        public async Task<IActionResult> GameDetails(string gameName, string serverId)
+        {
+            var voiceChannels = _voiceChannelRepository.GetAll().Where(v => v.GuildId == serverId).ToList();
+            var distinctTimes = voiceChannels.DistinctBy(p => p.Time.Value.Hour).ToList();
+            var graphData = new List<VoiceChannelGraph>();
+           foreach (var dt in distinctTimes)
+            {
+                VoiceChannelGraph voiceChannelGraph = new VoiceChannelGraph();
+                voiceChannelGraph.hour = dt.Time.Value.Hour;
+                voiceChannelGraph.TotalmemberCount = 0;
+                voiceChannelGraph.divider = 0;
+                graphData.Add(voiceChannelGraph);
+                foreach (var vc in voiceChannels)
+                {
+                    if(vc.Time.Value.Hour == dt.Time.Value.Hour)
+                    {
+                        graphData.Where(g => g.hour == vc.Time.Value.Hour).First().TotalmemberCount += vc.Count;
+                        graphData.Where(g => g.hour == vc.Time.Value.Hour).First().divider++;
+                            
+
+                    }
+                }
+            }
+           foreach(var data in graphData)
+            {
+                data.avgMemberCount = (double)data.TotalmemberCount / data.divider;
+            }
+                return View();
+        }
+        [HttpGet]
+        public IActionResult GetVoiceChannelInfoFromDatabase(string ServerId)
+        {
+            var voiceChannels = _voiceChannelRepository.GetAll().Where(v => v.GuildId == ServerId).ToList();
+            var distinctTimes = voiceChannels.DistinctBy(p => p.Time.Value.Hour).ToList();
+            var graphData = new List<VoiceChannelGraph>();
+            foreach (var dt in distinctTimes)
+            {
+                VoiceChannelGraph voiceChannelGraph = new VoiceChannelGraph();
+                voiceChannelGraph.hour = dt.Time.Value.Hour;
+                voiceChannelGraph.TotalmemberCount = 0;
+                voiceChannelGraph.divider = 0;
+                graphData.Add(voiceChannelGraph);
+                foreach (var vc in voiceChannels)
+                {
+                    if (vc.Time.Value.Hour == dt.Time.Value.Hour)
+                    {
+                        graphData.Where(g => g.hour == vc.Time.Value.Hour).First().TotalmemberCount += vc.Count;
+                        graphData.Where(g => g.hour == vc.Time.Value.Hour).First().divider++;
+
+
+                    }
+                }
+            }
+            foreach (var data in graphData)
+            {
+                data.avgMemberCount = (double)data.TotalmemberCount / data.divider;
+            }
+            return Json(graphData);
         }
     }
 }

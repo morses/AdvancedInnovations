@@ -25,15 +25,19 @@ namespace DiscordStats.DAL.Concrete
         private readonly IServerRepository _serverRepository;
         private readonly IPresenceRepository _presenceRepository;
         private readonly IChannelRepository _channelRepository;
+        private readonly IVoiceChannelRepository _voiceChannelRepository;
+
 
         private DiscordDataDbContext _db = new DiscordDataDbContext();
 
-        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository, IPresenceRepository presenceRepository, IChannelRepository channelRepository)
+        public DiscordService(IHttpClientFactory httpClientFactory, IServerRepository serverRepository, IPresenceRepository presenceRepository, IChannelRepository channelRepository, IVoiceChannelRepository voiceChannelRepository)
         {
             _serverRepository = serverRepository;
             _httpClientFactory = httpClientFactory;
             _presenceRepository = presenceRepository;
-            _channelRepository = channelRepository;
+            _channelRepository = channelRepository; 
+            _voiceChannelRepository = voiceChannelRepository;
+
         }
 
 
@@ -356,7 +360,7 @@ namespace DiscordStats.DAL.Concrete
 
                     for (int i = 0; i < allPresences.Count(); i++)
                     {
-                        if (presence.UserId == allPresences[i].UserId && presence.Name == allPresences[i].Name)
+                        if (presence.ServerId == allPresences[i].ServerId && presence.Name == allPresences[i].Name)
                         {
                             duplicate = true;
                         }
@@ -369,6 +373,42 @@ namespace DiscordStats.DAL.Concrete
             }
             return "It Worked";
         }
+
+
+        public async Task<string?> VoiceChannelEntryAndUpdateDbCheck(VoiceChannel[] voiceChannels)
+        {
+            var allChannels =  _voiceChannelRepository.GetAll().ToList();
+            
+            foreach (var channel in voiceChannels)
+            {
+                var duplicate = false;
+
+                Task.Delay(300).Wait();
+                await Task.Run(() =>
+                {
+                    var similarchannels = allChannels.Where(c => c.Id == channel.Id).ToList();
+
+                    foreach (var originalChannel in similarchannels)
+                    {
+                            if (channel.Count > originalChannel.Count && channel.Time.Value.Day == originalChannel.Time.Value.Day && channel.Time.Value.Hour == originalChannel.Time.Value.Hour)
+                            {
+                                originalChannel.Count = channel.Count;
+                                duplicate = true;
+                                _voiceChannelRepository.AddOrUpdate(originalChannel);
+                            }
+                            if(channel.Time.Value.Day == originalChannel.Time.Value.Day && channel.Time.Value.Hour == originalChannel.Time.Value.Hour && channel.Count == originalChannel.Count)
+                            {
+                                duplicate = true;
+                            }                    
+                    }
+                    if (!duplicate)
+                        _voiceChannelRepository.AddOrUpdate(channel);
+                });
+            }
+            
+            return "It Worked";
+        }
+        
 
         public async Task<string?> RemoveUserServer(string botToken, string serverId, string UserId)
         {
@@ -387,6 +427,37 @@ namespace DiscordStats.DAL.Concrete
             string uri = "https://discord.com/api/guilds/" + serverId;
             string response = await PatchToDiscordEndPoint(botToken, uri, currentUser);
             return response;
+        }
+        public async Task<List<Presence>?> GetPresencesForServer(string serverId)
+        {
+            var presences = _presenceRepository.GetPresences(serverId);
+            return presences;
+        }
+        public async Task<GamesVM> GetJsonStringFromEndpointGames(string gameName)
+        {
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://discord.com/api/applications/detectable")
+            {
+                Headers =
+                {
+                    { HeaderNames.Accept, "application/json" }
+                }
+            };
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            // Note this is the blocking version.  Would be better to use the Async version
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
+            // This is only a minimal version; make sure to cover all your bases here
+            if (response.IsSuccessStatusCode)
+            {
+                // same here, this is blocking; use ReadAsStreamAsync instead
+                string responseText = await response.Content.ReadAsStringAsync();
+                var converted = JsonConvert.DeserializeObject<List<GamesVM>>(responseText);
+                return converted.Where(x => x.name.ToUpper() == gameName.ToUpper()).FirstOrDefault();
+            }
+            else
+            {
+                // What to do if failure? Should throw specific exceptions that explain what happened
+                throw new HttpRequestException();
+            }
         }
     }
 }

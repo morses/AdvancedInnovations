@@ -16,6 +16,7 @@ namespace DiscordStats.Models
         {
         }
 
+
         public virtual DbSet<Channel> Channels { get; set; } = null!;
         public virtual DbSet<ChannelWebhookJoin> ChannelWebhookJoins { get; set; } = null!;
         public virtual DbSet<DiscordUser> DiscordUsers { get; set; } = null!;
@@ -25,6 +26,8 @@ namespace DiscordStats.Models
         public virtual DbSet<ServerPresenceJoin> ServerPresenceJoins { get; set; } = null!;
         public virtual DbSet<ServerUserJoin> ServerUserJoins { get; set; } = null!;
         public virtual DbSet<Webhook> Webhooks { get; set; } = null!;
+        public virtual DbSet<VoiceChannel> VoiceChannels { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,6 +42,7 @@ namespace DiscordStats.Models
             modelBuilder.Entity<Channel>(entity =>
             {
                 entity.HasKey(e => e.ChannelPk)
+
                     .HasName("PK__Channel__38C3B1266898FDA3");
             });
 
@@ -53,24 +57,31 @@ namespace DiscordStats.Models
                     .WithMany(p => p.ChannelWebhookJoins)
                     .HasForeignKey(d => d.WebhookPk)
                     .HasConstraintName("ChannelWebhookJoinWebhookPk");
+
             });
 
             modelBuilder.Entity<DiscordUser>(entity =>
             {
                 entity.HasKey(e => e.DiscordUserPk)
+
                     .HasName("PK__DiscordU__1F12BE95F001F9B0");
+
             });
 
             modelBuilder.Entity<Presence>(entity =>
             {
                 entity.HasKey(e => e.PresencePk)
+
                     .HasName("PK__Presence__4981B3D9F65EB1A6");
+
             });
 
             modelBuilder.Entity<Server>(entity =>
             {
                 entity.HasKey(e => e.ServerPk)
+
                     .HasName("PK__Server__C56B038677B1830F");
+
             });
 
             modelBuilder.Entity<ServerChannelJoin>(entity =>
@@ -112,10 +123,17 @@ namespace DiscordStats.Models
                     .HasConstraintName("ServerUserJoinServerPk");
             });
 
+
             modelBuilder.Entity<Webhook>(entity =>
             {
                 entity.HasKey(e => e.WebhookPk)
                     .HasName("PK__Webhook__238C26FDF7EEA0BE");
+
+            modelBuilder.Entity<VoiceChannel>(entity =>
+            {
+                entity.HasKey(e => e.VoiceChannelPk)
+                    .HasName("PK__VoiceCha__004F00F9DAED8DE0");
+
             });
 
             OnModelCreatingPartial(modelBuilder);
