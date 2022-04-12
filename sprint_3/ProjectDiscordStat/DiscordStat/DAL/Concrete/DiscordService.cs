@@ -37,6 +37,7 @@ namespace DiscordStats.DAL.Concrete
             _presenceRepository = presenceRepository;
             _channelRepository = channelRepository; 
             _voiceChannelRepository = voiceChannelRepository;
+
         }
 
 
@@ -264,18 +265,6 @@ namespace DiscordStats.DAL.Concrete
             return userInfo;
         }
 
-        public async Task<List<Channel>?> GetGuildChannels(string botToken, string serverId)
-        {
-            string uri = "https://discord.com/api/guilds/" + serverId + "/channels";
-            // Remember to handle errors here
-            string response = await GetJsonStringFromEndpointWithUserParam(botToken, uri);
-            // And here
-            List<Channel>? channel = JsonConvert.DeserializeObject<List<Channel>>(response);
-            return channel;
-        }
-
-
-
         public async Task<ServerOwnerViewModel?> GetFullGuild(string botToken, string serverId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId + "?with_counts=true";
@@ -385,38 +374,7 @@ namespace DiscordStats.DAL.Concrete
             return "It Worked";
         }
 
-        public async Task<string?> ChannelEntryAndUpdateDbCheck(Channel[] channels)
-        {
-            foreach (var channel in channels)
-            {
-                var duplicate = false;
 
-                Task.Delay(300).Wait();
-                await Task.Run(() =>
-                {
-                    var allChannels = _channelRepository.GetAll().ToList();
-                    var duplicateChannel = new Channel();
-                    for (int i = 0; i < allChannels.Count(); i++)
-                    {
-                        if (channel.Id == allChannels[i].Id)
-                        {
-                            duplicate = true;
-                            duplicateChannel = allChannels[i];
-                        }
-                    }
-                    if (!duplicate)
-                    {
-                        _channelRepository.AddOrUpdate(channel);
-                    }
-                    if (duplicate)
-                    {
-
-                        _channelRepository.AddOrUpdate(duplicateChannel);
-                    }
-                });
-            }
-            return "It Worked";
-        }
         public async Task<string?> VoiceChannelEntryAndUpdateDbCheck(VoiceChannel[] voiceChannels)
         {
             var allChannels =  _voiceChannelRepository.GetAll().ToList();
@@ -451,6 +409,7 @@ namespace DiscordStats.DAL.Concrete
             return "It Worked";
         }
         
+
         public async Task<string?> RemoveUserServer(string botToken, string serverId, string UserId)
         {
             string uri = "https://discord.com/api/guilds/" + serverId +"/members/" + UserId;
