@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<DiscordStats.Models.Server>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,12 +67,11 @@
           @if (Model != null)
             {
                 <form id="form1" runaat="server">
-                    <table id="filterTable" class="display" >
-                        <thead>
+                    <table class="table" id="serverTable">
+                        <thead class="thead-dark">
                             <tr>
                                 <th><b>Server Owner</b></th>
-                                <th><b>Server Name</b></th>
-                                <th><b>Server Id</b></th>
+                                <th><b>Server Name</b></th>                             
                                 <th></th>
                             </tr>
                         </thead>
@@ -90,7 +90,6 @@
                                               }
                                         </td>
                                             <td style="padding-top: 1%">@item.Name</td>
-                                            <td style="padding-top: 1%">@item.Id</td>
                                             <td style="padding-top: 1%">
                                             <a href="@Url.Action("Details", "Account", new {name = item.Name})" class="btn btn-primary"/>
                                             <i class="fa fa-info" ></i>
@@ -139,9 +138,9 @@
     </div>
 
 
-
+    
     </body>
-
+    </html>
 
 
 <!-- Bootstrap core JavaScript -->
