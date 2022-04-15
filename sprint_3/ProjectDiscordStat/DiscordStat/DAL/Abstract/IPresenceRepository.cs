@@ -7,7 +7,13 @@ namespace DiscordStats.DAL.Abstract
     {
         //IEnumerable<Presence> GetPresences();
 
+        List<Presence> GetPresences(string serverId);
+
         void UpdatePresence(string presenceId, string presenceName);
+
+
+        Presence FindPresence(string presenceName);
+
 
     }
 }

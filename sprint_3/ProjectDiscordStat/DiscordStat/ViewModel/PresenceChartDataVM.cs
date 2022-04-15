@@ -15,6 +15,8 @@ namespace DiscordStats.ViewModel
             .GroupBy(x => x.Name)
             .ToDictionary(g => g.Key, g => g.Count());
 
+            //var sortedKeyValueCounts = from entry in keyValueCounts orderby entry.Value descending select entry;
+
             return keyValueCounts;
         }
     }

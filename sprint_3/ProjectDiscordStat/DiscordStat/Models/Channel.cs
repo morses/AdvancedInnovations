@@ -11,6 +11,7 @@ namespace DiscordStats.Models
     {
         public Channel()
         {
+            ChannelWebhookJoins = new HashSet<ChannelWebhookJoin>();
             ServerChannelJoins = new HashSet<ServerChannelJoin>();
         }
 
@@ -28,6 +29,8 @@ namespace DiscordStats.Models
         [StringLength(256)]
         public string? GuildId { get; set; }
 
+        [InverseProperty(nameof(ChannelWebhookJoin.ChannelPkNavigation))]
+        public virtual ICollection<ChannelWebhookJoin> ChannelWebhookJoins { get; set; }
         [InverseProperty(nameof(ServerChannelJoin.ChannelPkNavigation))]
         public virtual ICollection<ServerChannelJoin> ServerChannelJoins { get; set; }
     }

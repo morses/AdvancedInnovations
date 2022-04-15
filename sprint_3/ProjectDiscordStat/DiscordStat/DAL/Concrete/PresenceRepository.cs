@@ -36,5 +36,25 @@ namespace DiscordStats.DAL.Concrete
             }
         }
 
+        public Presence FindPresence(string presenceName)
+        {
+            Presence presence = null;
+            foreach(var i in _dbSet)
+            {
+                if(i.Name == presenceName)
+                {
+                    presence = i;
+                }
+            }
+            return presence;
+        }
+
+
+        public List<Presence> GetPresences(string serverId)
+        {
+            List<Presence> presences = _dbSet.Where(p => p.ServerId == serverId).ToList();
+            return presences;
+        }
+
     }
 }
