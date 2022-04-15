@@ -57,10 +57,12 @@ function barGraphTopUsersPerServer(data) {
         }
         count += 1;
     };
-    var barColors = ["red", "green", "blue", "orange", "brown"];
+
+    var barColors = ["lightblue", "rgb(243, 128, 128)", "rgb(139, 236, 97)", "rgb(255, 214, 70)", "rgb(144, 12, 63)"];
 
     new Chart("barChart", {
         type: "bar",
+        label: 'Scatter Dataset',
         data: {
             labels: xValues,
             datasets: [{
@@ -68,40 +70,48 @@ function barGraphTopUsersPerServer(data) {
                 data: yValues,
             }]
         },
+
         options: {
-            legend: { display: false },
-            title: {
-                display: true,
-                text: "Top 5: Users per Servers",
-            }
-            //scales: {
-            //    yAxes: [{
-            //        ticks: {
-            //            beginAtZero: true
-            //        }
-            //    }]
-            //xValues: {
-            //    title: {
-            //        text: 'Servers',
-            //        font: {
-            //            family: 'Courier New, monospace',
-            //            size: 18,
-            //            color: 'white'
-            //        }
-            //    },
-            //},
-            //yValues: {
-            //    title: {
-            //        text: 'Users',
-            //        font: {
-            //            family: 'Courier New, monospace',
-            //            size: 18,
-            //            color: 'white'
-            //        }
-            //    }
-            //}
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: "Users per Servers",
+                    padding: 10,
+                    color: 'black',
+                    font: {
+                        size: 25
+                    }
+                },
+                
+            },
+            scales: {
+                y: {
+
+                    ticks: {
+                        beginAtZero: false,
+                        precision: 0,
+                        color: 'black',
+                        font: {
+                        size: 20
+                    }
+                    }
+                }
+            },
 
         }
+
+
+
+
+
+
+
+
+
+
     })
 };
 
@@ -128,10 +138,10 @@ function pieGraphTopUsersPerGam(data) {
         countForY += 1;
     }
 
-    var barColors = ["red", "green", "blue", "orange", "brown"];
+    var barColors = ["lightblue", "rgb(243, 128, 128)", "rgb(139, 236, 97)", "rgb(255, 214, 70)", "rgb(144, 12, 63)"];
 
     new Chart("pieChart", {
-        type: "pie",
+        type: "doughnut",
         data: {
             labels: xValues,
             datasets: [{
@@ -140,12 +150,26 @@ function pieGraphTopUsersPerGam(data) {
             }]
         },
         options: {
-            legend: { display: false },
+            plugins: {
+            legend: {
+                labels: {
+                    // This more specific font property overrides the global property
+                    color: 'black',
+                    font: {
+                        size: 20
+                    }
+                }
+            },
             title: {
                 display: true,
-                text: "First 5 Presences and Count"
-            }
+                text: "Games played",
+                color: 'black',
+                font: {
+                    size: 20
+                }
 
+            }
+        }
         }
     });
 };

@@ -1,106 +1,153 @@
 ﻿@model IEnumerable<DiscordStats.Models.Server>
 
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="mode">
-Dark mode:    
-    <span class="change">ON</span>
-</div>
+    <head>
+    <title>Account</title>
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/5b2bd23d5f.js" crossorigin="anonymous"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
-<script>
-    function CreateServer() {
-        window.location.href = '/Account/ServerForm/';
-;
-    }
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    $(document).ready( function () {
-        $('#filterTable').DataTable({ 
-            "order": [[ 2, "desc" ]] 
-        }); 
-    } );
-</script>
+    <title>@ViewData["Title"] - DiscordStat</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
-<div class="row">
-    <div class="col">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">    
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="~/assets/css/templatemo-host-cloud.css">
+    <link rel="stylesheet" href="~/assets/css/owl.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+
+</head>
+  <body>
+          <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+
+
+    <!-- Page Content -->
+    <!-- Heading Starts Here -->
+    <div class="page-heading header-text">
+      <div class="container">
+        <div class="row">
+          <div class="col">
         <a href="https://discord.com/channels/" + @ViewBag.id >@{var link = "https://cdn.discordapp.com/avatars/" + ViewBag.id + "//" + ViewBag.hash + ".png";}
-        <img class="discordImage"  src="@link"/></a>
+        <img class="discordImage"  src="@link" style="width:175px"/></a>
     </div>
     <div class="col" style="text-align:center">
         <h1>Welcome home @ViewBag.name, this is your account page.</h1>
     </div>
-</div>
-<div class="row">
-    <p>Did you know your Discord id is: @ViewBag.id?</p>
-</div>
-<div class="row">
-    <div class="col-3">
-        <button class="btn btn-primary" onclick="CreateServer()">New Server</button>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
-@if (Model != null)
-{
-    <form id="form1" runaat="server">
-<table id="filterTable" class="display" >
-    <thead>
-    <tr>
-        <th><b>Server Owner</b></th>
-        <th><b>Server Name</b></th>
-        <th><b>Server Id</b></th>
-        <th></th>
+    <!-- Heading Ends Here -->
 
 
-    </tr>
-    </thead>
-    <tbody>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-
-            <td>
-                @if (item.Owner == "true")
-                {
-                    <p>Yes</p>
-                }
-                else
-                {
-                    <p>No</p>
-                }
-            </td>
-            <td>@item.Name</td>
-            <td>@item.Id</td>
-            <td>
-                <a href="@Url.Action("Details", "Account", new {name = item.Name})" class="btn btn-primary"/>
-                <i class="fas fa-info"></i>
-            </td>
-
-        </tr>
-    }
-
-    </tbody>
-</table>
-
-    </form>
-}
+    <!-- Services Starts Here -->
+    <div class="services-section services-page">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="section-heading">
+              <h2>Your Active Servers</h2>
+              <p>Here you will find a list of all the servers you're a member of, click the 'i' next to any server to see more details.</p>
+            </div>
+          </div>
+          @if (Model != null)
+            {
+                <form id="form1" runaat="server">
+                    <table class="table" id="serverTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th><b>Server Owner</b></th>
+                                <th><b>Server Name</b></th>                             
+                                <th></th>
+                            </tr>
+                        </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                  {
+                                    <tr>
+                                        <td style="padding-top: 1%">
+                                            @if (item.Owner == "true")
+                                              {
+                                                <p>Yes</p>
+                                              }
+                                            else
+                                              {
+                                                <p>No</p>
+                                              }
+                                        </td>
+                                            <td style="padding-top: 1%">@item.Name</td>
+                                            <td style="padding-top: 1%">
+                                            <a href="@Url.Action("Details", "Account", new {name = item.Name})" class="btn btn-primary"/>
+                                            <i class="fa fa-info" ></i>
+                                        </td>
+                                    </tr>
+                                  }
+                            </tbody>
+                    </table>
+                </form>
+            }   
 @if (Model == null)
-{
-    <div class="col-12" style="text-align: center; color:white">
-
-    <div class="row">
-        <h2>It looks like you're not a member of any servers.</h2>
-        <h5>To join a server ask an an admin or other members for an invite link. Don't know anyone in a server? No Problem!</h5>
-        <div style="display: inline">
-            <h5> You can find a variety of public servers with the link below.</h5>
- <a style="font-weight: bolder; font-size: larger;" href="https://disboard.org/servers" target="_blank">Disboard.org</a>
+    {
+        <div class="col-12" style="text-align: center; color:black">
+            <div class="row">
+                <h2>It looks like you're not a member of any servers.</h2>
+                <h5>To join a server ask an an admin or other members for an invite link. Don't know anyone in a server? No Problem!</h5>
+                    <div style="display: inline">
+                        <h5> You can find a variety of public servers with the link below.</h5>
+                        <a style="font-weight: bolder; font-size: larger;" href="https://disboard.org/servers" target="_blank">Disboard.org</a>
+                    </div>
+            </div>
         </div>
+    }
         </div>
+      </div>
     </div>
-}
+    <!-- Services Ends Here -->
 
-@section Scripts {
 
-     <script type="text/javascript" src="~/js/site.js"></script>
-}
+    <!-- Testimonials Starts Here -->
+    <div class="testimonials-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="section-heading">
+              <h2>Want to create your own server?</h2>
+              <p>Use the button below to customize a new server to your liking and share it with friends.</p>
+              <button class="btn btn-success" style="margin-top: 1%" onclick="CreateServer()">New Server</button>
+            </div>
+          </div>
+          <div class="col-md-10 offset-md-1">
+              
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    
+    </body>
+    </html>
+
+
+<!-- Bootstrap core JavaScript -->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Additional Scripts -->
+    <script src="~/assets/js/custom.js"></script>
+    <script src="~/assets/js/owl.js"></script>
+    <script src="~/assets/js/accordions.js"></script>

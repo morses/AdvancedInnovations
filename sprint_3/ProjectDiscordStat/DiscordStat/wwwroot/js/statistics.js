@@ -51,20 +51,62 @@ function barGraphHourlyMessageActivity(data) {
             datasets: [{
                 backgroundColor: "green",
                 data: yValues,
-                ticks: {
-                    beginAtZero: false
-                }
             }]
         },
         options: {
-            legend: { display: false },
-            title: {
-                display: true,
-                text: "Messaging Frequency",
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: "Active Messaging Time",
+                    padding: 10,
+                    color: 'black',
+                    font: {
+                        size: 25
+                    }
+                },
+            },
+                        scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Messages Sent',
+                                    padding: 10,
+                                    color: 'black',
+                                    font: {
+                                        size: 25
+                                    }
+                                },
+                    ticks: {
+                        beginAtZero: false,
+                        precision: 0,
+                        color: 'black',
+                        font: {
+                            size: 20
+                        }
+                    }
 
+                },
+                x: {
+                    ticks: {
+                        precision: 0,
+                        color: 'Black',
+                        font: {
+                            size: 16,
+                            family: 'Helvetica'
+                        }
+                    }
+                }
             },
 
-
         }
+
+        
+
+            
     })
+
+
 };

@@ -49,6 +49,7 @@ function barGraphHourlyVoiceActivity(data) {
 
     new Chart("usersVoiceHourlyAllTimeChart", {
         type: "bar",
+
         data: {
             labels: xValues,
             datasets: [{
@@ -57,13 +58,58 @@ function barGraphHourlyVoiceActivity(data) {
             }]
         },
         options: {
-            legend: { display: false },
-            title: {
-                display: true,
-                text: "Most Active Voice Channel Times",
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: "Active Voice Times",
+                    padding: 10,
+                    color: 'black',
+                    font: {
+                        size: 25
+                    }
+                },
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Active Users',
+                        padding: 10,
+                        color: 'black',
+                        font: {
+                            size: 25
+                        }
+                    },
+                    ticks: {
+                        beginAtZero: false,
+                        precision: 0,
+                        color: 'black',
+                        font: {
+                            size: 20
+                        }
+                    }
 
-            }
+                },
+                x: {
+                    ticks: {
+                        precision: 0,
+                        color: 'Black',
+                        font: {
+                            size: 16,
+                            family: 'Helvetica'
+                        }
+                    }
+                }
+            },
+
         }
+
+
+
+
     })
 
 

@@ -1,32 +1,107 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="mode">
-Dark mode:	
-    <span class="change">ON</span>
-</div>
+    <head>
+    <title>Account</title>
 
-<body>
-    <h1>Stat Tracker Privacy Policy</b></h1>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <p>Last updated: March 2, 2022</p>
+    <title>@ViewData["Title"] - DiscordStat</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
-    <h1>Two Levels of Information we collect and how:</h1>
-    <ul>
-        <li><h2>Discord user info by logging in with discord.</h2></li>
-        <p>Once you log in with discord we have minimal access to your info. We use that to create your user "Account"" page and store whats on your user 
-           page in the cloud. 
-        </p>
-        <li><h2>Discord server and user info by adding our bot to a server.</h2></li>
-        <p>When adding our bot, permissions enabled, are deleting/adding servers, deleting/adding members, and deleting/adding webhooks. Plus
-           relative information of servers and users.
-        </p>
-    </ul>
-</body>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">    
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="~/assets/css/templatemo-host-cloud.css">
+    <link rel="stylesheet" href="~/assets/css/owl.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 
+</head>
+  <body>
+          <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+
+
+     <div class="banner">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 offset-md-2">
+            <div class="header-text caption">
+              <h2>Stat Tracker Privacy Policy</h2>                    
+            </div>
+                <div class="header-text caption">
+                    <h4 style="color:whitesmoke">Last updated: March 2, 2022</h4>
+                </div>  
+          </div>         
+        </div>
+      </div>
+    </div>
+    <!-- Banner Ends Here -->
+        <!-- Services Starts Here -->
+    <div class="services-section services-page">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="section-heading">
+              <h2 style="text-align:center">Two Levels of Information we collect and how:</h2>              
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="service-item">
+              <i class="fa fa-cloud"></i>
+              <h4>Discord user info by logging in with discord.</h4>
+              <p>Once you log in with discord we have minimal access to your info. We use that to create your user "Account"" page and store whats on your user page in the cloud.</p>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 col-xs-12">
+          </div>
+
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="service-item">
+              <i class="fa fa-database"></i>
+              <h4>Discord server and user info by adding our bot to a server.</h4>
+              <p>When adding our bot, permissions enabled, are deleting/adding servers, deleting/adding members, and deleting/adding webhooks. Plus relative information of servers and users.</p>
+            </div>
+          </div>
+
+
+
+         
+        </div>
+      </div>
+    </div>
+    <!-- Services Ends Here -->
+
+
+
+<!-- Bootstrap core JavaScript -->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Additional Scripts -->
+    <script src="~/assets/js/custom.js"></script>
+    <script src="~/assets/js/owl.js"></script>
+    <script src="~/assets/js/accordions.js"></script>
 
 @section Scripts {
 
      <script type="text/javascript" src="~/js/site.js"></script>
 }
+</body>
+</html>
