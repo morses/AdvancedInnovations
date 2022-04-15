@@ -1,63 +1,100 @@
 @model DiscordStats.ViewModels.ServerOwnerViewModel
 @using System.Security.Claims
-<div class="mode">
-Dark mode:	
-    <span class="change">ON</span>
-</div>
-<head>
-    <meta name="viewport" content="width=device-width" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-</head>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Server Details</title>
 
-<div class="row">
-    <div class="col-2">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>@ViewData["Title"] - DiscordStat</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">    
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="~/assets/css/templatemo-host-cloud.css">
+    <link rel="stylesheet" href="~/assets/css/owl.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+
+</head>
+ <body>
+          <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+    <!-- Page Content -->
+    <!-- Heading Starts Here -->
+    <div class="page-heading header-text">
+      <div class="container">
+        <div class="row">
+          <div class="col">
         @if (@Model.Icon == null)
         {
             var link = "https://w7.pngwing.com/pngs/609/846/png-transparent-discord-logo-discord-computer-icons-logo-computer-software-avatar-miscellaneous-blue-angle.png";
-            <img src="@link" style="height:100px"/>
+            <img class="discordImage"  src="@link" style="width:175px"/>
         }
         else
         {
             var link = "https://cdn.discordapp.com/icons/" + @Model.Id + "//" + @Model.Icon + ".png";
-            <img src="@link"/>
+            <img class="discordImage"  src="@link" style="width:175px"/>
         }
-       
     </div>
-    <div class="col-6" style="text-align:left">
+    <div class="col" style="text-align:center">
         <h1>@Model.Name</h1>
-        <p>Id: @Model.Id</p>
     </div>
-</div>
-<div id="ServerId" value="@Model.Id"></div>
-
-<div class="row">
-
-    @{
-        if (@Model.HasBot == "false")
-        {
-            <h1 style="text-align: center">This is all the information we could gather about this server. Please add the bot to see more.</h1>
-        }
-        else
-        {
-            <div class="col-4">
+          </div>
+        </div>
+      </div>
+    <!-- Heading Ends Here -->
+     <!-- Services Starts Here -->
+    <div class="services-section services-page">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="section-heading">
+                @if (@Model.HasBot == "false")
+                    {
+            <h2 style="text-align: center">This is all the information we could gather about this server. Please add the bot to see more.</h2>
+                    }
+                    @if (@Model.HasBot == "true")
+                    {
+                        <h2>Server Information</h2>
+                    }              
+            </div>
+          </div>
+          @if (@Model.HasBot == "true")
+          {
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="service-item">
+              <i class="fa fa-cloud"></i>
+              <h4>Details</h4>             
                 <p>Owner: @Model.Owner</p>
                 <P>Total members: @Model.Approximate_Member_Count</P>
                 <P>Online members: @Model.Approximate_Presence_Count</P>
                 <P>Verification Level: @Model.Verification_Level</P>
                 <P>Boost Level: @Model.Premium_Tier</P>
-                <p>Description: @Model.Description</p>
-                <div class="row" style="max-width:45%">
+                <div class="row" style="margin-top:3%">
                 <button type="button" class="btn btn-danger" data-toggle="modal" onclick="OpenModal()" data-target="#exampleModal">Leave Server</button>
                 </div>
-                <div class="row" style="margin-top:2%; max-width:45%">
+                <div class="row" style="margin-top:3%">
                 <button type="button" class="btn btn-info" onclick="location.href='@Url.Action("Games", "Account", new { ServerId = @Model.Id })'" >View Games</button>
                 </div>
             </div>
-
-            <div class="col-8">
-                            <h3>Users</h3>
-                <table id="filterTable" class="display">
-                    <thead>
+          </div>
+          <div class="col-md-8 col-sm-8 col-xs-12">
+            <div class="service-item">
+              <i class="fa fa-server"></i>
+              <h4>Users</h4>
+                   <table class="table" id="serverTable">
+                     <thead class="thead-dark">
                     <tr>
                         <th><b>Avatar</b></th>
                         <th><b>Name</b></th>
@@ -65,14 +102,13 @@ Dark mode:
                     </tr>
                     </thead>
                     <tbody>
-
                     @foreach (var u in @Model.users)
                     {
                         <tr>
                             @if (u.user.Avatar == null)
                             {
                                 var i = "https://w7.pngwing.com/pngs/609/846/png-transparent-discord-logo-discord-computer-icons-logo-computer-software-avatar-miscellaneous-blue-angle.png";
-                               <td><img src="@i" style="height: 80px;"/></td>
+                               <td style="padding-bottom: 2%"><img src="@i" style="height: 80px;"/></td>
                             }
                             else
                             {
@@ -80,29 +116,70 @@ Dark mode:
                                 <td><img src="@i" style="height: 80px;"/></td>
                             }
 
-                            <td>@u.user.UserName</td>
+                            <td style="padding-bottom: 2%">@u.user.UserName</td>
                     @if (Model.Owner == User.Claims.First(c => c.Type == ClaimTypes.Name).Value){
                     @if (User.Claims.First(c => c.Type == ClaimTypes.Name).Value != u.user.UserName && u.user.UserName != "Stat Tracker")
                     {
-                        <td><button type="button" class="btn btn-danger" data-toggle="modal" onclick="OpenModalKick(this)" id="@u.user.UserName" data-target="#exampleModal">Kick</button></td>
+                        <td style="padding-bottom: 2%"><button type="button" class="btn btn-danger" data-toggle="modal" onclick="OpenModalKick(this)" id="@u.user.UserName" data-target="#exampleModal">Kick</button></td>
                     }
                             }
                         </tr>
                     }
                     </tbody>
                 </table>
-                
-  
             </div>
-             <div class="col-12 justify-content-center">
-                <div class="row justify-content-center">
-                    <canvas id="usersVoiceHourlyAllTimeChart" style="width:100%;max-width:1000px"></canvas>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+    <!-- Services Ends Here -->
+
+    <!-- Testimonials Starts Here -->
+    <div class="testimonials-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="section-heading">
+              <h2>Stats</h2>
+              <div class="testimonial-item" >
+               <div class="icon">
+                  <i class="fa fa-bar-chart"></i>
                 </div>
-                <div class="row justify-content-center">
-                    <canvas id="usersHourlyAllTimeChart" style="width:100%;max-width:1000px"></canvas>
                 </div>
             </div>
-        }
+          </div>
+        </div>
+      </div>
+              <div class="row justify-content-center">
+        <div class="col-6 justify-content-center" >
+            <canvas id="usersVoiceHourlyAllTimeChart" style="width:100%;max-width:700px; max-height: 330px; margin-left: 35%"></canvas>
+       </div>
+        <div class="col-6 justify-content-center">   
+            <canvas id="usersHourlyAllTimeChart" style="width:100%;max-width:700px;max-height: 330px"></canvas>
+        </div>
+        </div>
+    </div>
+    <!-- Testimonials Ends Here -->
+        <!-- Graphs Starts Here -->
+    <div class="pricing-section">
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 offset-md-2">
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <!-- Graphs Ends Here -->
+     
+
+
+
+                    
+
+
 
 
 
@@ -186,8 +263,19 @@ Dark mode:
 
 
 
-                }
-            </div>
+
+</body>
+    </html>
+<div id="ServerId" value="@Model.Id"></div>
+
+<!-- Bootstrap core JavaScript -->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Additional Scripts -->
+    <script src="~/assets/js/custom.js"></script>
+    <script src="~/assets/js/owl.js"></script>
+    <script src="~/assets/js/accordions.js"></script>
 <script>
     
     function OpenModal() {
@@ -233,7 +321,7 @@ Dark mode:
         }
     </script>
     
-     <script type="text/javascript" src="~/js/site.js"></script>
+    <script type="text/javascript" src="~/js/site.js"></script>
     <script type="text/javascript" src="~/js/statistics.js"></script>
     <script type="text/javascript" src="~/js/VoiceChannelStats.js"></script>
 }

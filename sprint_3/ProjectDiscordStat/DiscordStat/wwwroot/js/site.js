@@ -89,6 +89,7 @@ function barGraphTopUsersPerServer(data) {
             },
             scales: {
                 y: {
+
                     ticks: {
                         beginAtZero: false,
                         precision: 0,
