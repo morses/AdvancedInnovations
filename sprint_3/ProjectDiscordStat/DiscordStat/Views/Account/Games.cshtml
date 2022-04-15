@@ -12,26 +12,65 @@
   filter: brightness(1.15);
 }
 </style> 
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Server Details</title>
 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<body
-  class="bg-image"
-  style="
-    background-image: url('https://static.wixstatic.com/media/f64113_599fc108e7bd4be6beb94829ff078aac~mv2.gif');
-  min-height : 100%;
-  min-width : 100%;
-  background-size:100% 100%;
-  background-repeat:no-repeat;
-  overflow-y: hidden;
-  overflow-x: hidden;
-">
+    <title>@ViewData["Title"] - DiscordStat</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">    
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="~/assets/css/templatemo-host-cloud.css">
+    <link rel="stylesheet" href="~/assets/css/owl.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 
- <ul class="list-group">
-     @foreach (var u in @Model)
-        {
-            <div class=row style="margin-bottom: 5%; margin-left:6%">
-            <div class="col-4">
-                    @{
+</head>
+ <body>
+          <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+    <!-- Page Content -->
+ <!-- Heading Starts Here -->
+    <div class="page-heading header-text">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Played Games</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Heading Ends Here -->
+
+<!-- Services Starts Here -->
+    <div class="services-section services-page">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="section-heading">              
+              <h2>Here you'll find all the games that have been played on this server.</h2>
+              <p>Click on the game image to view more details on how often the game is played and what the most popular time it's played at.</p>
+            </div>
+          </div>
+@foreach (var u in @Model)
+{
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="service-item">
+              @{
                         var i = u.GameImage;
                         if(u.name == "Spotify")
                         {
@@ -44,16 +83,33 @@
                                            
             <img class="zoom" src="@i" id="@u.name" onclick="location.href='@Url.Action("GameDetails", "Account", new { gameName = u.name, serverId = u.ServerId })'" style="height: 125px;"/>
                 }
-                </div>
-                <div class="col-3">
-                <h3 style="color: whitesmoke">@u.name</h3>
-                </div>
-                <div class="col-3">
-                <h3 style="color: whitesmoke">@u.UserCount player(s)</h3>
-                </div>
-                </div>
-        }
-        
-</ul>
-</body>
+              <h3 style="margin-top:10%">@u.name</h3>
 
+              <h4>@u.UserCount Past player(s).</h4>
+            </div>
+          </div>
+          }
+
+
+
+        </div>
+      </div>
+    </div>
+    <!-- Services Ends Here -->
+
+
+
+
+
+
+
+</body>
+    </html>
+    <!-- Bootstrap core JavaScript -->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Additional Scripts -->
+    <script src="~/assets/js/custom.js"></script>
+    <script src="~/assets/js/owl.js"></script>
+    <script src="~/assets/js/accordions.js"></script>
