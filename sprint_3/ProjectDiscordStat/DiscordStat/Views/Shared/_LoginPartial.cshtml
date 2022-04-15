@@ -2,26 +2,39 @@
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/fontawesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-host-cloud.css">
+    <link rel="stylesheet" href="assets/css/owl.css">
 
-<ul class="navbar-nav">
-@if (User.Identity.IsAuthenticated)
-{
-        
-    <li class="nav-item">
-        <a class="nav-link text-dark" href="@Url.Action("Account", "Account")">Account</a>
-    </li>
-    <a class="btn btn-primary" href="@Url.Action("Logout", "Account")" role="button">Logout
-        <i class="fab fa-discord"></i>
-    </a>
-}
-else
-{
-@*    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>*@
 
-    <a class="btn btn-primary" href="@Url.Action("Account", "Account")" role="button">Login
-        <i class="fab fa-discord"></i>
-    </a>
-}
-</ul>
+
+
+          
+            @if (User.Identity.IsAuthenticated)
+            { 
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Account", "Account")">Account</a>
+                </li>
+            </ul>
+            <div class="functional-buttons">
+                <ul class="navbar-nav ml-auto">            
+                    <li>            
+                        <a href="@Url.Action("Logout", "Account")">Logout</a>
+                    </li>                
+                </ul>
+            </div>
+            }
+            else
+            {
+            <div class="functional-buttons">
+                <ul class="navbar-nav ml-auto">                
+                    <li>                
+                        <a href="@Url.Action("Account", "Account")">Login</a>
+                    </li>
+                </ul>
+            </div>
+            }
+
