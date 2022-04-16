@@ -1,25 +1,67 @@
 ﻿@model IEnumerable<DiscordStats.Models.Channel>
 
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Server Details</title>
 
-<div class="mode">
-Dark mode:	
-    <span class="change">ON</span>
-</div>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>@ViewData["Title"] - DiscordStat</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">    
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="~/assets/css/templatemo-host-cloud.css">
+    <link rel="stylesheet" href="~/assets/css/owl.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 
-@if(@ViewBag.hasBot == "true")
+</head>
+ <body>
+          <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+    <!-- Page Content -->
+ <!-- Heading Starts Here -->
+    <div class="page-heading header-text">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Server Channels</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Heading Ends Here -->
+    @if(@ViewBag.hasBot == "true")
 {
-<h1 style="text-align:center">Click on acceptable channels for webhook features.</h1>
+    <!-- Services Starts Here -->
+    <div class="services-section services-page">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="section-heading">      
+              <h2>Click on acceptable channels for webhook features.</h2>             
+            </div>
+          </div>
 
-<table>
+
+          <div class="col-md-12 col-sm-12 col-xs-12">          
+               <table class="table" id="serverTable">
     <thead>
     <tr>
         <th><b>Channel Name</b></th>
-        <th><b>Channel Id</b></th>
         <th><b>Message Count</b></th>
-        <th></th>
     </tr>
-
     </thead>
     <tbody>
         @foreach (var c in Model.OrderByDescending(c => c.Count))
@@ -33,20 +75,35 @@ Dark mode:
                         }
                         else
                         {
-                            <td>@c.Name</td>
-                        }
-                        <td>@c.Id</td>
+                            <td><h3>@c.Name</h3></td>
+                        }                       
                         <td>@c.Count</td>
+                       
                     </tr>
                 }
             }
-    </tbody>
-</table>
+                </tbody>
+            </table>
+          </div>         
+        </div>
+      </div>
+    </div>
+    <!-- Services Ends Here -->
 }
 else
 {
     <h1 style="text-align:center">We are unable to list channels. Please add the bot to see channels.</h1>
 }
+</body>
+    </html>
+    <!-- Bootstrap core JavaScript -->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Additional Scripts -->
+    <script src="~/assets/js/custom.js"></script>
+    <script src="~/assets/js/owl.js"></script>
+    <script src="~/assets/js/accordions.js"></script>
 
 @section Scripts {
 

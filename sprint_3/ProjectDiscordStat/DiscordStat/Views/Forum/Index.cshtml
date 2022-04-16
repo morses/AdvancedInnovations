@@ -1,31 +1,84 @@
 ﻿@model IEnumerable<Server>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Server Details</title>
 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<div class="mode">
-Dark mode:	
-    <span class="change">ON</span>
-</div>
+    <title>@ViewData["Title"] - DiscordStat</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">    
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="~/assets/css/templatemo-host-cloud.css">
+    <link rel="stylesheet" href="~/assets/css/owl.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 
-<div class = "row">
-    <ul>
-        <li><h3>
-            <u>Verification Level:</u> It's a form of security for messaging in text channels, users within the server have to 
-            meet a certain level of security to message, disregarding members that have assigned roles.
-        </h3></li>
-        <li><h3>
-            <u>Premuim Tier:</u> Seems to be perks for a server. eg: boosts, monetize servers, and the likes. 
-        </h3></li>
-        <li><h3>
-            <u>App Presence #:</u> Is the "Approximate Presence Count". Which includes (and perhaps not limited to) 
-            "Playing"/"Streaming"/"Watching"/"Competing"; Custom Status; User Status: online, idle, dnd, or offline.
-        </h3></li>
-        <li><h3>
-            <u>Message:</u> Message is from the owner of the server to you.
-        </h3></li>
-    </ul>
-</div>
-<div class = "row">
-    <table id="filterTable" class="display">
+</head>
+ <body>
+          <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+    <!-- Page Content -->
+<!-- Heading Starts Here -->
+    <div class="page-heading header-text">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Forum</h1>
+            <p><span>All Posts</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Heading Ends Here -->
+    <!-- Services Starts Here -->
+    <div class="services-section services-page">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="section-heading">
+              </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="service-item">
+              <i class="fa fa-cloud"></i>
+              <h4>Verification Level</h4>
+              <p>It's a form of security for messaging in text channels, users within the server have to 
+            meet a certain level of security to message, disregarding members that have assigned roles.</p>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="service-item">
+              <i class="fa fa-server"></i>
+              <h4>Premium Tier</h4>
+              <p>Discord Nitro Boost level.</p>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="service-item">
+              <i class="fa fa-database"></i>
+              <h4>Activity</h4>
+              <p>Includes Playing, Streaming, Custom Status, or User Status.</p>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class = "row">
+     <table class="table" id="serverTable">
 
             <tr>
                 <th>Server Name</th>
@@ -53,11 +106,36 @@ Dark mode:
 
 <div class="col">
     <div class="form-group mt-3 text-center">
-        <input type="button" value="Return to Prior Page" style="background:black; color:white" onclick="location.href='@Url.Action("Forum","Forum")'" />
+        <input type="button" value="Return to Prior Page" class="btn btn-primary" onclick="location.href='@Url.Action("Forum","Forum")'" />
     </div>
 </div>
+          </div>
+         
+         
+        </div>
+      </div>
+    </div>
+    <!-- Services Ends Here -->
 
 
+
+
+
+
+
+
+</body>
+    </html>
+
+
+<!-- Bootstrap core JavaScript -->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Additional Scripts -->
+    <script src="~/assets/js/custom.js"></script>
+    <script src="~/assets/js/owl.js"></script>
+    <script src="~/assets/js/accordions.js"></script>
 @section Scripts {
 
      <script type="text/javascript" src="~/js/site.js"></script>
