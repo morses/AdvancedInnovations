@@ -46,7 +46,7 @@ builder.Services.AddDbContext<DiscordDataDbContext>(options => options.UseSqlSer
 
 // Register an IHttpClientFactory to enable injection of HttpClients
 builder.Services.AddHttpClient();
-
+builder.Services.AddMvc().AddRazorRuntimeCompilation();
 // Add our repositories and services
 builder.Services.AddScoped<IDiscordService, DiscordService>();
 builder.Services.AddScoped<IServerRepository, ServerRepository>();

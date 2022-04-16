@@ -1,51 +1,120 @@
 ﻿@model DiscordStats.ViewModel.WebhookUsageVM
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Server Details</title>
 
-<div class="mode">
-Dark mode:    
-    <span class="change">ON</span>
-</div>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>@ViewData["Title"] - DiscordStat</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">    
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="~/assets/css/templatemo-host-cloud.css">
+    <link rel="stylesheet" href="~/assets/css/owl.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+</head>
+<body>
+          <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+    <!-- Page Content -->
+    <!-- Heading Starts Here -->
+     <div class="banner">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 offset-md-2">
+            <div class="header-text caption">
+              <h2>Send a Message</h2>                    
+            </div>
+          </div>            
+        </div>
+      </div>
+    </div>
+        <!-- Heading Ends Here -->
+<!-- Services Starts Here -->
 @if(@Model != null)
 {
-    <h3>Webhook name: @Model.name</h3>
-    <form asp-action="WebhookMessage">
+    <div class="services-section">
+      <div class="container">
         <div class="row">
-            <div class="col">
-                <br>
-                <h2>Check box to send members in server.</h2> 
-                <label>@Html.CheckBoxFor(m => m.memberValue)</label>
+          <div class="col-md-12">
+            <div class="section-heading">              
+              <h2>Webhook name: @Model.name</h2>              
             </div>
-            <div class="col">
+          </div>
+           <form asp-action="WebhookMessage">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 justify-content-center">
+                <br>
+                <h2 style="white-space: nowrap">Check box to send members in server.</h2> 
+                <label style="margin-left: 50%">@Html.CheckBoxFor(m => m.memberValue)</label>
+            </div>
+            <div class="col-md-6 col-sm-12">
                 <br>
                 <h2>Check box to send activity count.</h2>  
-                @Html.CheckBoxFor(m => m.activityValue)
+               <label style="margin-left: 35%"> @Html.CheckBoxFor(m => m.activityValue)</label>
            </div>
         </div>
-@*        <div class="row">
-            <label for="text" asp-for="Id" class="control-label">Webhook Id:</label>
-            @Html.TextBoxFor(m => m.Id, new { @readonly="readonly" })
-        </div>*@
+
         <div class="row">
-            <label for="text" asp-for="Token" class="control-label">Webhook Token:</label>
+            <label for="text" asp-for="Token" style="margin-bottom: -0.5%; margin-left: -1%" class="control-label">Webhook Token:</label>
             @Html.TextBoxFor(m => m.Token, new { @readonly="readonly" })
         </div>
         <div class="row">
-            <label for="text" asp-for="guild_id" class="control-label">Guild Id:</label>
+            <label for="text" asp-for="guild_id" style="margin-bottom: -0.5%; margin-top: 1%; margin-left: -1%" class="control-label">Guild Id:</label>
             @Html.TextBoxFor(m => m.guild_id, new { @readonly="readonly" })
         </div>
         <div class="row">
-            <label for="text" asp-for="channel_id" class="control-label">Channel Id:</label>
+            <label for="text" asp-for="channel_id" style="margin-bottom: -0.5%; margin-top: 1%; margin-left: -1%" class="control-label">Channel Id:</label>
             @Html.TextBoxFor(m => m.channel_id, new { @readonly="readonly" })
         </div>
      
-        <button value="Submit"  class="btn btn-primary" style="margin-left: 45%; margin-top: 2%">Send Message</button>
+        <button value="Submit"  class="btn btn-primary" style="margin-left: 45%; margin-top: 2%; margin-bottom:2%">Send Message</button>
     </form>
-}
-else
-{
-    <h3>Message has been sent!</h3>
-}
 
+        </div>
+      </div>      
+    </div>
+    }
+    else
+    {
+    <div class="services-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="section-heading">              
+              <h2>Your message has been sent!</h2>              
+            </div>
+          </div>
+        </div>
+      </div>      
+    </div>
+    }
+    <!-- Services Ends Here -->
+
+</body>
+    </html>
+
+
+<!-- Bootstrap core JavaScript -->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Additional Scripts -->
+    <script src="~/assets/js/custom.js"></script>
+    <script src="~/assets/js/owl.js"></script>
+    <script src="~/assets/js/accordions.js"></script>
 @section Scripts {
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
