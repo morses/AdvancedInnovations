@@ -1,20 +1,110 @@
 ﻿@model DiscordStats.ViewModel.WebhookUsageVM
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Server Details</title>
 
-<div class="row" style="text-align: center">
-    <h1>What do you want to call your webhook</h1>
-</div>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<form asp-action="WebhookForm">
+    <title>@ViewData["Title"] - DiscordStat</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">    
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="~/assets/css/templatemo-host-cloud.css">
+    <link rel="stylesheet" href="~/assets/css/owl.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+
+</head>
+ <body>
+          <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+      <!-- Page Content -->
+    <!-- Heading Starts Here -->
+     <div class="banner">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 offset-md-2">
+            <div class="header-text caption">
+              <h2>Create a Webhook</h2>                    
+            </div>
+          </div>            
+        </div>
+      </div>
+    </div>
+        <!-- Heading Ends Here -->
+<!-- Services Starts Here -->
+
+    <div class="services-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="section-heading">              
+              <h2>Here you can create a new webhook and add it to your channel</h2>              
+            </div>
+          </div>
+          <form asp-action="WebhookForm">
     <div class="row">
-        <label for="text" asp-for="name" class="control-label">Webhook Name:</label>
+        <label for="text" asp-for="name" style="margin-bottom: -0.5%; margin-left: -1%" class="control-label">Webhook Name:</label>
         <input type="text" asp-for="name" class="form-control" required="required" maxlength="32">
         <span asp-validation-for="name" class="text-danger"></span>
     </div>
     <div class="row">
-        <label for="text" asp-for="channelId" class="control-label">Channel Id:</label>
+        <label for="text" asp-for="channelId" style="margin-bottom: -0.5%; margin-top: 1%; margin-left: -1%" class="control-label">Channel Id:</label>
         @Html.TextBoxFor(m => m.channelId, new { @readonly="readonly" })
     </div>
      
-    <button value="Submit"  class="btn btn-primary" style="margin-left: 45%; margin-top: 2%">Create Webhook</button>
+    <button value="Submit"  class="btn btn-primary" style="margin-left: 45%; margin-top: 2%; margin-bottom:2%">Create Webhook</button>
 </form>
+        </div>
+      </div>      
+    </div>
+    
+    <!-- Services Ends Here -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+    </html>
+
+
+<!-- Bootstrap core JavaScript -->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Additional Scripts -->
+    <script src="~/assets/js/custom.js"></script>
+    <script src="~/assets/js/owl.js"></script>
+    <script src="~/assets/js/accordions.js"></script>

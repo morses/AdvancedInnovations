@@ -57,12 +57,52 @@ function barGraphHourlyPresenceActivity(data) {
             }]
         },
         options: {
-            legend: { display: false },
-            title: {
-                display: true,
-                text: "Activity Frequency"
-            }
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: "Most Popular Play Time",
+                    padding: 10,
+                    color: 'black',
+                    font: {
+                        size: 25
+                    }
+                },
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Active Gamers',
+                        padding: 10,
+                        color: 'black',
+                        font: {
+                            size: 25
+                        }
+                    },
+                    ticks: {
+                        beginAtZero: false,
+                        precision: 0,
+                        color: 'black',
+                        font: {
+                            size: 20
+                        }
+                    }
 
+                },
+                x: {
+                    ticks: {
+                        precision: 0,
+                        color: 'Black',
+                        font: {
+                            size: 16,
+                            family: 'Helvetica'
+                        }
+                    }
+                }
+            },
 
         }
     })
