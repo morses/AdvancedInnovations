@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "mssql3": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/discordstatsserver/databases/DiscordStatsData",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DiscordDataConnection"
+    },
+    "mssql2": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/discordstatsserver/databases/DiscordStatsIdentity",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DiscordStatsIdentityDbContextConnection"
+    }
+  }
+}

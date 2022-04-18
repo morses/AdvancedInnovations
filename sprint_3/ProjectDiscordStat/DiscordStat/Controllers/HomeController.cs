@@ -61,7 +61,6 @@ namespace DiscordStats.Controllers
             return View();
         }
 
-        [Authorize]
         public async Task<IActionResult> AllServers()
         {
             AllServersVM allServersNameMemCountAndPresenceInfoVM = new (_serverRepository, _presenceRepository);

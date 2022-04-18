@@ -20,8 +20,8 @@ namespace DiscordStats.ViewModel
 
         public IList<ServerOwnerViewModel>? AllServerNameAndMemCountContainer()
         {
-            var servers = _serverRepository.GetAll().Where(s => s.Privacy == "public");
-            var presences = _presenceRepository.GetAll();
+            var servers = _serverRepository.GetAll().Where(s => s.Privacy == "public").ToList();
+            var presences = _presenceRepository.GetAll().ToList();
 
             List<Presence> presensesInServer = new();
             foreach (var server in servers)

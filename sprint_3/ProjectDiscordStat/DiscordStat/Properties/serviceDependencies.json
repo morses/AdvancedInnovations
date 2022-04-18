@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:DiscordStatsIdentityDbContextConnection"
-    },
     "mssql3": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:DiscordDataConnection"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:DiscordStatsIdentityDbContextConnection"
     }
   }
 }
