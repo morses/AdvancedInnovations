@@ -90,7 +90,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
 	 <PackageReference Include="RestSharp" Version="107.2.1" />
-	 <PackageReference Include="SpecFlow.Actions.Selenium" Version="0.1.298" />
   </ItemGroup>
 
   <ItemGroup>

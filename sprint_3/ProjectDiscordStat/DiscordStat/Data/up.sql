@@ -80,14 +80,14 @@ CREATE TABLE [Channel]
   [Name] nvarchar(256) Null,
   [Count] int Null,
   [Guild_id] nvarchar(256) Null,
-)
+);
 
 CREATE TABLE [ServerChannelJoin]
 (
   [ID] int PRIMARY KEY IDENTITY(1,1),
   [ServerPk] int,
   [ChannelPk]   int
-)
+);
 
 
 CREATE TABLE [Webhook]
@@ -101,14 +101,14 @@ CREATE TABLE [Webhook]
   [Guild_id] nvarchar(256) Null,
   [Application_id] nvarchar(256) Null,
   [Token] nvarchar(256) Null,
-)
+);
 
 CREATE TABLE [ChannelWebhookJoin]
 (
   [ID] int PRIMARY KEY IDENTITY(1,1),
   [ChannelPk] int,
   [WebhookPk]   int
-)
+);
 
 
 CREATE TABLE [VoiceChannels]
@@ -119,7 +119,7 @@ CREATE TABLE [VoiceChannels]
   [Count] int Null,
   [Guild_id] nvarchar(256) Null,
   [Time] DateTime Null
-)
+);
 
 
 -- *************** Add foreign key relations ********************
